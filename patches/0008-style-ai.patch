@@ -1,0 +1,59 @@
+From 20ec56292eeb3461961e3c85f4a4867da59ef07f Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Thu, 6 Mar 2025 14:26:55 +0800
+Subject: [PATCH 08/20] =?UTF-8?q?style:=E4=BF=AE=E5=A4=8D=E9=83=A8?=
+ =?UTF-8?q?=E5=88=86=E5=B7=B2=E7=9F=A5ai=E7=BB=84=E4=BB=B6=E7=9A=84?=
+ =?UTF-8?q?=E6=A0=B7=E5=BC=8F=E9=97=AE=E9=A2=98?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/views/ai.vue | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index 57d5b9c..027c4f0 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -1312,13 +1312,16 @@ body {
+ .thinking-message {
+   align-self: flex-start;
+ background-color: #ffffff; 
+- margin-left: 95px; /* 与 ai-message 保持一致 */
+   width: fit-content;
+   position: relative; /* 与 ai-message 保持一致 */
+-  left: 7%;
++  left: 7.8%;
+   border-radius: 14px;
+   padding: 12px;
+-  max-width: 70%;
++  max-width: 77%; /* 设置消息的最大宽度 */
++  position: relative; /* 为 action-icons 的定位提供参考 */
++  padding-bottom: 0.4%;
++  padding-left: 5px;
++  padding-right: 5px;
+ }
+ /* 添加渐变边框 */
+ .thinking-message::before {
+@@ -1470,7 +1473,7 @@ background-color: #ffffff;
+   background: rgba(255, 255, 255, 1);
+   border-radius: 15px;
+   align-self: flex-end;
+-  margin-right: 103px;
++  margin-right: 106px;
+   margin-left: auto; /* 左侧外边距自动，将消息推到最右侧 */
+   width: fit-content;
+   position: relative;
+@@ -1505,7 +1508,7 @@ background-color: #ffffff;
+   background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+   margin-left: 95px; /* 为右侧头像留出空间 */
+-  max-width: 77%; /* 设置消息的最大宽度 */
++  max-width: 79%; /* 设置消息的最大宽度 */
+   margin-bottom: 35px; /* 添加透明 margin，用于放置 action-icons */
+   position: relative; /* 为 action-icons 的定位提供参考 */
+   padding-top: 0.4%;
+-- 
+2.39.5 (Apple Git-154)
+

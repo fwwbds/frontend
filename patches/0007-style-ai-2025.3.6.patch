@@ -1,0 +1,74 @@
+From 15ad9eb817bffa9b0448bf3c701641fd95249615 Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Thu, 6 Mar 2025 14:05:56 +0800
+Subject: [PATCH 07/20] =?UTF-8?q?style:=E4=BF=AE=E5=A4=8D=E4=BA=86?=
+ =?UTF-8?q?=E9=83=A8=E5=88=86ai=E7=BB=84=E4=BB=B6=E7=9A=84=E6=A0=B7?=
+ =?UTF-8?q?=E5=BC=8F=E9=97=AE=E9=A2=982025.3.6?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/views/ai.vue | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index 426d0d2..57d5b9c 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -1375,7 +1375,7 @@ background-color: #ffffff;
+   padding: 5px 10px; /* 内边距 */
+   border-radius: 8px; /* 圆角 */
+   position: relative;
+-  right: -85%; 
++  right: -82.9%; 
+ }
+ 
+ /* 图标样式 */
+@@ -1508,9 +1508,10 @@ background-color: #ffffff;
+   max-width: 77%; /* 设置消息的最大宽度 */
+   margin-bottom: 35px; /* 添加透明 margin，用于放置 action-icons */
+   position: relative; /* 为 action-icons 的定位提供参考 */
+-  padding-top: 0%;
+-  padding-bottom: 0%;
+-  padding-left: 20px;
++  padding-top: 0.4%;
++  padding-bottom: 0.4%;
++  padding-left: 5px;
++  padding-right: 5px;
+ }
+ 
+ /* 透明 margin 容器 */
+@@ -1617,10 +1618,9 @@ top: 0; /* 将 top 设置为 0，使头像顶部与消息框顶部对齐 */
+ }
+ /* 消息框外参考来源样式 */
+ .references-outside-container {
+-  margin-top: -34px; /* 减少负边距，降低与消息的贴合度 */
+-  margin-left: 93px; /* 向右移动，给操作按钮留出空间 */
++  margin-top: -30px; /* 减少负边距，降低与消息的贴合度 */
++  margin-left: 98px; /* 向右移动，给操作按钮留出空间 */
+   padding: 4px 8px;
+-  border: 1px solid rgb(196, 182, 229);
+   background-color: transparent;
+   border-radius: 13px; /* 四周都有圆角 */
+   max-width: 70%; /* 稍微减小宽度 */
+@@ -1648,6 +1648,7 @@ top: 0; /* 将 top 设置为 0，使头像顶部与消息框顶部对齐 */
+   display: flex;
+   flex-wrap: wrap;
+   gap: 6px;
++  margin-right: 6px;
+ }
+ 
+ .reference-item-compact {
+@@ -1680,7 +1681,7 @@ top: 0; /* 将 top 设置为 0，使头像顶部与消息框顶部对齐 */
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+-  max-width: 220px;
++  max-width: 210px;
+ }
+ 
+ .reference-icon {
+-- 
+2.39.5 (Apple Git-154)
+

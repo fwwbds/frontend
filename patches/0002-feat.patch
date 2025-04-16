@@ -1,0 +1,800 @@
+From 8f98dbafa658ef837c05e83e677e483fa4b09196 Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Sat, 1 Mar 2025 16:46:57 +0800
+Subject: [PATCH 02/20] =?UTF-8?q?feat-=E5=89=8D=E7=AB=AF=E5=BC=95=E7=94=A8?=
+ =?UTF-8?q?=E5=86=85=E5=AE=B9=E7=9A=84=E5=AE=9E=E7=8E=B0=20fix-=E5=9B=BE?=
+ =?UTF-8?q?=E7=89=87=E6=97=A0=E6=B3=95=E6=98=BE=E7=A4=BA=E5=A4=9A=E5=BC=A0?=
+ =?UTF-8?q?=E7=9A=84=E9=97=AE=E9=A2=98?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ work/package-lock.json      |   2 +-
+ work/package.json           |   2 +-
+ work/src/views/QMathify.vue | 143 ++++++++++++++++++++------------
+ work/src/views/ai.vue       | 158 +++++++++++++++++++-----------------
+ work/src/views/home.vue     |   7 +-
+ work/src/views/login.vue    |  35 +++++++-
+ work/style.css              |  13 +++
+ 7 files changed, 231 insertions(+), 129 deletions(-)
+ create mode 100644 work/style.css
+
+diff --git a/work/package-lock.json b/work/package-lock.json
+index 90db9a6..94dfb74 100644
+--- a/work/package-lock.json
++++ b/work/package-lock.json
+@@ -38,7 +38,7 @@
+         "typescript": "~5.7.3",
+         "unplugin-auto-import": "^19.1.0",
+         "unplugin-vue-components": "^28.2.0",
+-        "vite": "^6.1.0",
++        "vite": "^6.2.0",
+         "vite-plugin-vue-devtools": "^7.7.2",
+         "vitest": "^3.0.5",
+         "vue-tsc": "^2.2.2"
+diff --git a/work/package.json b/work/package.json
+index 66103e3..c4dea84 100644
+--- a/work/package.json
++++ b/work/package.json
+@@ -44,7 +44,7 @@
+     "typescript": "~5.7.3",
+     "unplugin-auto-import": "^19.1.0",
+     "unplugin-vue-components": "^28.2.0",
+-    "vite": "^6.1.0",
++    "vite": "^6.2.0",
+     "vite-plugin-vue-devtools": "^7.7.2",
+     "vitest": "^3.0.5",
+     "vue-tsc": "^2.2.2"
+diff --git a/work/src/views/QMathify.vue b/work/src/views/QMathify.vue
+index 17dda49..96854a6 100644
+--- a/work/src/views/QMathify.vue
++++ b/work/src/views/QMathify.vue
+@@ -48,11 +48,15 @@
+             <span>搜索历史记录</span>
+           </div>
+         </el-button>
+-
+         <el-button type="primary" class="bo07" @click="toggleDialogList">
+           <div class="button-content">
+             <img alt="" src="@/imgs/lately.png" class="lately-icon" />
+             <span>近期对话</span>
++            <!-- 动态绑定图标 -->
++            <el-icon :class="['arrow-icon', { 'rotate': isDialogListVisible }]">
++              <ArrowDown v-if="!isDialogListVisible" />
++              <ArrowUp v-else />
++            </el-icon>
+           </div>
+         </el-button>
+ 
+@@ -75,30 +79,32 @@
+             </div>
+           </div>
+         </div>
++        <div>
+           <el-button type="primary" class="bo08" @mouseenter="handleButtonEnter" @mouseleave="handleButtonLeave" @click="togglePopover">
+             <div class="button-content">
+               <img alt="per" src="@/imgs/person.png" class="per-icon" />
+               <span>个人信息</span>
+             </div>
+           </el-button>
+-          <div v-if="showPopover" class="popover" @mouseenter="handlePopoverEnter" @mouseleave="handlePopoverLeave">
+-            <el-button type="text" class="xiu">
+-              <img alt="pen" src="@/imgs/pen.png" class="pen" />
+-              修改个人信息</el-button>
+-            <el-button type="text" @click="clearAllDialogs" class="shan">
+-              <img alt="delete" src="@/imgs/delete.png" class="delete" />
+-              删除历史记录</el-button>
+-            <el-button type="text" class="she">
+-              <img alt="set" src="@/imgs/set.png" class="set" />
+-              系统设置</el-button>
+-            <el-button type="text" class="jiao">
+-              <img alt="call" src="@/imgs/call.png" class="call" />
+-              联系我们</el-button>
+-            <el-button type="text" class="tui">
+-              <img alt="loginout" src="@/imgs/loginout.png" class="loginout" />
+-              退出登录</el-button>
+-          </div>
+         </div>
++        <div v-if="showPopover" class="popover" @mouseenter="handlePopoverEnter" @mouseleave="handlePopoverLeave">
++          <el-button type="text" class="xiu">
++            <img alt="pen" src="@/imgs/pen.png" class="pen" />
++            修改个人信息</el-button>
++          <el-button type="text" @click="clearAllDialogs" class="shan">
++            <img alt="delete" src="@/imgs/delete.png" class="delete" />
++            删除历史记录</el-button>
++          <el-button type="text" class="she">
++            <img alt="set" src="@/imgs/set.png" class="set" />
++            系统设置</el-button>
++          <el-button type="text" class="jiao">
++            <img alt="call" src="@/imgs/call.png" class="call" />
++            联系我们</el-button>
++          <el-button type="text" class="tui">
++            <img alt="loginout" src="@/imgs/loginout.png" class="loginout" />
++            退出登录</el-button>
++        </div>
++      </div>
+     </div>
+ 
+     <!-- 页面内容 -->
+@@ -112,8 +118,9 @@
+     </div>
+   </div>
+ </template>
++
+ <script setup>
+-import { ref,onMounted } from 'vue';
++import { ref, onMounted } from 'vue';
+ import { ElMessage } from "element-plus";
+ import { Memo, Edit, Delete } from '@element-plus/icons-vue'; // 引入图标
+ import ai from './ai.vue';
+@@ -122,6 +129,8 @@ import {
+   deleteConversation,
+   renameConversation,
+ } from '@/api/dify';
++import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'; // 引入 Element Plus 图标
++
+ // 状态管理
+ const isSidebarOpen = ref(false); // 侧栏展开状态
+ const isDialogListVisible = ref(false); // 对话列表显示状态
+@@ -318,6 +327,19 @@ const toggleSidebar = () => {
+ 
+ const toggleDialogList = () => {
+   isDialogListVisible.value = !isDialogListVisible.value;
++  // 确保箭头图标在点击后始终向下旋转
++  if (isDialogListVisible.value) {
++    // 这里可以添加旋转动画
++    const arrowIcon = document.querySelector('.arrow-icon');
++    if (arrowIcon) {
++      arrowIcon.style.transform = 'rotate(180deg)';
++    }
++  } else {
++    const arrowIcon = document.querySelector('.arrow-icon');
++    if (arrowIcon) {
++      arrowIcon.style.transform = 'rotate(0deg)';
++    }
++  }
+ };
+ 
+ // 悬浮卡片管理
+@@ -354,11 +376,9 @@ const togglePopover = () => {
+ onMounted(() => {
+   loadRecentDialogs(); // 加载近期对话列表
+ });
+-
+ </script>
+-<style>
+-
+ 
++<style>
+ /* 容器样式 */
+ .container {
+   display: flex;
+@@ -413,10 +433,9 @@ onMounted(() => {
+   height: 40px;
+   opacity: 1;
+   border-radius: 10px;
+-  background: rgba(237, 230, 255, 0.81);
+   display: flex;
+   align-items: center; /* 垂直居中 */
+-  justify-content: center; /* 水平居中 */
++  justify-content: center;
+ }
+ 
+ .bo01 img,
+@@ -440,6 +459,8 @@ onMounted(() => {
+ .bo01 {
+   left: 20px;
+   top: 100px;
++  border: none;
++
+ }
+ 
+ .bo02 {
+@@ -462,9 +483,10 @@ onMounted(() => {
+   top: 105px;
+   width: 180px;
+   height: 50px;
+-  background: rgba(226, 214, 255, 1);
++  background:F8F5FF;
+   color: rgba(111, 58, 246, 1);
+   display: flex;
++  font-weight: 550;
+   align-items: center; /* 垂直居中 */
+   justify-content: flex-start; /* 内容靠左对齐 */
+   padding-left: 10px; /* 左侧内边距 */
+@@ -476,22 +498,9 @@ onMounted(() => {
+   width: 180px;
+   height: 50px;
+   position: absolute; /* 绝对定位 */
+-  background: rgba(248, 245, 255, 0.81);
+-  color: rgba(111, 58, 246, 1);
+-  display: flex;
+-  border-radius: 10px;
+-  align-items: center; /* 垂直居中 */
+-  justify-content: flex-start; /* 内容靠左对齐 */
+-  padding-left: 10px; /* 左侧内边距 */
+-}
++  font-weight: 550;
+ 
+-.bo07 {
+-  left: 18px;
+-  top: 250px;
+-  width: 180px;
+-  height: 50px;
+-  position: absolute; /* 绝对定位 */
+-  background: rgba(248, 245, 255, 0.81);
++  background: F8F5FF;
+   color: rgba(111, 58, 246, 1);
+   display: flex;
+   border-radius: 10px;
+@@ -500,24 +509,30 @@ onMounted(() => {
+   padding-left: 10px; /* 左侧内边距 */
+ }
+ 
++.bo07{  font-weight: 550;
++}
+ .bo08 {
+   top: 650px;
+   left: 30px;
+   width: 180px;
+   height: 50px;
+   position:absolute; /* 绝对定位 */
+-  background: rgba(248, 245, 255, 0.81);
++  font-weight: 550;
++
++  background:  rgba(237, 230, 255, 0.81);
+   color: rgba(111, 58, 246, 1);
+   display: flex;
+   border-radius: 10px;
+   align-items: center; /* 垂直居中 */
+   justify-content: flex-start; /* 内容靠左对齐 */
+   padding-left: 10px; /* 左侧内边距 */
++  border: none;
++
+ }
+ 
+ .popover {
+   position: absolute;
+-  top: 400px;
++  top: 430px;
+   left: 40px;
+   width: 140px;
+ height: 180px;
+@@ -573,8 +588,19 @@ box-shadow: 0px 2px 4px  rgba(0, 0, 0, 0.25);
+ .button-content {
+   display: flex;
+   align-items: center; /* 垂直居中 */
++  gap: 8px;
+ }
+ 
++/* 箭头图标样式 */
++.arrow-icon {
++  transition: transform 0.8s ease; /* 添加旋转动画 */
++  margin-left: 40px;
++}
++
++/* 点击后箭头向上旋转 */
++.arrow-icon.rotate {
++  transform: rotate(180deg);
++}
+ /* 近期对话列表样式 */
+ .recent-dialog-list {
+   margin-top: 10px;
+@@ -583,14 +609,17 @@ box-shadow: 0px 2px 4px  rgba(0, 0, 0, 0.25);
+   max-height: 200px;
+   overflow-y: auto;
+   overflow-x: hidden;
+-  width: 200px; /* 增加宽度，从190px改为200px */
++  width: 182px; /* 增加宽度，从190px改为200px */
+   height: 200px;
+   opacity: 1;
+   border-radius: 10px;
+   background: rgba(249, 246, 255, 1);
+-  left: 10px; /* 添加左偏移，使其居中 */
++  left: 29px; /* 添加左偏移，使其居中 */
++}
++.recent-dialog-list::-webkit-scrollbar {
++  width: 0; /* 隐藏垂直滚动条 */
++  height: 0; /* 隐藏水平滚动条 */
+ }
+-
+ /* 对话项样式调整 */
+ .dialog-item {
+   display: flex;
+@@ -598,11 +627,11 @@ box-shadow: 0px 2px 4px  rgba(0, 0, 0, 0.25);
+   justify-content: space-between;
+   padding: 8px 4px; /* 减小内边距 */
+   color: rgba(111, 58, 246, 1);
++  font-size: 14px;
+   cursor: pointer;
+   border-radius: 4px;
+   margin-bottom: 4px;
+   width: 95%; /* 增加宽度占比，从93%改为95% */
+-  margin-left: 2px; /* 添加左边距 */
+   margin-right: 2px; /* 添加右边距 */
+ }
+ /* 活跃对话样式 */
+@@ -624,7 +653,7 @@ box-shadow: 0px 2px 4px  rgba(0, 0, 0, 0.25);
+ 
+ .icon-container {
+   display: flex;
+-  gap: 8px;
++  gap: 3px;
+ }
+ .edit-icon,
+ .delete-icon {
+@@ -747,8 +776,20 @@ html {
+   display: flex;
+   align-items: center; /* 垂直居中 */
+   justify-content: center; /* 水平居中 */
+-}
++  border: none;
+ 
++}
++.bo01:hover,
++.bo02:hover,
++.bo03:hover,
++.bo04:hover,
++.bo05:hover,
++.bo06:hover,
++.bo07:hover,
++.bo08:hover{
++  background-color:  rgb(88.6%,83.9%,100%);
++  color: rgba(111, 58, 246, 1) ;
++}
+ .bo01 img,
+ .bo02 img,
+ .bo03 img,
+@@ -790,7 +831,7 @@ html {
+   top: 105px;
+   width: 180px;
+   height: 50px;
+-  background: rgba(226, 214, 255, 1);
++  background: rgba(237, 230, 255, 0.81);
+   color: rgba(111, 58, 246, 1);
+   justify-content: flex-start; /* 内容靠左对齐 */
+   padding-left: 10px; /* 左侧内边距 */
+@@ -801,7 +842,7 @@ html {
+   top: 180px;
+   width: 180px;
+   height: 50px;
+-  background: rgba(248, 245, 255, 0.81);
++  background:  rgba(237, 230, 255, 0.81);
+   color: rgba(111, 58, 246, 1);
+   justify-content: flex-start; /* 内容靠左对齐 */
+   padding-left: 10px; /* 左侧内边距 */
+@@ -812,7 +853,7 @@ html {
+   top: 250px;
+   width: 180px;
+   height: 50px;
+-  background: rgba(248, 245, 255, 0.81);
++  background: rgba(237, 230, 255, 0.81);
+   color: rgba(111, 58, 246, 1);
+   justify-content: flex-start; /* 内容靠左对齐 */
+   padding-left: 10px; /* 左侧内边距 */
+diff --git a/work/src/views/ai.vue b/work/src/views/ai.vue
+index c0a6dbc..06287ab 100644
+--- a/work/src/views/ai.vue
++++ b/work/src/views/ai.vue
+@@ -35,32 +35,30 @@
+           <div v-else>{{ message.content }}</div>
+         </div>
+          <!-- 思考中状态 -->
+-         <div v-if="message.type === 'thinking'" class="thinking">
+-          <span>思考中...</span>
++        <div v-if="message.type === 'thinking'" class="thinking">
++          <span></span>
+           <div class="loader"></div>
+         </div>
+-        <div
+-    v-if="message.type === 'ai' && !isGreeting(message.content)"
+-    class="action-icons"
+-  >    <el-icon class="copy-icon" @click="copyMessage(message.content)">
+-      <CopyDocument />
+-    </el-icon>
+-    <el-icon class="refresh-icon" @click="regenerateResponse(index)">
+-      <Refresh />
+-    </el-icon>
+-    <el-icon class="check-icon" @click="likeMessage(index)">
+-      <CircleCheck />
+-    </el-icon>
+-    <el-icon class="close-icon" @click="dislikeMessage(index)">
+-      <CircleClose/>
+-    </el-icon>
+-    <el-icon class="stop-responding-icon" @click="stopResponding(index)">
+-      <VideoPause />
+-    </el-icon>
+-  </div>
++
++        <!-- 将 action-icons 移出消息框，放在消息框下方的透明 margin 中 -->
++        <div v-if="message.type === 'ai' && !isGreeting(message.content)" class="action-icons-container">
++          <div class="action-icons">
++            <el-icon class="copy-icon" @click="copyMessage(message.content)">
++              <CopyDocument />
++            </el-icon>
++            <el-icon class="check-icon" @click="likeMessage(index)">
++              <CircleCheck />
++            </el-icon>
++            <el-icon class="close-icon" @click="dislikeMessage(index)">
++              <CircleClose/>
++            </el-icon>
++            <el-icon class="stop-responding-icon" @click="stopResponding(index)">
++              <VideoPause />
++            </el-icon>
++          </div>
++        </div>
+   
+         <!-- 显示图片预览 -->
+-                <!-- 修改图片容器部分 -->
+         <div class="image-container" v-if="message.imageUrl || message.tempImageUrl || message.isUploading">
+           <img
+             :src="message.imageUrl || message.tempImageUrl"
+@@ -107,12 +105,13 @@
+     <!-- 输入和发送区域 -->
+     <div class="chat-input">
+       <div>
+-      <input
+-        v-model="inputMessage"
+-        type="text"
+-        placeholder="请输入您想要问的问题"
+-        @keydown.enter="sendMessage"
+-      /></div>
++        <input
++          v-model="inputMessage"
++          type="text"
++          placeholder="请输入您想要问的问题"
++          @keydown.enter="sendMessage"
++        />
++      </div>
+       <!-- 隐藏的图片上传输入框 -->
+       <input
+         type="file"
+@@ -155,18 +154,12 @@
+           </el-icon>
+         </template>
+       </el-popover>
+-      <el-popover
+-        placement="top"
+-        width="fit-content"
+-        trigger="hover"
+-        content="新建对话"
+-      >
+-        <template #reference>
+-          <el-icon @click="handleNewDialog" class="dia">
+-            <ChatDotRound />
+-          </el-icon>
+-        </template>
+-      </el-popover>
++      <el-tooltip content="新建对话" placement="top" effect="light">
++      <el-icon @click="handleNewDialog" class="dia">
++        <ChatDotRound />
++      </el-icon>
++    </el-tooltip>
++   
+       <el-divider />
+       <button @click="sendMessage">
+         <img alt="" src="@/imgs/send.png" class="send" />
+@@ -514,21 +507,25 @@ const loadDialogFromLocal = async (id) => {
+               } else {
+                 const lastUserMsg = [...messageList.value].reverse().find(m => m.type === 'user');
+                 if (lastUserMsg) {
++                  // 修改处理图片文件的逻辑
+                   if (file.type === 'image') {
+-                    // 对于图片，设置imageUrl但不添加到files数组
++                    // 创建图片数组来保存多张图片
++                    if (!lastUserMsg.images) lastUserMsg.images = [];
++                    lastUserMsg.images.push({
++                      id: file.id,
++                      url: fileUrl
++                    });
++                    
++                    // 保留单个imageUrl属性以兼容现有代码
+                     lastUserMsg.imageUrl = fileUrl;
+                     processedImageIds.add(file.id);
+-                    // 缓存图片URL
+                     imageUrlCache.value[file.id] = fileUrl;
++                    
+                     // 标记为纯图片消息，如果内容为空
+                     if (!lastUserMsg.content || lastUserMsg.content.trim() === '') {
+                       lastUserMsg.isImageOnly = true;
+                     }
+-                  } else {
+-                    // 非图片类型的文件正常添加到files
+-                    if (!lastUserMsg.files) lastUserMsg.files = [];
+-                    lastUserMsg.files.push(fileInfo);
+-                  }
++                  } 
+                 }
+               }
+             });
+@@ -1020,15 +1017,16 @@ defineExpose({
+ .thinking-message {
+   background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+-  margin-left: 60px; /* 为右侧头像留出空间 */
++  margin-left: 85px; /* 与 ai-message 保持一致 */
+   width: fit-content;
++  position: relative; /* 与 ai-message 保持一致 */
++  left: 7%;
+   border-radius: 15px;
+   padding: 12px;
+   max-width: 70%;
+-  position: relative;
+-  left: 45px;
+ }
+ 
++
+ .thinking {
+   display: flex;
+   align-items: center;
+@@ -1053,18 +1051,18 @@ defineExpose({
+     transform: rotate(360deg);
+   }
+ }
++
+ /* 功能图标区域样式 */
+ .action-icons {
+   display: flex;
+   gap: 10px; /* 图标之间的间距 */
+-  justify-content: flex-start; /* 图标靠右对齐 */
+-  padding-left: 128px; /* 与消息内容的间距 */
+- padding-bottom: 5px;
++  background:transparent; /* 半透明背景 */
++  padding: 5px 10px; /* 内边距 */
++  border-radius: 8px; /* 圆角 */
+ }
+ 
+ /* 图标样式 */
+ .copy-icon,
+-.refresh-icon,
+ .check-icon,
+ .close-icon,
+ .stop-responding-icon {
+@@ -1078,10 +1076,6 @@ defineExpose({
+   color: #409eff; /* 复制图标悬停颜色 */
+ }
+ 
+-.refresh-icon:hover {
+-  color: #67c23a; /* 重新回答图标悬停颜色 */
+-}
+-
+ .check-icon:hover {
+   color: #f56c6c; /* 喜欢图标悬停颜色 */
+ }
+@@ -1098,6 +1092,12 @@ position: absolute;
+ top: -65px;
+ right: 0px;
+ }
++/* 调整弹出框的样式 */
++.newdia .el-popover {
++  text-align: center; /* 内容居中 */
++  max-width: 50px; /* 设置最小宽度 */
++  padding: 10px; /* 调整内边距 */
++}
+ /* 消息显示区域样式 */
+ .chat-messages {
+   flex: 1;
+@@ -1106,16 +1106,19 @@ right: 0px;
+   overflow-x: hidden; /* 新增这一行，禁用横向滚动 */
+   height: calc(90% - 160px); /* 调整高度，确保不覆盖输入框区域 */
+ }
+-
++.chat-messages::-webkit-scrollbar {
++  width: 0; /* 隐藏垂直滚动条 */
++  height: 0; /* 隐藏水平滚动条 */
++}
+ /* 单条消息样式 */
+ .message {
+   padding: 8px;
+-  margin: 15px;
++  margin: 20px;
+   border-radius: 15px;
+   display: flex;
+   align-items: center; /* 确保头像和内容对齐 */
+   position: relative; /* 为头像的绝对定位提供参考 */
+-  max-width: 70%; /* 设置消息的最大宽度 */
++  max-width: 78%; /* 设置消息的最大宽度 */
+   word-wrap: break-word; /* 强制长单词或 URL 换行 */
+ }
+ 
+@@ -1143,13 +1146,12 @@ right: 0px;
+   background: rgba(255, 255, 255, 1);
+   border-radius: 15px;
+   align-self: flex-end;
+-  margin-right: 50px;
++  margin-right: 99px;
+   margin-left: auto; /* 左侧外边距自动，将消息推到最右侧 */
+   width: fit-content;
+   position: relative;
+   padding: 8px;
+- 
+-  max-width: 70%; /* 设置消息的最大宽度 */
++  max-width: 79%; /* 设置消息的最大宽度 */
+   word-wrap: break-word;
+   word-break: break-all;
+ 
+@@ -1178,9 +1180,20 @@ right: 0px;
+ .ai-message {
+   background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+-  margin-left: 60px; /* 为右侧头像留出空间 */
++  margin-left: 95px; /* 为右侧头像留出空间 */
+   width: fit-content;
+-  margin-bottom: 8px; /* 为功能图标区域留出空间 */
++  margin-bottom: 40px; /* 添加透明 margin，用于放置 action-icons */
++  position: relative; /* 为 action-icons 的定位提供参考 */
++}
++
++/* 透明 margin 容器 */
++.action-icons-container {
++  position: absolute;
++  bottom: -40px; /* 将 action-icons 定位到透明 margin 中 */
++  left: 0;
++  width: 100%;
++  display: flex;
++  justify-content: flex-start; /* 图标靠左对齐 */
+ }
+ .ai-message::before {
+   content: '';
+@@ -1254,10 +1267,9 @@ right: 0px;
+   height: 40px;
+   border-radius: 50%; /* 圆形头像 */
+   position: absolute;
+-  left: -60px; /* 定位到对话框左侧外部 */
+-  top: 50%;
+-  transform: translateY(-50%);
+-  
++  left: -70px; /* 定位到对话框左侧外部 */
++  top: 0; /* 将 top 设置为 0，使头像顶部与消息框顶部对齐 */
++  transform: translateY(0); /* 移除 translateY(-50%)，因为不再需要垂直居中 */
+ }
+ 
+ .usertou {
+@@ -1265,9 +1277,9 @@ right: 0px;
+   height: 40px;
+   border-radius: 50%; /* 圆形头像 */
+   position: absolute;
+-  right: -50px; /* 定位到对话框右侧外部 */
+-  top: 50%;
+-  transform: translateY(-50%);
++  right: -70px; /* 定位到对话框右侧外部 */
++top: 0; /* 将 top 设置为 0，使头像顶部与消息框顶部对齐 */
++  transform: translateY(0); /* 移除 translateY(-50%)，因为不再需要垂直居中 */
+   margin-left: 10px;
+ }
+ 
+diff --git a/work/src/views/home.vue b/work/src/views/home.vue
+index 928dd61..b3b5361 100644
+--- a/work/src/views/home.vue
++++ b/work/src/views/home.vue
+@@ -85,12 +85,14 @@ export default defineComponent({
+   margin-bottom: 5px; /* 设置图片下方的外边距为 50px */
+ }
+ .botton01{
+-  top: 66%;
++  top: 63%;
+   right:36%;
+   position: absolute;
+   font-size: 30px;
+   width: 400px;
+ height: 80px;
++border: none;
++
+ opacity: 1;
+ border-radius: 20px;
+ background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191, 242, 0.95) 33.49%, rgba(162, 169, 252, 0.89) 74.36%, rgba(151, 107, 255, 0.8) 100%);
+@@ -103,6 +105,7 @@ font-size: 20px;
+ width: 100px;
+ height: 60px;
+ opacity: 1;
++border: none;
+ border-radius: 30px;
+ background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191, 242, 0.95) 33.49%, rgba(162, 169, 252, 0.89) 74.36%, rgba(151, 107, 255, 0.8) 100%);
+ }
+@@ -114,6 +117,8 @@ font-size: 20px;
+ color: rgba(153, 112, 255, 1);
+ width: 100px;
+ height: 60px;
++border: none;
++
+ opacity: 1;
+ border-radius: 30px;
+ background: linear-gradient(90deg, rgba(170, 239, 242, 0.2) 0.92%, rgba(136, 191, 242, 0.19) 33.49%, rgba(162, 169, 252, 0.18) 74.36%, rgba(151, 107, 255, 0.16) 100%)};
+diff --git a/work/src/views/login.vue b/work/src/views/login.vue
+index 026c6fb..bc80345 100644
+--- a/work/src/views/login.vue
++++ b/work/src/views/login.vue
+@@ -28,7 +28,11 @@
+     <router-link to="/reset" class="link02" :style="{ fontSize: '12px' }"
+       >忘记密码?</router-link
+     >
+-    <el-checkbox  class="box"    v-model="checked5" label="记住密码" ></el-checkbox>
++    <el-checkbox  
++    class="box"    
++    v-model="checked5" 
++    label="记住密码"  
++    :class="{ 'is-checked': checked5 }"></el-checkbox>
+ </template>
+ <script lang="ts" setup>
+ 
+@@ -50,6 +54,7 @@ const handleLogin = () => {
+   // 如果登录成功，跳转到 /QMathify 页面
+   router.push('/QMathify');
+ };
++
+ </script>
+ <style scoped>
+ html, body {
+@@ -62,7 +67,6 @@ html, body {
+ .bg {
+   left: 0;
+   margin: 0;
+-
+   top: 0;
+   position: absolute;
+   width: 100%; /* 宽度为容器宽度 */
+@@ -76,6 +80,13 @@ html, body {
+   top: 43%;
+   right: 41.3%;
+   opacity: 1;
++  border: 1px solid rgba(182, 182, 250, 1);
++  border-radius: 6px;
++}
++input2:focus {
++  outline: none; /* 去除默认的聚焦轮廓 */
++  border-color:rgba(182, 182, 250, 1);  /* 聚焦时的边框颜色，与初始颜色一致 */
++  border:none
+ }
+ .input3 {
+   position: absolute;
+@@ -101,6 +112,26 @@ html, body {
+   top: 55.6%;
+   right: 52.7%;
+   opacity: 1;
++  color: #333; /* 默认字体颜色 */
++
++}
++/* 选中状态下的样式 */
++.box.is-checked {
++  color: purple; /* 字体颜色变为紫色 */
++}
++
++/* 修改复选框的选中状态颜色 */
++.box .el-checkbox__inner {
++  border-color: #ccc; /* 默认边框颜色 */
++}
++
++.box.is-checked .el-checkbox__inner {
++  background-color: purple; /* 选中时背景颜色变为紫色 */
++  border-color: purple; /* 选中时边框颜色变为紫色 */
++}
++
++.box.is-checked .el-checkbox__inner::after {
++  border-color: white; /* 选中时对勾颜色变为白色 */
+ }
+ .botton02{
+   position: absolute;
+diff --git a/work/style.css b/work/style.css
+new file mode 100644
+index 0000000..d65c74f
+--- /dev/null
++++ b/work/style.css
+@@ -0,0 +1,13 @@
++/* 修改全局复选框样式 */
++.el-checkbox.is-checked .el-checkbox__inner {
++  background-color: purple;
++  border-color: purple;
++}
++
++.el-checkbox.is-checked .el-checkbox__inner::after {
++  border-color: white;
++}
++
++.el-checkbox.is-checked .el-checkbox__label {
++  color: purple;
++}
+\ No newline at end of file
+-- 
+2.39.5 (Apple Git-154)
+

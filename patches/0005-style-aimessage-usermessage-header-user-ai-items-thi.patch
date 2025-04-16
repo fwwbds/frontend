@@ -1,0 +1,435 @@
+From 0d8c9ee3ae17b699eb9b90b1c573538058e6d32a Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Wed, 5 Mar 2025 17:28:09 +0800
+Subject: [PATCH 05/20] =?UTF-8?q?style:=E5=B0=86aimessage=E5=92=8Cusermess?=
+ =?UTF-8?q?age=E4=B8=8E=E4=B8=8B=E9=9D=A2=E8=BE=93=E5=85=A5=E6=A1=86?=
+ =?UTF-8?q?=E5=90=8C=E9=BD=90=EF=BC=9B=E4=BF=AE=E6=94=B9=E4=B8=AA=E4=BA=BA?=
+ =?UTF-8?q?=E4=BF=A1=E6=81=AF=E7=9A=84header=E6=96=87=E5=AD=97=E5=B1=85?=
+ =?UTF-8?q?=E4=B8=AD=E4=BA=86=EF=BC=9B=E8=B0=83=E6=95=B4=E4=BA=86=E4=B8=AA?=
+ =?UTF-8?q?=E4=BA=BA=E4=BF=A1=E6=81=AF=E6=8C=89=E9=92=AE=E7=9A=84=E4=BD=8D?=
+ =?UTF-8?q?=E7=BD=AE=EF=BC=9B=E4=BF=AE=E6=94=B9=E4=BA=86=E8=BF=91=E6=9C=9F?=
+ =?UTF-8?q?=E5=AF=B9=E8=AF=9D=E7=9A=84=E6=A0=B7=E5=BC=8F=EF=BC=9B=E5=B0=86?=
+ =?UTF-8?q?user=E5=9B=BE=E7=89=87=E5=B1=85=E4=B8=AD=EF=BC=9B=E5=B0=86ai?=
+ =?UTF-8?q?=E5=9B=9E=E7=AD=94=E5=B1=85=E4=B8=AD=EF=BC=9B=E8=B0=83=E6=95=B4?=
+ =?UTF-8?q?=E4=BA=86=E8=BF=91=E6=9C=9F=E5=AF=B9=E8=AF=9Ditems=E7=9A=84?=
+ =?UTF-8?q?=E6=96=87=E5=AD=97=E9=9D=A0=E5=B7=A6=E7=9A=84=E8=B7=9D=E7=A6=BB?=
+ =?UTF-8?q?=EF=BC=9B=E9=97=AE=E9=A2=98=EF=BC=9Athink.html=E6=94=B9?=
+ =?UTF-8?q?=E5=90=8Edocker=E4=B8=8A=E5=8E=BB=E6=A0=B7=E5=BC=8F=E6=B2=A1?=
+ =?UTF-8?q?=E6=9C=89=E6=94=B9=E5=8F=98=EF=BC=8C=E4=BD=86=E6=98=AF=E5=9C=A8?=
+ =?UTF-8?q?=E6=8E=A7=E5=88=B6=E5=8F=B0=E6=94=B9=E5=8F=98=E6=98=AF=E4=BC=9A?=
+ =?UTF-8?q?=E5=8F=98=E7=9A=84=EF=BC=9B=E6=97=A0=E6=B3=95=E7=BB=99=E6=80=9D?=
+ =?UTF-8?q?=E8=80=83=E4=B8=AD=E7=9A=84ai=E6=A1=86=E5=8A=A0=E4=B8=8A?=
+ =?UTF-8?q?=E8=BE=B9=E6=A1=86=EF=BC=9B=E9=A1=B5=E9=9D=A2=E4=B8=AD=E7=9A=84?=
+ =?UTF-8?q?=E6=BB=9A=E8=BD=AE=E6=90=9E=E4=B8=8D=E6=8E=89=EF=BC=9B=E9=A1=B5?=
+ =?UTF-8?q?=E9=9D=A2=E5=8F=B3=E4=B8=8A=E8=A7=92=E7=9A=84=E5=B0=8F=E7=BB=84?=
+ =?UTF-8?q?=E4=BB=B6=E4=B8=8D=E7=9F=A5=E9=81=93=E5=9C=A8=E5=BC=80=E5=8F=91?=
+ =?UTF-8?q?=E5=93=AA=E4=B8=80=E6=AD=A5=E7=9A=84=E6=97=B6=E5=80=99=E4=B8=8D?=
+ =?UTF-8?q?=E8=A7=81=E4=BA=86?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/views/QMathify.vue | 19 +++++---
+ frontend/src/views/ai.vue       | 86 ++++++++++++++++++---------------
+ frontend/src/views/login.vue    | 16 +++---
+ think.html                      |  4 +-
+ 4 files changed, 73 insertions(+), 52 deletions(-)
+
+diff --git a/frontend/src/views/QMathify.vue b/frontend/src/views/QMathify.vue
+index 0728a7e..98514a1 100644
+--- a/frontend/src/views/QMathify.vue
++++ b/frontend/src/views/QMathify.vue
+@@ -1,4 +1,4 @@
+-<template>
++ <template>
+   <div class="container">
+     <!-- 边栏 -->
+     <div
+@@ -109,6 +109,7 @@
+           title="修改个人信息"
+           width="30%"
+           :close-on-click-modal="false"
++          class="el-dialog"
+         >
+           <el-form :model="userForm" ref="userFormRef" label-width="100px" :rules="userFormRules">
+             <el-form-item label="用户名" prop="username">
+@@ -588,7 +589,7 @@ body, html {
+   align-items: center;
+   justify-content: center;
+   padding: 0px;
+-  overflow-y: auto;
++  overflow-y: hidden;
+   transition: margin-left 0.3s ease;
+   max-width: calc(100vw - 0px);
+ }
+@@ -756,7 +757,7 @@ body, html {
+ 
+ .bo08 {
+   left: 30px;
+-  bottom: 20px; /* 改为距离底部定位，确保在小屏幕上也可见 */
++  bottom: 40px; /* 改为距离底部定位，确保在小屏幕上也可见 */
+ }
+ 
+ /* 按钮内图标 */
+@@ -786,11 +787,13 @@ body, html {
+ .arrow-icon.rotate {
+   transform: rotate(180deg);
+ }
+-
++::v-deep .el-dialog .el-dialog__header {
++  text-align: center; /* 标题文本居中 */
++}
+ /* 个人信息悬浮卡片 */
+ .popover {
+   position: absolute;
+-  bottom: 80px; /* 改为相对底部定位，与bo08按钮位置相适应 */
++  bottom: 100px; /* 改为相对底部定位，与bo08按钮位置相适应 */
+   left: 40px;
+   width: 140px;
+   height: 180px;
+@@ -839,7 +842,7 @@ body, html {
+   height: 200px;
+   opacity: 1;
+   border-radius: 10px;
+-  background: rgba(249, 246, 255, 1);
++  background: transparent;
+   left: 29px;
+ }
+ 
+@@ -855,6 +858,7 @@ body, html {
+   justify-content: space-between;
+   padding: 8px 4px;
+   color: rgba(111, 58, 246, 1);
++  background-color: rgba(249, 246, 255, 1);
+   font-size: 14px;
+   cursor: pointer;
+   border-radius: 4px;
+@@ -864,7 +868,7 @@ body, html {
+ }
+ 
+ .dialog-active {
+-  background-color: rgba(226, 214, 255, 1);
++  background-color: rgba(237, 230, 255, 0.81);
+   font-weight: bold;
+ }
+ 
+@@ -873,6 +877,7 @@ body, html {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   max-width: 70%;
++  margin: 3px;
+ }
+ 
+ .dialog-item:hover {
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index 2006a2e..f870ca1 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -23,7 +23,7 @@
+           src="@/imgs/user.png"
+           alt="User Avatar"
+         />
+-        <!-- 显示深度思考内容 -->
++        <!-- 显示深度思考内容 --> 
+         <div v-if="message.thinkingContent" class="thinking-content">
+           {{ message.thinkingContent }}
+         </div>
+@@ -206,7 +206,7 @@
+           </el-icon>
+         </template>
+       </el-popover>
+-      <el-tooltip content="新建对话" placement="top" effect="light">
++      <el-tooltip content="新建对话"  placement="top"   effect="light" class="newbuild">
+       <el-icon @click="handleNewDialog" class="dia">
+         <ChatDotRound />
+       </el-icon>
+@@ -1214,6 +1214,7 @@ defineExpose({
+   font-size: 16px;
+   line-height: 1.5;
+   word-wrap: break-word;
++  background: transparent;
+ }
+ 
+ .markdown-body table {
+@@ -1225,13 +1226,13 @@ defineExpose({
+ 
+ .markdown-body table th,
+ .markdown-body table td {
+-  border: 1px solid #dfe2e5;
++  border: 1px solid transparent;
+   padding: 6px 13px;
+ }
+ 
+ .markdown-body table tr {
+   background-color: #fff;
+-  border-top: 1px solid #c6cbd1;
++  border-top: 1px solid transparent;
+ }
+ 
+ .markdown-body table tr:nth-child(2n) {
+@@ -1279,33 +1280,40 @@ defineExpose({
+   );
+   top: 100px;
+   bottom: 0%;
++  overflow-y: hidden;
+ }
+ /* 深度思考内容样式 */
+ .thinking-content {
+   font-style: italic;
+-  color: #666;
++  color: transparent;
+   margin-bottom: 8px;
++  background: transparent;
++
+ }
+ 
+ /* 思考中状态样式 */
+ .thinking-message {
+-  background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+-  margin-left: 85px; /* 与 ai-message 保持一致 */
++background-color: #ffffff; 
++ margin-left: 95px; /* 与 ai-message 保持一致 */
+   width: fit-content;
+   position: relative; /* 与 ai-message 保持一致 */
+   left: 7%;
+-  border-radius: 15px;
++  border-radius: 13px;
+   padding: 12px;
+   max-width: 70%;
++  border: 1px solid 
++  linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191, 242, 0.95) 33.49%, rgba(162, 169, 252, 0.89) 74.36%, rgba(151, 107, 255, 0.8) 100%);
+ }
+ 
+-
+ .thinking {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+-  color: #666;
++  color: transparent;
++  border: 1px solid 
++  linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191, 242, 0.95) 33.49%, rgba(162, 169, 252, 0.89) 74.36%, rgba(151, 107, 255, 0.8) 100%);
++
+ }
+ 
+ .loader {
+@@ -1333,6 +1341,8 @@ defineExpose({
+   background:transparent; /* 半透明背景 */
+   padding: 5px 10px; /* 内边距 */
+   border-radius: 8px; /* 圆角 */
++  position: relative;
++  right: -85%; 
+ }
+ 
+ /* 图标样式 */
+@@ -1345,21 +1355,14 @@ defineExpose({
+   font-size: 20px;
+  
+ }
+-
++.stop-responding-icon:hover,
++.close-icon:hover ,
++.check-icon:hover,
+ .copy-icon:hover {
+-  color: #409eff; /* 复制图标悬停颜色 */
+-}
+-
+-.check-icon:hover {
+-  color: #2bde14; /* 喜欢图标悬停颜色 */
++  color:rgba(144, 107, 232, 1); /* 复制图标悬停颜色 */
+ }
+ 
+-.close-icon:hover {
+-  color: #f70606; /* 不喜欢图标悬停颜色 */}
+ 
+-.stop-responding-icon:hover {
+-  color: #999090; /* 停止回答图标悬停颜色 */
+-}
+ .four{width: 180px;
+   height: 57px;
+   position: absolute;
+@@ -1375,7 +1378,7 @@ defineExpose({
+ /* 消息显示区域样式 */
+ .chat-messages {
+   flex: 1;
+-  padding: 10px; /* 只给左侧添加内边距 */
++  padding: 10px; 
+   overflow-y: auto;
+   overflow-x: hidden; /* 新增这一行，禁用横向滚动 */
+   height: calc(90% - 160px); /* 调整高度，确保不覆盖输入框区域 */
+@@ -1401,7 +1404,6 @@ defineExpose({
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
+-  margin-top: 10px;
+   width: 100%; /* 确保占满消息框宽度 */
+   justify-content: center; /* 水平居中 */
+   align-items: center; /* 垂直居中 */
+@@ -1435,7 +1437,7 @@ defineExpose({
+   background: rgba(255, 255, 255, 1);
+   border-radius: 15px;
+   align-self: flex-end;
+-  margin-right: 99px;
++  margin-right: 103px;
+   margin-left: auto; /* 左侧外边距自动，将消息推到最右侧 */
+   width: fit-content;
+   position: relative;
+@@ -1470,9 +1472,12 @@ defineExpose({
+   background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+   margin-left: 95px; /* 为右侧头像留出空间 */
+-  width: fit-content;
++  max-width: 77%; /* 设置消息的最大宽度 */
+   margin-bottom: 35px; /* 添加透明 margin，用于放置 action-icons */
+   position: relative; /* 为 action-icons 的定位提供参考 */
++  padding-top: 0%;
++  padding-bottom: 0%;
++  padding-left: 20px;
+ }
+ 
+ /* 透明 margin 容器 */
+@@ -1493,7 +1498,7 @@ defineExpose({
+   left: -2px;
+   right: -2px;
+   bottom: -2px;
+-  
++  padding: 5px;
+   background: linear-gradient(
+     90deg,
+     rgba(170, 239, 242, 1) 0.92%,
+@@ -1517,16 +1522,19 @@ defineExpose({
+   flex-direction: column;
+   align-items: center;
+ }
+-
++/* 全局修改 el-tooltip 内容的字体大小 */
++.el-tooltip__popper {
++  font-size: 16px; /* 根据需要调整字体大小 */
++}
+ /* 文件预览图片样式 */
+ .file-image {
+   max-width: 250px;
+   max-height: 180px;
+   border-radius: 8px;
++  color: rgba(144, 107, 232, 1);
+   cursor: pointer;
+   transition: transform 0.3s ease;
+   object-fit: contain; /* 保持图片比例 */
+-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+ }
+ 
+ .file-image:hover {
+@@ -1539,13 +1547,14 @@ defineExpose({
+   align-items: center;
+   gap: 5px;
+   padding: 5px 10px;
+-  background-color: #f0f2f5;
++  background-color: transparent;
++  color: rgba(144, 107, 232, 1);
+   border-radius: 4px;
+   cursor: pointer;
+ }
+ 
+ .file-link a {
+-  color: #409eff;
++  color:rgba(144, 107, 232, 1);
+   text-decoration: none;
+ }
+ 
+@@ -1575,16 +1584,17 @@ top: 0; /* 将 top 设置为 0，使头像顶部与消息框顶部对齐 */
+ }
+ /* 消息框外参考来源样式 */
+ .references-outside-container {
+-  margin-top: -5px; /* 减少负边距，降低与消息的贴合度 */
+-  margin-bottom: 25px; /* 增加底部外边距，给按钮留出空间 */
+-  margin-left: 125px; /* 向右移动，给操作按钮留出空间 */
++  margin-top: -34px; /* 减少负边距，降低与消息的贴合度 */
++  margin-left: 93px; /* 向右移动，给操作按钮留出空间 */
+   padding: 4px 8px;
+-  border-left: 3px solid #409EFF;
+-  background-color: rgba(255, 255, 255, 0.7);
+-  border-radius: 6px; /* 四周都有圆角 */
++  border: 1px solid rgb(196, 182, 229);
++  background-color: transparent;
++  border-radius: 13px; /* 四周都有圆角 */
+   max-width: 70%; /* 稍微减小宽度 */
+   position: relative;
+   z-index: 1;
++  position: relative;
++  width: 600px;
+ }
+ 
+ .references-title {
+@@ -1598,7 +1608,7 @@ top: 0; /* 将 top 设置为 0，使头像顶部与消息框顶部对齐 */
+ .references-title .el-icon {
+   margin-right: 4px;
+   font-size: 14px;
+-  color: #409EFF;
++  color:rgba(144, 107, 232, 1);
+ }
+ 
+ .references-list {
+@@ -1623,7 +1633,7 @@ top: 0; /* 将 top 设置为 0，使头像顶部与消息框顶部对齐 */
+ }
+ 
+ .reference-chip {
+-  background-color: #409EFF;
++  background-color: rgba(144, 107, 232, 1);
+   color: white;
+   font-size: 10px;
+   padding: 0px 5px;
+diff --git a/frontend/src/views/login.vue b/frontend/src/views/login.vue
+index 5b2267d..357e59a 100644
+--- a/frontend/src/views/login.vue
++++ b/frontend/src/views/login.vue
+@@ -187,24 +187,28 @@ input2:focus {
+ }
+ .box{ position: absolute;
+   top: 55.6%;
+-  right: 52.7%;
++  right: 52.5%;
+   opacity: 1;
+-  color: #333; /* 默认字体颜色 */
++  color: rgba(153, 112, 255, 0.81); /* 默认字体颜色 */
++
++}
++.box:hover {
++  color: rgba(153, 112, 255, 0.81); /* 字体颜色变为紫色 */
+ 
+ }
+ /* 选中状态下的样式 */
+ .box.is-checked {
+-  color: purple; /* 字体颜色变为紫色 */
++  color: rgba(153, 112, 255, 0.81); /* 字体颜色变为紫色 */
+ }
+ 
+ /* 修改复选框的选中状态颜色 */
+ .box .el-checkbox__inner {
+-  border-color: #ccc; /* 默认边框颜色 */
++  border-color: rgba(153, 112, 255, 0.81); /* 默认边框颜色 */
+ }
+ 
+ .box.is-checked .el-checkbox__inner {
+-  background-color: purple; /* 选中时背景颜色变为紫色 */
+-  border-color: purple; /* 选中时边框颜色变为紫色 */
++  background-color:  rgba(153, 112, 255, 0.81); /* 选中时背景颜色变为紫色 */
++  border-color: rgba(153, 112, 255, 0.81); /* 选中时边框颜色变为紫色 */
+ }
+ 
+ .box.is-checked .el-checkbox__inner::after {
+diff --git a/think.html b/think.html
+index 3bb81e3..88ec98c 100644
+--- a/think.html
++++ b/think.html
+@@ -1 +1,3 @@
+-<details style=\"color:gray;background-color: #f8f8f8;padding: 8px;border-radius: 4px;\" open> <summary> Thinking... </summary>
+\ No newline at end of file
++<details style="color: grey; background-color:rgb(255, 255, 255); padding-right: 5px; border-radius: 4px;" open>
++  <summary>Thinking...</summary>
++</details>
+\ No newline at end of file
+-- 
+2.39.5 (Apple Git-154)
+

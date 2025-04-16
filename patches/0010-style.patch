@@ -1,0 +1,740 @@
+From d88655a1b609afe7509b2ba79e5085daefba22ea Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Sun, 9 Mar 2025 15:34:14 +0800
+Subject: [PATCH 10/20] =?UTF-8?q?style:=E7=BE=8E=E5=8C=96=E7=95=8C?=
+ =?UTF-8?q?=E9=9D=A2=E6=A0=B7=E5=BC=8F=E5=90=8C=E6=97=B6=E4=BF=9D=E7=95=99?=
+ =?UTF-8?q?=E5=B0=8F=E7=AA=97=E5=8F=AF=E6=B5=8F=E8=A7=88=E5=8A=9F=E8=83=BD?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/imgs/lately.png    | Bin 690 -> 1173 bytes
+ frontend/src/imgs/person.png    | Bin 978 -> 3812 bytes
+ frontend/src/imgs/search.png    | Bin 740 -> 2128 bytes
+ frontend/src/views/QMathify.vue |  48 +++++++++++----
+ frontend/src/views/ai.vue       | 104 ++++++++++++++++++++++----------
+ frontend/src/views/home.vue     |  24 ++++----
+ frontend/src/views/login.vue    |   8 +--
+ frontend/src/views/register.vue |   3 +
+ frontend/src/views/reset.vue    |   2 +
+ 9 files changed, 125 insertions(+), 64 deletions(-)
+
+diff --git a/frontend/src/imgs/lately.png b/frontend/src/imgs/lately.png
+index 480e975f22629483b50fa8ff49b3341d7faa1561..d0e42cda1537483540fef66db5013778d5322086 100644
+GIT binary patch
+literal 1173
+zcmeAS@N?(olHy`uVBq!ia0vp^6(G#P1|%(0%q{^b#^NA%Cx&(BWL^R}EX7WqAsj$Z
+z!;#Vf<l1|>IEGZrd3$$b>8${fV;|qYTC&k|qM$^hQJ`>jQw57gP_uf+%mW6Eb9v`*
+zJ~BC?>dJP3L$7D9mpQAajIfIBk!t>zuYQMGx=U#O>1XhK&)Luc11}yd$$9wXZE(DB
+z4bvAE2m4cEkxNe~M0n{v-@JRV&b2IV=Jk(Xg&VBNpZTOnO1mg%i-Yi9md9-$e#aX2
+z9Xb%ela%Z7{e|ZmQ&D!YcY7JXCa+y#VKDQ+fn$an3fI5-_pqigri$lo>Ekbf{CjyB
+zz9)Q^xM9I&*4NmZobZ?wW>){IHIFN|CDpN=m|ZWX>-w?s+uw?3Uu<3;4w%@}Sik)G
+z3tNTl>o$L{$@RYMdb@dky7sGr$E>Ukja+)_FJCSCRC(!YtI|#;v*&&%r5Vy^y|{kz
+z_VT)(+|1^T#@IA%ttY{eb3A_;1bAFMv**;!YP)Sqb(QMacAs5w+SOh}@A8wqw|9No
+zeBt&bu|JbiV~!j+*?W1h%Kxw(K2N)E?|NePW!o0lEe9qgb17)o@|0Lb?}-!Boqtz0
+zm1%C+8m-AO=bZDsqg}Xdc3YoPnI6nw{@Qt#__U@PljtvcTJzH{?iM&|+0ZK<|DJJY
+z+0Os1>w%6sB-s?Y`LV_B4KcxS_H`$X^j^)>soM7aPvY_4d4>FWtH1gdX`R1gSnzx5
+zyq(Dj!d>Uj7;fPGyNH!1M}}GY_<>^|Eq*wZ*-j4qzGG(fhC-MqFiOyw;lE?HJl=V6
+zZ~Cj;`JNu@oZcT~7LDn<d^L2gz1;rlJ$LLTPl$1?>Yny+-NfTBUvV{guF!qe)iM9z
+zyNTEPCnrAOebut*z|8+wL*3sw#jw^LiwgIAuu8J3R20N#@Mw@1yuNkrX`Vg5{`KFP
+zy5sf9yr0J-vbA~sB(cqFtKI$1EoLu!f%1jRGcE@;pDDPld84Y&_x{_NU#s@L=<T|G
+zyGOEC@yg%*tUtx}_AR*X$Nx=a`Zn&e8C!y%c=bewUwE8gKT)z={-A%!8}XTi-$kGL
+zgzY`i^V)e!@YLO|X)*DO;`qzD&+M>s-Txq7D$+1HW<Q_NqGX`aX75V3iac5T^ZVmV
+z(lai;<1^d+;kyRE@b{EFqrQ_y>w-Twf8S>wYRX@}?t6FjhWK;I7m|9-lOHIYa$k2u
+zCjZ!hgE{>&zi(~ddf?_l^9M_(Pi#J_D>)(YjrX)W>*_t1dZt+Th1dU=O%t8{{ajs|
+z)`llDvYLcL{w(sUalAjt`+Y(FD_yHU7Mt8o#=I-If6LIz_tEpsre|Em*uJIgKk;zg
+z0>cgNUzOVT+MGHt@2!~SpRM_9d<S%k<}~v1$aqvfsaPE5Bdcb5vgV?+<Ny8lbT4F{
+z3DmyR%shJuf3yAmS+iEu6#o2}rGx;Bj{RV*d3L@e{ZzvTV9~<h>FVdQ&MBb@039DT
+ATL1t6
+
+literal 690
+zcmeAS@N?(olHy`uVBq!ia0vp^HXzKw1|+Ti+$;i8jKx9jP7LeL$-HD>V9N1yaSX{|
+zeLK@P=&%7#tEJTMF9tFTUKVUFV(vRMYlFt(gwhm6OTVv7rLWGFJi7n<yC+}g>C3_Y
+zzi>dHiAdw+ho4JjmVMq^uc&A%w{PC@#9doHsIE`UV69mnIZv30y^W(Scmnr{7Kc9v
+zS&R2Sl)57yW6(2$`@ml+aPLbw+Sy$yob)Wxq^RfW{A;uMHJ2p!PRz~zbFwmTXIMbr
+z;>Al+&E~FN@9sNmvA7@O&c2I(cj;Z<`sK@yqrapMvY4bF7gAe0%g}qbL)Q9_>d$wk
+z?pUz<Qm$-4eZj%oJMKgRX~*loa%C^w&zy1ZXPHK9x3;IFmN@%==jRqa`q}mQ+C^Jf
+zVkSO(dVgOO)3TiE*=uGku3E7D(y_N$-sK5><)x2Sv2Xe$A79-zw;^18UDblk7p|SP
+zJ?z)AT3DUEDqr8^SY&$MG<LR?g?}oIe@V1!{(5>@^xOK9m%YcDuel$Z#I``6&qs4o
+zq~R%<yWMSO3192wH8<PXPkVa!OW3W{qUBlhmsaloWg^mD`8G&_wZGx~rrK^Jo*8E{
+zEn=T5WK2kF)XliJN>1l&rqqoly@T(VW-QF~)<5`;ZH7aZ{n`ANQ2}z_PaOEXSd-Pk
+ze)Zj5rMCm3tGpsUKTF?d+CO>2%g~e=@pfVHODnZLUtU-;wb+dH%A=DDrgqNSmR;a+
+zyus8|<M%Ch;nKfF%Eq^Jt^_^NeR20tk%7vWcZrg--ra9+Onp)JR`3NF-pFRz$5<AX
+WG-cJ|lU2Y($l&Sf=d#Wzp$P!*bV)7%
+
+diff --git a/frontend/src/imgs/person.png b/frontend/src/imgs/person.png
+index 4066b647154cce587c6df6f3d798eab8051151d3..ad178701747011c2c8984ece5542035427802311 100644
+GIT binary patch
+literal 3812
+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
+a3jYKDK1W3>;Jk(a0000<MNUMnLSTYNluSAR
+
+literal 978
+zcmV;@11<cCP)<h;3K|Lk000e1NJLTq002Ay002A)1^@s6I{evk00001b5ch_0Itp)
+z=>Px&j7da6RA>e5Sy^u5Fbwt4`kx%BDds41lgv$ej;0?e=!n8IO^MW658wiU5-ofS
+zDS7F#oPVbSrvohxykEcH@Y53OP-|J#?ee&X&+~S9WIrF*uRruTl#m=55=n%;0u2N1
+zhZb*$T(is>WMlZZRRxC<PGl09x|6V6MQCGS!mj*(RXB-JgjR{vgi~M2%o-z87_NSe
+z$Vm5R<84fk;3I`@fR&67$No*REPfgX2{e5lvEmt-K9X40Ee}oN$YV|Iu)s~MUW+BS
+zE>(w@o>mt_rO-_XUt`xBk`|(}`kH*iU@c-X4v1yZYuhV+OPmGC)jFq%4Sl<ZiWaiX
+zT#;xk5xK{-IG#Bkvym^|n|s!5<}^FDEL0(JzvlL-6ulu*@WYF@3yE%NS=lX6I)n(*
+zam37-qd>(j#4O^CPQ_@2Ul80Q0OuEx6}+G_O_SqNUep4N8H<69FFkNESstS|k7T_B
+zdw?;+p7|;7isRH|MgvD+k8#DB(Lh5VR|>_<OnVI#O*W!ItY<E3XpW1djmuYuxq`7;
+zNW3Q6Gsn=k8^&tc4ayGAil+?aTJ5(K6v(V^BpHj_5ttgM*oURn3!H*0qBr-^BzP2_
+zR#n3V6F@Li-aij{_l${i3(iiA79H~oR#a98I@7bnX4~QxOvHL0AhX319tt+`S#Xc*
+zp$Rr<Lg{76f6*R9xHW98;AahRI0xiuyt@oRC23>p>0Nt{aBSClJh-waoNxn#Y66=2
+zT*Lz(+`q1MDA>D?5ro|h?V4#C_kP6sXq1b5>4C*b^X`E}R=fNMkz#8`Qa|(5S}@Fh
+zaNqz4lmmd^l!-1vnFF`Th4E6Ha4vo47-mZWIe4n9u?mWUo9Oxk6qDf;w}2ic)0-27
+z;4{QB&EcFN%kdJ0VriVo%xaMnmNxcRb3t*ONv*FMpkkr6-MVr@=P+<;A5~~5Ua~3e
+z%hzAzSR70)5RS$}fio`W&-g8jkDRc?n|Npd-GWyz(~{6V0aA2#fCAxC@Gvg7%i|OG
+z%P^pfcxn9Y`uLZb-ahmp4vCqfrC8$9uE-HV0#nvU3ZIRqS|IlkmwHd(0fS#i^goSN
+zWk#pwK4-i}d`cw8H0aD5P6-d0-#r(TFj^DVS#L=Ek9zYYzmPycEI}^!!ghVlL&nV3
+zP>lx}^oU=xOalKak(N6wh+Av^Iet2DI*@hX2f9k|B#3>5GXMYp07*qoM6N<$f+#b<
+A7XSbN
+
+diff --git a/frontend/src/imgs/search.png b/frontend/src/imgs/search.png
+index de8c72f04fb8ee44c50ce20ab349f11557f0151d..08a06e066455402f690e4e605a2a68d569b4e82e 100644
+GIT binary patch
+literal 2128
+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
+GLSTYCO!le(
+
+literal 740
+zcmV<A0vr8_P)<h;3K|Lk000e1NJLTq002Ay002A)1^@s6I{evk00001b5ch_0Itp)
+z=>Px%o=HSORA>e5nPHOKAPj|lwEo{5soUwz(rY#Sv7P6&G7kdcLE_5mvNIVBJS2TW
+z*iLp?=HJY~%)rdR%)rdRaWnAa^84pmKHo2YzPXu(;Qj6Pai)(8{a*vSnQ`kRev&uN
+z<&cH(Ol|}+hb(m6#ZSr{vM`>>jX>s*g|55!Ntr_y#xuDQ$Q-iJbr(M=bI8JFS)gsb
+zkwu})9IB9YjkmIE1T@Eo>uL<La9NfH==yq!3aC2UaYE*hg*yiO3ez%&EPO>&JKB&r
+zWZ{m%zQVN3Aq!s-)y_8F-)`6DJ>*QlQa*ctkwN87?P;W-_7thWtn+|cbFky_VBTJC
+zwgg`>)>`M;Oy*$7f@~SJKt@}|zQs~$SNH^=x6=dMYg^SLfi=L=IP|LR2VFEU`v)9g
+z@=Dk=$^By(njPkj9<sB;0N)5(5SZs39||WDm;qX_1~;<C)~;<NFzs&FH!Rxau60KM
+zwtoP01<t#i?4Htz+TmyXGBE5YoOjJLj_*bWF4(Vne$5T9{W8D^-p*n#FrEDmOM=`!
+zl`YvzSvVRvt?N4bYZQ^dd=}MR9$Ay5I}#XySXrZOK{G7$-RBn$qk(e>lxq%xenB_(
+zqhT~Kl3s(Mvue-l&-QZr#gzeFQnp^_2*6Zn$rpqSDk*u6d(%BsMv<Er;<_mMhl7Y=
+ziwW@SZ&av&Qf#EVS3pUZgug9X7c|Am%HwqM(sv_c;Jk$LJ~HhZ+a{eeX*;2xImKai
+zA8<FW2N((P{0pE4JoZTOoNrH@hU9Y^&<M8n;gTsCtbx|-VZ3DLFk=kFLGd`3|KWic
+zqIAt*nCJefKn=bIXs};?M-9~48t~~rYrv-kHDI*%*281-dS+l|U}j)uU}oU?4EzO!
+Wi83$BgYSR<0000<MNUMnLSTZ(*JkPf
+
+diff --git a/frontend/src/views/QMathify.vue b/frontend/src/views/QMathify.vue
+index 1ddfc89..5f750c9 100644
+--- a/frontend/src/views/QMathify.vue
++++ b/frontend/src/views/QMathify.vue
+@@ -934,10 +934,10 @@ body.sidebar-open-mobile {
+ /* 修复menu-icon位置，避免与logo重叠 */
+ .collapsed-content .menu-icon {
+   position: relative;
+-  top: auto;
+-  right: auto;
++  top: 0%;
++  right: -27%;
+   margin-bottom: 0.5rem;
+-  font-size: 1.5rem;
++  font-size: 1.3rem;
+ }
+ 
+ /* 优化按钮垂直分布 */
+@@ -1003,19 +1003,23 @@ body.sidebar-open-mobile {
+ }
+ 
+ .math {
+-  width: 80%;
++  width: 106%;
+   max-width: 200px;
+   height: auto;
++  top: 4%;
++  position: relative;
+   margin: 0 auto 1.5rem;
+   display: block;
+ }
+ 
+ .line {
+-  width: 80%;
++  width: 93%;
+   max-width: 190px;
+   height: auto;
+   margin: 1rem auto;
+   display: block;
++  left: 1%;
++    position: relative;
+ }
+ 
+ /* 按钮基础样式 */
+@@ -1059,16 +1063,28 @@ body.sidebar-open-mobile {
+ 
+ /* 展开侧栏按钮样式 */
+ .bo05, .bo06, .bo07, .bo08 {
+-  height: 3rem;
++  height: 3.2rem;
+   color: rgba(111, 58, 246, 1);
+   justify-content: flex-start;
+   padding-left: 1rem;
+   padding-right: 1rem;
+   font-weight: 550;
++  font-size: 14px;
+   display: flex;
+   align-items: center;
++  width: 80%;
++  left: 1%;
++}
++.bo05{
++  position: relative;
++    top: 1.3%;
++    width: 80%;
++    left: 1%;
++}
++.bo06{
++  position: relative;
++  top:-1%;
+ }
+-
+ /* 按钮内图标 */
+ .button-content {
+   display: flex;
+@@ -1082,6 +1098,7 @@ body.sidebar-open-mobile {
+   width: 1.25rem;
+   height: 1.25rem;
+   margin-right: 0.75rem;
++  margin-top:0.16rem ;
+ }
+ 
+ /* 箭头图标固定位置 */
+@@ -1089,6 +1106,7 @@ body.sidebar-open-mobile {
+   transition: transform 0.8s ease;
+   margin-left: auto;
+   margin-right: auto;
++  right: -31%;
+ }
+ 
+ .arrow-icon.rotate {
+@@ -1109,7 +1127,8 @@ body.sidebar-open-mobile {
+   bottom: 100%;  /* 定位到按钮上方 */
+   left: 50%;     /* 水平居中对齐 */
+   transform: translateX(-50%);  /* 水平居中对齐 */
+-  width: 210px;
++  width: 70%;
++  height: 363%;
+   background: rgba(255, 255, 255, 1);
+   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+   border: 1px solid #eee;
+@@ -1140,7 +1159,7 @@ body.sidebar-open-mobile {
+ 
+ .popover-item span {
+   color: #333;
+-  font-size: 0.9rem;
++  font-size: 0.8rem;
+ }
+ 
+ /* 确保近期对话列表有统一的缩进 */
+@@ -1153,7 +1172,9 @@ body.sidebar-open-mobile {
+   max-height: 12.5rem;
+   overflow-y: auto;
+   overflow-x: hidden;
+-  width: 100%;
++  width: 85%;
++  left: 7%;
++  position: relative;
+   border-radius: 10px;
+   background: transparent;
+ }
+@@ -1183,10 +1204,11 @@ body.sidebar-open-mobile {
+   cursor: pointer;
+   border-radius: 6px;
+   margin-bottom: 0.25rem;
+-  width: 100%;
+-  box-sizing: border-box;
++  width: 94%;
++    left: 4%;
++    box-sizing: border-box;
++    position: relative;
+ }
+-
+ .dialog-active {
+   background-color: rgba(237, 230, 255, 0.81);
+   font-weight: bold;
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index 97a794d..0209384 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -4,13 +4,11 @@
+     <div class="chat-messages" ref="chatMessagesRef">
+       <!-- 循环渲染消息列表 -->
+       <template v-for="(message, index) in messageList" :key="index">
+-        <div
+-          :class="['message', message.type === 'user' ? 'user-message' : message.type === 'thinking' ? 'thinking-message' : 'ai-message']"
+-        >
+-        <!-- AI 消息显示头像 -->
++    <div
++      :class="['message', message.type === 'user' ? 'user-message' : message.type === 'thinking' ? 'thinking-message' : (isGreeting(message.content) ? 'ai-message-greeting' : 'ai-message')]"
++    ><!-- AI 消息显示头像 -->
+         <img
+-          v-if="message.type === 'ai' || message.type === 'thinking'"
+-          class="aitou"
++        v-if="message.type === 'ai' || message.type === 'thinking' || isGreeting(message.content)"          class="aitou"
+           src="@/imgs/bot.png"
+           alt="AI Avatar"
+         />
+@@ -27,9 +25,9 @@
+       
+         <!-- 显示消息内容 - 修改AI消息为Markdown渲染 -->
+         <div v-if="message.content && !message.isImageOnly">
+-          <div v-if="message.type === 'ai'" class="markdown-body" v-html="renderMarkdown(message.content)"></div>
+-          <div v-else>{{ message.content }}</div>
+-        </div>
++            <div v-if="message.type === 'ai' || isGreeting(message.content)" class="markdown-body" v-html="renderMarkdown(message.content)"></div>
++            <div v-else>{{ message.content }}</div>
++          </div>
+          <!-- 思考中状态 -->
+         <div v-if="message.type === 'thinking'" class="thinking">
+           <span></span>
+@@ -111,9 +109,10 @@
+             {{ message.fileName || '查看文件' }}
+           </a>
+         </div>
++     
+         <div 
+           v-if="message.type === 'ai' && message.sources && message.sources.length > 0" 
+-          class="references-outside-container"
++          class="references-outside-container"  
+         >
+           <div class="references-title">
+             <el-icon><InfoFilled /></el-icon>
+@@ -154,6 +153,7 @@
+             </el-tooltip>
+           </div>
+         </div>
++        
+       </div>
+       </template>
+     </div>
+@@ -293,7 +293,11 @@ const renderMarkdown = (text) => {
+     return text; // 如果渲染失败，返回原始文本
+   }
+ };
+-
++// 判断是否为问候语
++const isGreeting = (content) => {
++  const greetingText = '亲爱的用户,你好!我是你的智能数学助手QMathify。我可以帮助你解答数学问题,包括但不限于：代数问题求解，概率统计计算 数学知识归纳....请告诉我你的问题，我会为你解答。';
++  return content === greetingText;
++};
+ // 添加更新对话标题的事件
+ const emit = defineEmits(['add-to-recent-dialogs', 'update-dialog-title']);
+ const chatMessagesRef = ref(null);
+@@ -336,11 +340,7 @@ const isValidUUID = (str) => {
+   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+   return typeof str === 'string' && uuidRegex.test(str);
+ };
+-// 判断是否为问候语
+-const isGreeting = (content) => {
+-  const greetingText = '亲爱的用户,你好!我是你的智能数学助手QMathify。我可以帮助你解答数学问题,包括但不限于：代数问题求解，概率统计计算 数学知识归纳....请告诉我你的问题，我会为你解答。';
+-  return content === greetingText;
+-};
++
+ const copyMessage = (text) => {
+   navigator.clipboard.writeText(text)
+     .then(() => {
+@@ -1340,8 +1340,9 @@ body {
+ /* 响应式聊天容器 */
+ .chat-container {
+   position: relative;
+-  width: 90%;
+-  height: calc(100vh - 50px);
++  width: 80%;
++  top: 4%;
++  height: calc(100vh - 80px);
+   min-height: 500px;
+   margin: 0 auto;
+   display: flex;
+@@ -1390,6 +1391,7 @@ body {
+   margin-left: auto;
+   margin-right: 3.5rem;
+   padding: 0.5rem;
++  right: 2.6%;
+   position: relative;
+   width: fit-content;
+ }
+@@ -1411,15 +1413,46 @@ body {
+   border-radius: 17px;
+   z-index: -1;
+ }
++/* AI 问候语样式 */
++.ai-message-greeting {
++  background: rgba(255, 255, 255, 1);
++  align-self: flex-start;
++  margin-left: 3.5rem;
++  max-width: 83.9%;
++  margin-bottom: 30px;
++  position: relative;
++  left: 2.6%;
++  padding: 0.5rem;
++  width: auto; /* 改为auto，而不是fit-content */
++  box-sizing: border-box;
++}
+ 
++.ai-message-greeting::before {
++  content: '';
++  position: absolute;
++  top: -2px;
++  left: -2px;
++  right: -2px;
++  bottom: -2px;
++  background: linear-gradient(
++    90deg,
++    rgba(170, 239, 242, 1) 0.92%,
++    rgba(136, 191, 242, 0.95) 33.49%,
++    rgba(162, 169, 252, 0.89) 74.36%,
++    rgba(113, 61, 235, 0.8) 100%
++  );
++  border-radius: 17px;
++  z-index: -1;
++}
+ /* AI 消息样式 */
+ .ai-message {
+   background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+   margin-left: 3.5rem;
+-  max-width: 85%;
+-  margin-bottom: 30px;
++  max-width: 83.7%;
++  margin-bottom: 97px;
+   position: relative;
++  left: 2.6%;
+   padding: 0.5rem;
+   width: auto; /* 改为auto，而不是fit-content */
+   box-sizing: border-box;
+@@ -1442,7 +1475,9 @@ body {
+   border-radius: 17px;
+   z-index: -1;
+ }
+-
++.ai-message-greeting {
++  margin-bottom: 0;
++}
+ /* 思考中状态的旋转动画 */
+ .thinking {
+   display: flex;
+@@ -1470,14 +1505,17 @@ body {
+ 
+ /* 思考中状态样式 */
+ .thinking-message {
+-  background-color: #ffffff;
+   width: fit-content;
+   position: relative;
+   border-radius: 14px;
+   padding: 0.5rem;
+-  max-width: 85%;
+-  margin-left: 3.5rem;
++  margin-left: 4.5rem;
+   margin-bottom: 35px;
++  background: rgba(255, 255, 255, 1);
++  align-self: flex-start;
++  margin-left: 3.5rem;
++  left: 2.6%;
++  box-sizing: border-box;
+ }
+ 
+ .thinking-message::before {
+@@ -1504,7 +1542,7 @@ body {
+   height: 2.5rem;
+   border-radius: 50%;
+   position: absolute;
+-  left: -3rem;
++  left: -4rem;
+   top: 0;
+ }
+ 
+@@ -1513,7 +1551,7 @@ body {
+   height: 2.5rem;
+   border-radius: 50%;
+   position: absolute;
+-  right: -3rem;
++  right: -4rem;
+   top: 0;
+ }
+ 
+@@ -1593,12 +1631,15 @@ body {
+   padding: 0;
+   background-color: transparent;
+   border-radius: 0;
++  z-index: 0;
+   max-width: 85%;
+-  z-index: 2;
+   border: none;
+   box-shadow: none;
+   display: inline-flex;
+   flex-direction: column;
++  width: 100%;
++  height: 97%;
++  background-color: transparent;
+ }
+ 
+ .references-title {
+@@ -1622,11 +1663,7 @@ body {
+   display: flex;
+   align-items: center;
+   gap: 4px; /* 减少内部间距 */
+-  background: linear-gradient(
+-    90deg, 
+-    rgba(170, 239, 242, 0.3) 0%, 
+-    rgba(162, 169, 252, 0.3) 100%
+-  );
++  background: white;
+   border-radius: 8px;
+   padding: 4px 6px; /* 减少左右内边距 */
+   cursor: pointer;
+@@ -1732,8 +1769,9 @@ body {
+ .chat-input {
+   display: flex;
+   position: relative;
+-  width: 100%;
++  width: 85%;
+   padding: 0 1rem 1rem;
++  left: 8%;
+   margin-top: 0;
+   flex-shrink: 0;
+   box-sizing: border-box;
+diff --git a/frontend/src/views/home.vue b/frontend/src/views/home.vue
+index b3b5361..28445be 100644
+--- a/frontend/src/views/home.vue
++++ b/frontend/src/views/home.vue
+@@ -60,26 +60,26 @@ export default defineComponent({
+ }
+ .hw2 {
+   height: auto;
+-  top: 115%; 
+-  left: 16%; 
+-  width: 70%;
++  top: 122%; 
++  left: 13.3%; 
++  width: 71%;
+   padding: 2px;
+   position: absolute;
+ }
+ .hw3{
+   height: auto;
+-  top: 195%; 
+-  left: 16%; 
+-  width: 70%;
++  top: 202%; 
++  left: 17%; 
++  width: 66%;
+   padding: 2px;
+   position: absolute;
+ }
+ .hw4{
+   height: auto;
+-  top: 275%; 
++  top: 281%; 
+   left: 15%; 
+   width: 70%;
+-  padding-bottom: 200px;
++  padding-bottom: 18%;
+   position: absolute;
+   display: block; /* 去除图片底部间隙 */
+   margin-bottom: 5px; /* 设置图片下方的外边距为 50px */
+@@ -102,8 +102,8 @@ background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191,
+ top: 1%;
+ position: absolute;
+ font-size: 20px;
+-width: 100px;
+-height: 60px;
++width: 93px;
++height: 54px;
+ opacity: 1;
+ border: none;
+ border-radius: 30px;
+@@ -115,8 +115,8 @@ top: 1%;
+ position: absolute;
+ font-size: 20px;
+ color: rgba(153, 112, 255, 1);
+-width: 100px;
+-height: 60px;
++width: 93px;
++height: 54px;
+ border: none;
+ 
+ opacity: 1;
+diff --git a/frontend/src/views/login.vue b/frontend/src/views/login.vue
+index 357e59a..76ea2ca 100644
+--- a/frontend/src/views/login.vue
++++ b/frontend/src/views/login.vue
+@@ -157,14 +157,9 @@ html, body {
+   top: 43%;
+   right: 41.3%;
+   opacity: 1;
+-  border: 1px solid rgba(182, 182, 250, 1);
+   border-radius: 6px;
+ }
+-input2:focus {
+-  outline: none; /* 去除默认的聚焦轮廓 */
+-  border-color:rgba(182, 182, 250, 1);  /* 聚焦时的边框颜色，与初始颜色一致 */
+-  border:none
+-}
++
+ .input3 {
+   position: absolute;
+   top: 50%;
+@@ -224,6 +219,7 @@ height: 40px;
+ font-size: 20px;
+ font-weight: 400;
+ opacity: 1;
++border: 0cap;
+ border-radius: 4px;
+ background: linear-gradient(135deg, rgba(170, 239, 242, 1) 0%, rgba(136, 191, 242, 0.95) 32.87%, rgba(162, 169, 252, 0.89) 74.12%, rgba(151, 107, 255, 0.8) 100%);
+ box-shadow: 2px 2px 8px  rgba(0, 0, 0, 0.25);
+diff --git a/frontend/src/views/register.vue b/frontend/src/views/register.vue
+index b538947..4a9d14f 100644
+--- a/frontend/src/views/register.vue
++++ b/frontend/src/views/register.vue
+@@ -231,6 +231,8 @@ html, body {
+   top: 49.5%;
+   right: 41.6%;
+   opacity: 1;
++  border: 0cap;
++
+   background: rgba(232, 222, 252, 0.89);}
+ .input5{
+   position: absolute;
+@@ -255,6 +257,7 @@ height: 40px;
+ font-size: 20px;
+ font-weight: 400;
+ opacity: 1;
++border: 0cap;
+ border-radius: 4px;
+ background: linear-gradient(135deg, rgba(170, 239, 242, 1) 0%, rgba(136, 191, 242, 0.95) 32.87%, rgba(162, 169, 252, 0.89) 74.12%, rgba(151, 107, 255, 0.8) 100%);
+ box-shadow: 2px 2px 8px  rgba(0, 0, 0, 0.25);
+diff --git a/frontend/src/views/reset.vue b/frontend/src/views/reset.vue
+index 820a05e..346a750 100644
+--- a/frontend/src/views/reset.vue
++++ b/frontend/src/views/reset.vue
+@@ -241,6 +241,7 @@ html, body {
+   top: 49.5%;
+   right: 41.6%;
+   opacity: 1;
++border: 0cap;
+   background: rgba(232, 222, 252, 0.89);}
+ .input5{
+   position: absolute;
+@@ -264,6 +265,7 @@ html, body {
+   font-size: 20px;
+   font-weight: 400;
+   opacity: 1;
++  border: 0cap;
+   border-radius: 4px;
+   background: linear-gradient(135deg, rgba(170, 239, 242, 1) 0%, rgba(136, 191, 242, 0.95) 32.87%, rgba(162, 169, 252, 0.89) 74.12%, rgba(151, 107, 255, 0.8) 100%);
+   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+-- 
+2.39.5 (Apple Git-154)
+

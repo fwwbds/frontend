@@ -1,0 +1,309 @@
+From 2219e5ae5f351a6133e1f89ba752aca4e924e9a8 Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Thu, 20 Mar 2025 19:23:19 +0800
+Subject: [PATCH 15/20] =?UTF-8?q?fixed:=E4=BF=AE=E5=A4=8D=E9=83=A8?=
+ =?UTF-8?q?=E5=88=86=E5=B7=B2=E7=9F=A5=E9=97=AE=E9=A2=98?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/api/dify.js       |  2 +-
+ frontend/src/api/dify02.js     |  2 +-
+ frontend/src/routes/index.ts   |  4 +--
+ frontend/src/views/ai.vue      | 57 ++++++++++++++++++++++++++++------
+ frontend/src/views/point01.vue | 20 +++++++++---
+ frontend/src/views/point02.vue | 24 ++++++++++----
+ 6 files changed, 85 insertions(+), 24 deletions(-)
+
+diff --git a/frontend/src/api/dify.js b/frontend/src/api/dify.js
+index 17322a9..c06f622 100644
+--- a/frontend/src/api/dify.js
++++ b/frontend/src/api/dify.js
+@@ -1,5 +1,5 @@
+ // Dify API service
+-const API_BASE_URL = 'http://47.99.158.58/v1';
++const API_BASE_URL = ' http://120.26.63.52/v1';
+ const API_KEY = 'app-IwkD0errZfVqEfI30GVcMVEz'; // Replace with your actual API key
+ 
+ // 用户ID生成或获取
+diff --git a/frontend/src/api/dify02.js b/frontend/src/api/dify02.js
+index 95f1389..a64a8ed 100644
+--- a/frontend/src/api/dify02.js
++++ b/frontend/src/api/dify02.js
+@@ -1,5 +1,5 @@
+ // Dify API service
+-const API_BASE_URL = 'http://47.99.158.58/v1';
++const API_BASE_URL = ' http://120.26.63.52/v1';
+ const API_KEY = 'app-IIzdZFROTi7AEuBSotTesCqB'; // Replace with your actual API key
+ 
+ // 用户ID生成或获取
+diff --git a/frontend/src/routes/index.ts b/frontend/src/routes/index.ts
+index 5b04d78..6bfb2be 100644
+--- a/frontend/src/routes/index.ts
++++ b/frontend/src/routes/index.ts
+@@ -48,7 +48,7 @@ import funcPage from '../views/function.vue';
+ import leadPage from '../views/leading.vue';
+ 
+ // 定义需要认证的路由路径
+-const protectedRoutes = ['/QMathify'];
++const protectedRoutes = ['/function'];
+ 
+ const routes = [
+   {
+@@ -83,7 +83,7 @@ const routes = [
+   },
+   {
+     path: '/leading',
+-    name: 'Leading',
++    name: 'leading',
+     component:leadPage 
+   }
+ ];
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index be9d4fb..5668b48 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -326,17 +326,43 @@ const renderMarkdown = (text) => {
+     const thinkContent = thinkMatch[1]; // 思考内容
+     const responseContent = text.replace(/<think>[\s\S]*?<\/think>/, ''); // 回答内容
+     
+-    // 分别渲染思考内容和回答内容
+-    const renderedThink = `<div class="ai-thinking"   >${md.render(thinkContent)}</div>`;
+-    const renderedResponse = md.render(responseContent);
++    // 创建思考部分的 DOM 元素并设置样式
++    const thinkDiv = document.createElement('div');
++    thinkDiv.classList.add('ai-thinking');
++    thinkDiv.style.backgroundColor = '#f0f0f0';
++    thinkDiv.style.padding = '10px';
++    thinkDiv.style.borderRadius = '8px';
++    thinkDiv.style.margin = '10px 0';
++    thinkDiv.style.color = '#333';
++    thinkDiv.innerHTML = md.render(thinkContent);
+     
+-    // 组合两部分
+-    return renderedThink + renderedResponse;
++    // 创建回答部分的 DOM 元素
++    const responseDiv = document.createElement('div');
++    responseDiv.innerHTML = md.render(responseContent);
++    
++    // 创建一个临时容器来组合两部分
++    const container = document.createElement('div');
++    container.appendChild(thinkDiv);
++    container.appendChild(responseDiv);
++    
++    // 返回组合后的 HTML 字符串
++    return container.innerHTML;
+   } catch (e) {
+     console.error('Markdown渲染错误', e);
+     return text; // 如果渲染失败，返回原始文本
+   }
+ };
++//     // 分别渲染思考内容和回答内容
++//     const renderedThink = `<div class="ai-thinking" style="background-color: #f0f0f0; padding: 10px; border-radius: 8px; margin: 10px 0; color: #333;">${md.render(thinkContent)}</div>`;
++//    const renderedResponse = md.render(responseContent);
++    
++//     // 组合两部分
++//     return renderedThink + renderedResponse;
++//   } catch (e) {
++//     console.error('Markdown渲染错误', e);
++//     return text; // 如果渲染失败，返回原始文本
++//   }
++// };
+ 
+ // 添加更新对话标题的事件
+ const emit = defineEmits(['add-to-recent-dialogs', 'update-dialog-title']);
+@@ -582,7 +608,7 @@ const loadDialogFromLocal = async (id) => {
+           userImages.forEach(file => {
+             let fileUrl = file.url;
+             if (fileUrl && fileUrl.startsWith('/')) {
+-              fileUrl = `http://47.99.158.58${fileUrl}`;
++              fileUrl = ` http://120.26.63.52${fileUrl}`;
+             }
+             
+             // 为每个图片创建独立的消息
+@@ -608,7 +634,7 @@ const loadDialogFromLocal = async (id) => {
+           documentFiles.forEach(file => {
+             let fileUrl = file.url;
+             if (fileUrl && fileUrl.startsWith('/')) {
+-              fileUrl = `http://47.99.158.58${fileUrl}`;
++              fileUrl = ` http://120.26.63.52${fileUrl}`;
+             }
+             
+             messageList.value.push({
+@@ -651,7 +677,7 @@ const loadDialogFromLocal = async (id) => {
+               aiMessage.files = aiFiles.map(file => {
+                 let fileUrl = file.url;
+                 if (fileUrl && fileUrl.startsWith('/')) {
+-                  fileUrl = `http://47.99.158.58${fileUrl}`;
++                  fileUrl = ` http://120.26.63.52${fileUrl}`;
+                 }
+                 return {
+                   id: file.id,
+@@ -1170,7 +1196,7 @@ const handleImageUpload = async (e) => {
+     // 构建文件URL，与历史记录处理一致
+     let fileUrl = result.url || '';
+     if (fileUrl && fileUrl.startsWith('/')) {
+-      fileUrl = `http://47.99.158.58${fileUrl}`;
++      fileUrl = ` http://120.26.63.52${fileUrl}`;
+     }
+     
+     // 添加纯图片消息 - 不包含任何文本内容，保持与历史记录的结构一致
+@@ -1244,7 +1270,7 @@ const handleFileUpload = async (e) => {
+     // 构建文件URL（与loadDialogFromLocal函数一致）
+     let fileUrl = result.url || '';
+     if (fileUrl && fileUrl.startsWith('/')) {
+-      fileUrl = `http://47.99.158.58${fileUrl}`;
++      fileUrl = ` http://120.26.63.52${fileUrl}`;
+     }
+     
+     // 上传成功后，修改消息内容，保存文件ID用于后续API调用
+@@ -1288,6 +1314,17 @@ onMounted(() => {
+     // 移除localStorage中的内容，避免下次重复填充
+     localStorage.removeItem('bo02Question');
+   }
++  // 检查bo03Question
++
++const question03 = localStorage.getItem('bo03Question');
++
++if (question03) {
++
++inputMessage.value = question03;
++
++localStorage.removeItem('bo03Question');
++
++}
+   if (typeof existingOnMounted === 'function') {
+     existingOnMounted();
+   }
+diff --git a/frontend/src/views/point01.vue b/frontend/src/views/point01.vue
+index 70080ba..62691d6 100644
+--- a/frontend/src/views/point01.vue
++++ b/frontend/src/views/point01.vue
+@@ -25,7 +25,7 @@
+             <el-button type="primary" class="bo02" @click="handleBo02Click">
+   什么是全概率公式？它和贝叶斯公式有何关系？
+ </el-button>
+-            <el-button type="primary"  class="bo03">
++            <el-button type="primary"  class="bo03" @click="handleBo03Click" >
+               当a=14,b=-5时,代数式2a+3b的值等于多少?            </el-button>
+           </div>
+           <div class="box02"  >
+@@ -34,7 +34,7 @@
+             <el-button type="primary"  v-show="!isSmallScreen" class="bo04"  @click="goToPage02">
+               开始
+             </el-button>
+-            <el-button type="primary"  class="bo05">
++            <el-button type="primary"  class="bo05"  @click="handleBo05Click"  >
+               圆和扇形的半径相等,圆面积是30平方米,扇形圆心角是36度,扇形的面积？<br>
+               反问：圆的面积公式是什么？<br>
+               A:πr²       B:πd²       C:2πr       D:2πd
+@@ -80,7 +80,19 @@ const handleBo02Click = () => {
+   // 跳转到 /QMathify 页面
+   window.location.href = `/QMathify`;
+ };
+-
++const handleBo03Click = () => {
++  const question = " 当a=14,b=-5时,代数式2a+3b的值等于多少?  "; // 获取按钮的文字内容
++  // 将问题内容存储到localStorage中
++  localStorage.setItem('bo03Question', question);
++  // 跳转到 /QMathify 页面
++  window.location.href = `/QMathify`;
++};
++const handleBo05Click = () => {
++  const question = "  圆和扇形的半径相等,圆面积是30平方米,扇形圆心角是36度,扇形的面积？  "; // 获取按钮的文字内容
++  // 将问题内容存储到localStorage中
++  localStorage.setItem('bo05Question', question);
++  window.location.href = `/Leading`;
++};
+ onMounted(() => {
+   checkScreenSize();
+   window.addEventListener('resize', checkScreenSize);
+@@ -248,7 +260,7 @@ border-radius: 10px;
+ background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191, 242, 0.95) 33.49%, rgba(162, 169, 252, 0.89) 74.36%, rgba(151, 107, 255, 0.8) 100%);}
+ .bo05{    position: relative;
+     left: -2%;
+-    top: -1%;
++    top: -5%;
+     opacity: 1;
+     border-radius: 10px;
+     background: #f4f0ff;
+diff --git a/frontend/src/views/point02.vue b/frontend/src/views/point02.vue
+index bc40958..093cb11 100644
+--- a/frontend/src/views/point02.vue
++++ b/frontend/src/views/point02.vue
+@@ -545,7 +545,7 @@ const loadDialogFromLocal = async (id) => {
+           userImages.forEach(file => {
+             let fileUrl = file.url;
+             if (fileUrl && fileUrl.startsWith('/')) {
+-              fileUrl = `http://47.99.158.58${fileUrl}`;
++              fileUrl = ` http://120.26.63.52${fileUrl}`;
+             }
+             
+             // 为每个图片创建独立的消息
+@@ -571,7 +571,7 @@ const loadDialogFromLocal = async (id) => {
+           documentFiles.forEach(file => {
+             let fileUrl = file.url;
+             if (fileUrl && fileUrl.startsWith('/')) {
+-              fileUrl = `http://47.99.158.58${fileUrl}`;
++              fileUrl = ` http://120.26.63.52${fileUrl}`;
+             }
+             
+             messageList.value.push({
+@@ -614,7 +614,7 @@ const loadDialogFromLocal = async (id) => {
+               aiMessage.files = aiFiles.map(file => {
+                 let fileUrl = file.url;
+                 if (fileUrl && fileUrl.startsWith('/')) {
+-                  fileUrl = `http://47.99.158.58${fileUrl}`;
++                  fileUrl = ` http://120.26.63.52${fileUrl}`;
+                 }
+                 return {
+                   id: file.id,
+@@ -1133,7 +1133,7 @@ const handleImageUpload = async (e) => {
+     // 构建文件URL，与历史记录处理一致
+     let fileUrl = result.url || '';
+     if (fileUrl && fileUrl.startsWith('/')) {
+-      fileUrl = `http://47.99.158.58${fileUrl}`;
++      fileUrl = ` http://120.26.63.52${fileUrl}`;
+     }
+     
+     // 添加纯图片消息 - 不包含任何文本内容，保持与历史记录的结构一致
+@@ -1207,7 +1207,7 @@ const handleFileUpload = async (e) => {
+     // 构建文件URL（与loadDialogFromLocal函数一致）
+     let fileUrl = result.url || '';
+     if (fileUrl && fileUrl.startsWith('/')) {
+-      fileUrl = `http://47.99.158.58${fileUrl}`;
++      fileUrl = ` http://120.26.63.52${fileUrl}`;
+     }
+     
+     // 上传成功后，修改消息内容，保存文件ID用于后续API调用
+@@ -1240,13 +1240,25 @@ const handleFileUpload = async (e) => {
+     fileInput.value.value = '';
+   }
+ };
++
+ const existingOnMounted = onMounted;
+ onMounted(() => {
+   handleNewDialog();
+   if (typeof existingOnMounted === 'function') {
+     existingOnMounted();
+   }
+-  
++  const question05 = localStorage.getItem('bo05Question');
++
++if (question05) {
++
++inputMessage.value = question05;
++
++localStorage.removeItem('bo05Question');
++
++}
++  if (typeof existingOnMounted === 'function') {
++    existingOnMounted();
++  }
+   // 初始化文本框高度
+   nextTick(() => {
+     adjustTextareaHeight();
+-- 
+2.39.5 (Apple Git-154)
+

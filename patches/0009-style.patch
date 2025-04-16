@@ -1,0 +1,38 @@
+From 8cdc5fe754be594321fff1d42945db8c9b9a85eb Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Thu, 6 Mar 2025 16:51:45 +0800
+Subject: [PATCH 09/20] =?UTF-8?q?style:=E4=BF=AE=E5=A4=8D=E6=80=9D?=
+ =?UTF-8?q?=E8=80=83=E4=B8=AD=E5=A4=B4=E5=83=8F=E6=A1=86=E5=92=8C=E6=B6=88?=
+ =?UTF-8?q?=E6=81=AF=E6=A1=86=E9=97=AE=E9=A2=98?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/views/ai.vue | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index 12443b5..534d3ee 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -1357,7 +1357,7 @@ body {
+ background-color: #ffffff; 
+   width: fit-content;
+   position: relative; /* 与 ai-message 保持一致 */
+-  left: 7.8%;
++  left: 9.9%;
+   border-radius: 14px;
+   padding: 12px;
+   max-width: 77%; /* 设置消息的最大宽度 */
+@@ -1365,6 +1365,7 @@ background-color: #ffffff;
+   padding-bottom: 0.4%;
+   padding-left: 5px;
+   padding-right: 5px;
++  gap: 2px;
+ }
+ /* 添加渐变边框 */
+ .thinking-message::before {
+-- 
+2.39.5 (Apple Git-154)
+

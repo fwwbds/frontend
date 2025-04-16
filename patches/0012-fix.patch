@@ -1,0 +1,719 @@
+From bcb483b056d100b33a23e57dd00701eb29e9a9c4 Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Sun, 16 Mar 2025 21:34:35 +0800
+Subject: [PATCH 12/20] =?UTF-8?q?fix:=E6=96=B0=E5=A2=9E=E6=8E=A5=E5=8F=A3?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ docker-compose.yml              |   2 +-
+ frontend/src/api/dify02.js      | 456 ++++++++++++++++++++++++++++++++
+ frontend/src/routes/home.ts     |  32 ---
+ frontend/src/routes/index.ts    |  12 +-
+ frontend/src/routes/login.ts    |  14 -
+ frontend/src/routes/register.ts |  14 -
+ frontend/src/routes/reset.ts    |  14 -
+ frontend/src/views/HomeView.vue |   2 +-
+ frontend/src/views/ai.vue       |  30 ++-
+ frontend/src/views/point02.vue  |   6 +-
+ 10 files changed, 495 insertions(+), 87 deletions(-)
+ create mode 100644 frontend/src/api/dify02.js
+ delete mode 100644 frontend/src/routes/home.ts
+ delete mode 100644 frontend/src/routes/login.ts
+ delete mode 100644 frontend/src/routes/register.ts
+ delete mode 100644 frontend/src/routes/reset.ts
+
+diff --git a/docker-compose.yml b/docker-compose.yml
+index 67b8419..d8b4e8d 100644
+--- a/docker-compose.yml
++++ b/docker-compose.yml
+@@ -1,4 +1,4 @@
+-version: '3.8'
++ #version: '3.8'
+ 
+ services:
+   frontend:
+diff --git a/frontend/src/api/dify02.js b/frontend/src/api/dify02.js
+new file mode 100644
+index 0000000..95f1389
+--- /dev/null
++++ b/frontend/src/api/dify02.js
+@@ -0,0 +1,456 @@
++// Dify API service
++const API_BASE_URL = 'http://47.99.158.58/v1';
++const API_KEY = 'app-IIzdZFROTi7AEuBSotTesCqB'; // Replace with your actual API key
++
++// 用户ID生成或获取
++const getUserId = () => {
++  // 尝试从登录信息中获取用户ID
++  const userInfo = localStorage.getItem('user');
++  if (userInfo) {
++    try {
++      const user = JSON.parse(userInfo);     
++      // 如果没有用户ID但有用户名，使用用户名生成固定ID（更稳定）
++      if (user && user.username) {
++        // 使用用户名创建一个固定的ID
++        return 'user_' + user.username;
++      }
++      else {
++        console.error('用户信息中没有用户名');
++      }
++    } catch (e) {
++      console.error('解析用户信息失败:', e);
++    }
++  }
++  return userId;
++};
++
++// 验证是否为有效的UUID
++// 验证是否为有效的UUID
++function isValidUUID(str) {
++  // 简单检查是否符合UUID格式
++  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
++  return typeof str === 'string' && uuidRegex.test(str);
++}
++
++// 发送对话消息 - 流式响应
++// 修改 sendChatMessage 函数，添加元数据回调参数
++export const sendChatMessage = async (message, conversationId = null, onMessage = null, onEnd = null, onError = null, files = null, onMetadata = null) => {
++    const user = getUserId();
++    
++    try {
++      // 处理 conversationId，确保只在有效时传递
++      const payload = {
++        query: message,
++        inputs: {},
++        user: user,
++        response_mode: 'streaming',
++      };
++      
++      // 只有当 conversationId 有效且不是时间戳形式时才添加到请求
++      if (conversationId && isValidUUID(conversationId)) {
++        payload.conversation_id = conversationId;
++      }
++      
++      // 添加文件ID（如果提供）- 修复这里的files参数引用
++      if (files && Array.isArray(files) && files.length > 0) {
++        payload.files = files;
++      }
++      
++      const response = await fetch(`${API_BASE_URL}/chat-messages`, {
++        method: 'POST',
++        headers: {
++          'Authorization': `Bearer ${API_KEY}`,
++          'Content-Type': 'application/json',
++        },
++        body: JSON.stringify(payload),
++      });
++  
++
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '请求失败');
++    }
++
++    // 处理流式响应
++    const reader = response.body.getReader();
++    const decoder = new TextDecoder('utf-8');
++    let buffer = '';
++    let messageId = null;
++    let responseConversationId = null;
++    let taskId = null;
++    let fullAnswer = '';
++
++    while (true) {
++      const { done, value } = await reader.read();
++      if (done) {
++        break;
++      }
++      
++      buffer += decoder.decode(value, { stream: true });
++      const lines = buffer.split('\n\n');
++      buffer = lines.pop() || '';
++      
++      for (const line of lines) {
++        if (line.startsWith('data: ')) {
++          try {
++            const data = JSON.parse(line.substring(6));
++            
++            if (data.event === 'message') {
++              // 获取任务ID, 但不要在这里触发onMessage
++              if (!taskId && data.task_id) {
++                taskId = data.task_id;
++              }
++              
++              messageId = data.message_id || messageId;
++              responseConversationId = data.conversation_id || responseConversationId;
++              
++              fullAnswer += data.answer || '';
++              // 传递所有需要的参数
++              if (onMessage) onMessage(fullAnswer, taskId ,messageId);
++            } else if (data.event === 'message_end') {
++              messageId = data.message_id || messageId;
++              responseConversationId = data.conversation_id || responseConversationId;
++              
++              // 确保先调用元数据回调，之后再调用结束回调
++              if (data.metadata) {
++                console.log("收到元数据:", data.metadata);
++                if (data.metadata.retriever_resources) {
++                  console.log("收到参考来源:", data.metadata.retriever_resources.length);
++                }
++                if (onMetadata) onMetadata(data.metadata, messageId);
++              }
++              
++              // 确保回调参数顺序正确
++              if (onEnd) onEnd(fullAnswer, messageId, responseConversationId);
++              break;
++            } else if (data.event === 'error') {
++              const error = new Error(data.message || '未知错误');
++              error.status = data.status;
++              error.code = data.code;
++              
++              if (onError) onError(error);
++              throw error;
++            }
++          } catch (e) {
++            console.error('解析事件数据失败:', e, line);
++          }
++        }
++      }
++    }
++    
++    return {
++      messageId,
++      conversationId: responseConversationId,
++      taskId
++    };
++  } catch (error) {
++    console.error('发送消息出错:', error);
++    if (onError) onError(error);
++    throw error;
++  }
++};
++
++// 获取历史消息
++export const getConversationHistory = async (conversationId, user = null, firstId = null, limit = 20) => {
++  const userId = user || getUserId();
++  
++  // 确保 conversationId 有效
++  if (!conversationId) {
++    throw new Error('会话ID不能为空');
++  }
++  
++  try {
++    console.log("正在请求历史消息, ID:", conversationId);
++    
++    const url = new URL(`${API_BASE_URL}/messages`);
++    url.searchParams.append('conversation_id', conversationId);
++    url.searchParams.append('user', userId);
++    if (firstId) url.searchParams.append('first_id', firstId);
++    url.searchParams.append('limit', limit.toString());
++    
++    const response = await fetch(url, {
++      method: 'GET',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++      },
++    });
++    
++    if (!response.ok) {
++      const errorText = await response.text();
++      console.error("API返回错误:", errorText);
++      
++      try {
++        const errorData = JSON.parse(errorText);
++        throw new Error(errorData.message || `获取历史消息失败，状态码: ${response.status}`);
++      } catch (e) {
++        throw new Error(`获取历史消息失败，状态码: ${response.status}`);
++      }
++    }
++    
++    const data = await response.json();
++    console.log("获取到历史数据:", data);
++    return data;
++  } catch (error) {
++    console.error('获取历史消息出错:', error);
++    throw error;
++  }
++};
++
++// 获取会话列表
++export const getConversations = async (user = null, lastId = null, limit = 20) => {
++  const userId = user || getUserId();
++  
++  try {
++    const url = new URL(`${API_BASE_URL}/conversations`);
++    url.searchParams.append('user', userId);
++    if (lastId && isValidUUID(lastId)) url.searchParams.append('last_id', lastId);
++    url.searchParams.append('limit', limit.toString());
++    
++    const response = await fetch(url, {
++      method: 'GET',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++      },
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '获取会话列表失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('获取会话列表出错:', error);
++    throw error;
++  }
++};
++
++// 删除会话
++export const deleteConversation = async (conversationId, user = null) => {
++  const userId = user || getUserId();
++  
++  // 确保 conversationId 有效
++  if (!conversationId || !isValidUUID(conversationId)) {
++    throw new Error('无效的会话ID');
++  }
++  
++  try {
++    const response = await fetch(`${API_BASE_URL}/conversations/${conversationId}`, {
++      method: 'DELETE',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++        'Content-Type': 'application/json',
++      },
++      body: JSON.stringify({ user: userId }),
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '删除会话失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('删除会话出错:', error);
++    throw error;
++  }
++};
++
++// 重命名会话
++export const renameConversation = async (conversationId, name = null, autoGenerate = true, user = null) => {
++  const userId = user || getUserId();
++  
++  // 确保 conversationId 有效
++  if (!conversationId || !isValidUUID(conversationId)) {
++    throw new Error('无效的会话ID');
++  }
++  
++  try {
++    const body = { auto_generate: autoGenerate, user: userId };
++    if (name) body.name = name;
++    
++    const response = await fetch(`${API_BASE_URL}/conversations/${conversationId}/name`, {
++      method: 'POST',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++        'Content-Type': 'application/json',
++      },
++      body: JSON.stringify(body),
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '重命名会话失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('重命名会话出错:', error);
++    throw error;
++  }
++};
++
++// 发送反馈（点赞/点踩）
++export const sendFeedback = async (messageId, rating, user = null, content = '') => {
++  const userId = user || getUserId();
++  
++  // 确保 messageId 有效
++  if (!messageId || !isValidUUID(messageId)) {
++    throw new Error('无效的消息ID');
++  }
++  
++  try {
++    const response = await fetch(`${API_BASE_URL}/messages/${messageId}/feedbacks`, {
++      method: 'POST',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++        'Content-Type': 'application/json',
++      },
++      body: JSON.stringify({
++        rating,
++        user: userId,
++        content,
++      }),
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '发送反馈失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('发送反馈出错:', error);
++    throw error;
++  }
++};
++
++// 上传文件
++export const uploadFile = async (file, user = null) => {
++  const userId = user || getUserId();
++  const formData = new FormData();
++  formData.append('file', file);
++  formData.append('user', userId);
++  
++  try {
++    const response = await fetch(`${API_BASE_URL}/files/upload`, {
++      method: 'POST',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++      },
++      body: formData,
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '上传文件失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('上传文件出错:', error);
++    throw error;
++  }
++};
++
++// 停止响应
++export const stopResponse = async (taskId, user = null) => {
++  const userId = user || getUserId();
++  
++  try {
++    const response = await fetch(`${API_BASE_URL}/chat-messages/${taskId}/stop`, {
++      method: 'POST',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++        'Content-Type': 'application/json',
++      },
++      body: JSON.stringify({ user: userId }),
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '停止响应失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('停止响应出错:', error);
++    throw error;
++  }
++};
++
++// 获取下一轮建议问题列表
++export const getSuggestedQuestions = async (messageId, user = null) => {
++  const userId = user || getUserId();
++  
++  // 确保 messageId 有效
++  if (!messageId || !isValidUUID(messageId)) {
++    throw new Error('无效的消息ID');
++  }
++  
++  try {
++    const url = new URL(`${API_BASE_URL}/messages/${messageId}/suggested`);
++    url.searchParams.append('user', userId);
++    
++    const response = await fetch(url, {
++      method: 'GET',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++      },
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '获取建议问题失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('获取建议问题出错:', error);
++    throw error;
++  }
++};
++
++// 获取应用基本信息
++export const getAppInfo = async () => {
++  try {
++    const response = await fetch(`${API_BASE_URL}/info`, {
++      method: 'GET',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++      },
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '获取应用信息失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('获取应用信息出错:', error);
++    throw error;
++  }
++};
++
++// 获取应用参数
++export const getAppParameters = async () => {
++  try {
++    const response = await fetch(`${API_BASE_URL}/parameters`, {
++      method: 'GET',
++      headers: {
++        'Authorization': `Bearer ${API_KEY}`,
++      },
++    });
++    
++    if (!response.ok) {
++      const errorData = await response.json();
++      throw new Error(errorData.message || '获取应用参数失败');
++    }
++    
++    return await response.json();
++  } catch (error) {
++    console.error('获取应用参数出错:', error);
++    throw error;
++  }
++};
+\ No newline at end of file
+diff --git a/frontend/src/routes/home.ts b/frontend/src/routes/home.ts
+deleted file mode 100644
+index a64ce0e..0000000
+--- a/frontend/src/routes/home.ts
++++ /dev/null
+@@ -1,32 +0,0 @@
+-import { RoutePath } from '@/constant/route'
+-import type { RouteRecordRaw } from 'vue-router'
+-export const homeRoute: RouteRecordRaw[] = [
+-  //   {
+-  //     name: '风采展示',
+-  //     path: RoutePath.Show,
+-  //     component: () => import('@/views/home/show/index.vue'),
+-  //   },
+-  {
+-    name: 'Home',
+-    path: ``,
+-    component: () => import('@/views/Home.vue')
+-  }
+-]
+-// import { createRouter, createWebHistory } from 'vue-router';
+-// import Home from '@/views/home.vue'; // 确保路径正确
+-
+-// const routes = [
+-//   {
+-//     path: '/',
+-//     name: 'Home',
+-//     component: Home, // 首页组件
+-//   },
+-//   // 其他路由
+-// ];
+-
+-// const router = createRouter({
+-//   history: createWebHistory(),
+-//   routes,
+-// });
+-
+-// export default router;
+\ No newline at end of file
+diff --git a/frontend/src/routes/index.ts b/frontend/src/routes/index.ts
+index d4887dc..0616db3 100644
+--- a/frontend/src/routes/index.ts
++++ b/frontend/src/routes/index.ts
+@@ -39,13 +39,13 @@
+ 
+ // export default router;
+ import { createRouter, createWebHistory } from 'vue-router';
+-import HomePage from '../views/Home.vue';
+-import LoginPage from '../views/Login.vue';
+-import registerPage from '../views/Register.vue';
+-import resetPage from '../views/Reset.vue';
++import HomePage from '../views/home.vue';
++import LoginPage from '../views/login.vue';
++import registerPage from '../views/register.vue';
++import resetPage from '../views/reset.vue';
+ import aiPage from '../views/QMathify.vue';
+-import funcPage from '../views/Function.vue';
+-import leadPage from '../views/Leading.vue';
++import funcPage from '../views/function.vue';
++import leadPage from '../views/leading.vue';
+ 
+ // 定义需要认证的路由路径
+ const protectedRoutes = ['/QMathify'];
+diff --git a/frontend/src/routes/login.ts b/frontend/src/routes/login.ts
+deleted file mode 100644
+index 4b76291..0000000
+--- a/frontend/src/routes/login.ts
++++ /dev/null
+@@ -1,14 +0,0 @@
+-import { RoutePath } from '@/constant/route'
+-import type { RouteRecordRaw } from 'vue-router'
+-export const loginRoute: RouteRecordRaw[] = [
+-  //   {
+-  //     name: '风采展示',
+-  //     path: RoutePath.Show,
+-  //     component: () => import('@/views/home/show/index.vue'),
+-  //   },
+-  {
+-    name: 'Login',
+-    path: RoutePath.Login,
+-    component: () => import('@/views/Login.vue')
+-  }
+-]
+diff --git a/frontend/src/routes/register.ts b/frontend/src/routes/register.ts
+deleted file mode 100644
+index 70b61f7..0000000
+--- a/frontend/src/routes/register.ts
++++ /dev/null
+@@ -1,14 +0,0 @@
+-import { RoutePath } from '@/constant/route'
+-import type { RouteRecordRaw } from 'vue-router'
+-export const registerRoute: RouteRecordRaw[] = [
+-  //   {
+-  //     name: '风采展示',
+-  //     path: RoutePath.Show,
+-  //     component: () => import('@/views/home/show/index.vue'),
+-  //   },
+-  {
+-    name: 'Register',
+-    path: RoutePath.Register,
+-    component: () => import('@/views/Register.vue')
+-  }
+-]
+diff --git a/frontend/src/routes/reset.ts b/frontend/src/routes/reset.ts
+deleted file mode 100644
+index 9efa077..0000000
+--- a/frontend/src/routes/reset.ts
++++ /dev/null
+@@ -1,14 +0,0 @@
+-import { RoutePath } from '@/constant/route'
+-import type { RouteRecordRaw } from 'vue-router'
+-export const resetRoute: RouteRecordRaw[] = [
+-  //   {
+-  //     name: '风采展示',
+-  //     path: RoutePath.Show,
+-  //     component: () => import('@/views/home/show/index.vue'),
+-  //   },
+-  {
+-    name: 'Reset',
+-    path: RoutePath.Reset,
+-    component: () => import('@/views/Reset.vue')
+-  }
+-]
+diff --git a/frontend/src/views/HomeView.vue b/frontend/src/views/HomeView.vue
+index a780ebd..0b7b46f 100644
+--- a/frontend/src/views/HomeView.vue
++++ b/frontend/src/views/HomeView.vue
+@@ -1,5 +1,5 @@
+ <script setup lang="ts">
+-import HelloWorld from '@/views/Home.vue'
++import HelloWorld from '@/views/home.vue'
+ </script>
+ 
+ <template>
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index 81d323b..b5b1508 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -294,7 +294,24 @@ const md = new MarkdownIt({
+ // 添加Markdown渲染函数
+ const renderMarkdown = (text) => {
+   try {
+-    return md.render(text);
++    // 检查是否有思考部分
++    const thinkMatch = /<think>([\s\S]*?)<\/think>/g.exec(text);
++    
++    if (!thinkMatch) {
++      // 没有思考部分，直接渲染全部内容
++      return md.render(text);
++    }
++    
++    // 提取思考部分和回答部分
++    const thinkContent = thinkMatch[1]; // 思考内容
++    const responseContent = text.replace(/<think>[\s\S]*?<\/think>/, ''); // 回答内容
++    
++    // 分别渲染思考内容和回答内容
++    const renderedThink = `<div class="ai-thinking"   >${md.render(thinkContent)}</div>`;
++    const renderedResponse = md.render(responseContent);
++    
++    // 组合两部分
++    return renderedThink + renderedResponse;
+   } catch (e) {
+     console.error('Markdown渲染错误', e);
+     return text; // 如果渲染失败，返回原始文本
+@@ -1270,6 +1287,14 @@ defineExpose({
+   border-radius: 15px;
+ 
+ }
++.ai-thinking{
++  display: block;
++  background-color: #f0f0f0; /* 浅灰色背景 */
++  padding: 10px;            /* 内边距 */
++  border-radius: 8px;       /* 圆角边框 */
++  margin: 10px 0;           /* 外边距 */
++  color: #333;              /* 文字颜色 */
++}
+ 
+ .markdown-body {
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+@@ -1278,10 +1303,11 @@ defineExpose({
+   word-wrap: break-word;
+   word-break: break-word; /* 添加单词断行 */
+   overflow-wrap: break-word; /* 增强文本换行能力 */
+-  background: transparent;
++  background: grey;
+   border-radius: 15px;
+   width: 100%; /* 确保最大填满父容器宽度 */
+   box-sizing: border-box;
++
+ }
+ 
+ .markdown-body table {
+diff --git a/frontend/src/views/point02.vue b/frontend/src/views/point02.vue
+index ddef5bd..b5c8c61 100644
+--- a/frontend/src/views/point02.vue
++++ b/frontend/src/views/point02.vue
+@@ -25,9 +25,9 @@
+             alt="User Avatar"
+           />
+           <!-- 显示深度思考内容 --> 
+-          <div v-if="message.thinkingContent" class="thinking-content">
++          <!-- <div v-if="message.thinkingContent" class="thinking-content">
+             {{ message.thinkingContent }}
+-          </div>
++          </div> -->
+         
+           <!-- 显示消息内容 - 修改AI消息为Markdown渲染 -->
+           <div v-if="message.content && !message.isImageOnly">
+@@ -259,7 +259,7 @@ import {
+   sendFeedback,
+   uploadFile,
+   stopResponse
+-} from '@/api/dify'; 
++} from '@/api/dify02'; 
+ 
+ import MarkdownIt from 'markdown-it';
+ import texmath from 'markdown-it-texmath';
+-- 
+2.39.5 (Apple Git-154)
+

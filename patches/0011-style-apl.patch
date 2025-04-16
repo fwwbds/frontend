@@ -1,0 +1,6151 @@
+From 5c2d1cb853f1d4bb69310c57f838aa4cf6e3cc58 Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Thu, 13 Mar 2025 14:38:24 +0800
+Subject: [PATCH 11/20] =?UTF-8?q?style=EF=BC=9A=E5=85=88=E5=B0=86=E6=9C=80?=
+ =?UTF-8?q?=E5=90=8E=E5=87=A0=E4=B8=AA=E9=83=A8=E4=BB=B6=E5=92=8C=E9=A1=B5?=
+ =?UTF-8?q?=E9=9D=A2=E5=A4=A7=E8=87=B4=E6=90=9E=E5=87=BA=E6=9D=A5=E4=BA=86?=
+ =?UTF-8?q?=EF=BC=8C=E8=BF=98=E6=9C=89=E4=BA=9B=E7=BB=86=E8=8A=82=E9=9C=80?=
+ =?UTF-8?q?=E8=A6=81=E4=BF=AE=E6=94=B9=EF=BC=8C=E4=BD=A0=E5=85=88=E5=B0=86?=
+ =?UTF-8?q?=E5=8A=9F=E8=83=BD=E9=82=A3=E4=BA=9Bapl=E4=BB=80=E4=B9=88?=
+ =?UTF-8?q?=E4=BB=80=E4=B9=88=E7=9A=84=E6=94=BE=E8=BF=9B=E6=9D=A5=E6=88=91?=
+ =?UTF-8?q?=E4=B8=80=E8=B5=B7=E8=B0=83=E6=A0=B7=E5=BC=8F=E3=80=82?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/routes/home.ts     |    2 +-
+ frontend/src/routes/index.ts    |   20 +-
+ frontend/src/routes/login.ts    |    2 +-
+ frontend/src/routes/register.ts |    2 +-
+ frontend/src/routes/reset.ts    |    2 +-
+ frontend/src/views/Function.vue | 1424 ++++++++++++++++++++++
+ frontend/src/views/HomeView.vue |    2 +-
+ frontend/src/views/Leading.vue  | 1427 ++++++++++++++++++++++
+ frontend/src/views/QMathify.vue |   17 +-
+ frontend/src/views/ai.vue       |   29 +-
+ frontend/src/views/login.vue    |    2 +-
+ frontend/src/views/menu01.vue   |   72 ++
+ frontend/src/views/menu02.vue   |   72 ++
+ frontend/src/views/point01.vue  |  207 ++++
+ frontend/src/views/point02.vue  | 2033 +++++++++++++++++++++++++++++++
+ package-lock.json               |  545 +++++++++
+ package.json                    |    6 +
+ 17 files changed, 5839 insertions(+), 25 deletions(-)
+ create mode 100644 frontend/src/views/Function.vue
+ create mode 100644 frontend/src/views/Leading.vue
+ create mode 100644 frontend/src/views/menu01.vue
+ create mode 100644 frontend/src/views/menu02.vue
+ create mode 100644 frontend/src/views/point01.vue
+ create mode 100644 frontend/src/views/point02.vue
+ create mode 100644 package-lock.json
+ create mode 100644 package.json
+
+diff --git a/frontend/src/routes/home.ts b/frontend/src/routes/home.ts
+index fc70b03..a64ce0e 100644
+--- a/frontend/src/routes/home.ts
++++ b/frontend/src/routes/home.ts
+@@ -9,7 +9,7 @@ export const homeRoute: RouteRecordRaw[] = [
+   {
+     name: 'Home',
+     path: ``,
+-    component: () => import('@/views/home.vue')
++    component: () => import('@/views/Home.vue')
+   }
+ ]
+ // import { createRouter, createWebHistory } from 'vue-router';
+diff --git a/frontend/src/routes/index.ts b/frontend/src/routes/index.ts
+index e3f0833..d4887dc 100644
+--- a/frontend/src/routes/index.ts
++++ b/frontend/src/routes/index.ts
+@@ -39,11 +39,13 @@
+ 
+ // export default router;
+ import { createRouter, createWebHistory } from 'vue-router';
+-import HomePage from '../views/home.vue';
+-import LoginPage from '../views/login.vue';
+-import registerPage from '../views/register.vue';
+-import resetPage from '../views/reset.vue';
++import HomePage from '../views/Home.vue';
++import LoginPage from '../views/Login.vue';
++import registerPage from '../views/Register.vue';
++import resetPage from '../views/Reset.vue';
+ import aiPage from '../views/QMathify.vue';
++import funcPage from '../views/Function.vue';
++import leadPage from '../views/Leading.vue';
+ 
+ // 定义需要认证的路由路径
+ const protectedRoutes = ['/QMathify'];
+@@ -73,6 +75,16 @@ const routes = [
+     path: '/QMathify',
+     name: 'QMathify',
+     component: aiPage
++  },
++  {
++    path: '/Function',
++    name: 'Function',
++    component:funcPage 
++  },
++  {
++    path: '/Leading',
++    name: 'Leading',
++    component:leadPage 
+   }
+ ];
+ 
+diff --git a/frontend/src/routes/login.ts b/frontend/src/routes/login.ts
+index cf96833..4b76291 100644
+--- a/frontend/src/routes/login.ts
++++ b/frontend/src/routes/login.ts
+@@ -9,6 +9,6 @@ export const loginRoute: RouteRecordRaw[] = [
+   {
+     name: 'Login',
+     path: RoutePath.Login,
+-    component: () => import('@/views/login.vue')
++    component: () => import('@/views/Login.vue')
+   }
+ ]
+diff --git a/frontend/src/routes/register.ts b/frontend/src/routes/register.ts
+index 603fb13..70b61f7 100644
+--- a/frontend/src/routes/register.ts
++++ b/frontend/src/routes/register.ts
+@@ -9,6 +9,6 @@ export const registerRoute: RouteRecordRaw[] = [
+   {
+     name: 'Register',
+     path: RoutePath.Register,
+-    component: () => import('@/views/register.vue')
++    component: () => import('@/views/Register.vue')
+   }
+ ]
+diff --git a/frontend/src/routes/reset.ts b/frontend/src/routes/reset.ts
+index 2727c7a..9efa077 100644
+--- a/frontend/src/routes/reset.ts
++++ b/frontend/src/routes/reset.ts
+@@ -9,6 +9,6 @@ export const resetRoute: RouteRecordRaw[] = [
+   {
+     name: 'Reset',
+     path: RoutePath.Reset,
+-    component: () => import('@/views/reset.vue')
++    component: () => import('@/views/Reset.vue')
+   }
+ ]
+diff --git a/frontend/src/views/Function.vue b/frontend/src/views/Function.vue
+new file mode 100644
+index 0000000..d79747e
+--- /dev/null
++++ b/frontend/src/views/Function.vue
+@@ -0,0 +1,1424 @@
++<template>
++  <div class="container">
++    <!-- 移动端菜单按钮 -->
++    <div class="mobile-menu-button" ref="mobileMenuButtonRef" v-if="!isSidebarOpen" @click="toggleSidebar">
++      <img alt="" src="@/imgs/mobile-menu-button.png" />
++    </div>
++
++    <!-- 边栏 -->
++    <div
++      ref="sidebarRef"
++      class="sidebar"
++      :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-collapsed': !isSidebarOpen }"
++    >
++      <!-- 关闭按钮 (移动端) -->
++      <div class="mobile-close-button" v-if="isSidebarOpen" @click="toggleSidebar">
++        <el-icon><Close /></el-icon>
++      </div>
++      
++      <!-- 侧栏收起时的内容 -->
++      <div v-if="!isSidebarOpen" class="collapsed-content">
++        <el-icon class="menu-icon" @click="toggleSidebar">
++          <Memo />
++        </el-icon>
++        <img alt="logo" class="logo" src="@/imgs/logo.png" />
++        <el-button type="primary" class="sidebar-button bo01" @click="toggleSidebar">
++          <img alt="dia" src="@/imgs/dia.png" class="collapsed-icon" />
++        </el-button>
++        <el-button type="primary" class="sidebar-button bo02" @click="toggleSidebar">
++          <img alt="sear" src="@/imgs/search.png" class="collapsed-icon" />
++        </el-button>
++        <el-button type="primary" class="sidebar-button bo03" @click="toggleSidebar">
++          <img alt="late" src="@/imgs/lately.png" class="collapsed-icon" />
++        </el-button>
++        <el-button type="primary" class="sidebar-button bo04" @click="toggleSidebar">
++          <img alt="per" src="@/imgs/person.png" class="collapsed-icon" />
++        </el-button>
++      </div>
++
++      <!-- 侧栏展开时的内容 -->
++      <div v-else class="expanded-content">
++        <el-icon class="menu-icon-top-right" @click="toggleSidebar">
++          <Memo />
++        </el-icon>
++        <img class="math" src="@/imgs/math.png" />
++
++        <el-button type="primary" class="sidebar-button bo05" @click="handleNewDialog">
++          <div class="button-content">
++            <img alt="dia" src="@/imgs/dia.png" class="dia-icon" />
++            <span>新建对话</span>
++          </div>
++        </el-button>
++
++        <img class="line" src="@/imgs/line.png" />
++
++        <el-button type="primary" class="sidebar-button bo06" @click="openSearchDialog">
++          <div class="button-content">
++            <img alt="" src="@/imgs/search.png" class="search-icon" />
++            <span>搜索历史记录</span>
++          </div>
++        </el-button>
++        
++        <el-button type="primary" class="sidebar-button bo07" @click="toggleDialogList">
++          <div class="button-content">
++            <img alt="" src="@/imgs/lately.png" class="lately-icon" />
++            <span>近期对话</span>
++            <el-icon :class="['arrow-icon', { 'rotate': isDialogListVisible }]">
++              <ArrowDown v-if="!isDialogListVisible" />
++              <ArrowUp v-else />
++            </el-icon>
++          </div>
++        </el-button>
++        <!-- 近期对话列表 -->
++        <div v-if="isDialogListVisible" class="recent-dialog-list">
++          <div 
++            v-for="(dialog, index) in dialogs" 
++            :key="dialog.id"
++            :class="['dialog-item', { 'dialog-active': currentDialogId === dialog.id }]"
++            @click="loadDialog(dialog.id)"
++          >
++            <span class="dialog-name">{{ dialog.name }}</span>
++            <div class="icon-container">
++              <el-icon class="edit-icon" @click.stop="renameDialog(index)">
++                <Edit />
++              </el-icon>
++              <el-icon class="delete-icon" @click.stop="deleteDialog(dialog.id)">
++                <Delete />
++              </el-icon>
++            </div>
++          </div>
++        </div>
++        
++        <div class="user-profile-container">
++          <el-button type="primary" class="sidebar-button bo08" 
++            @mouseenter="handleButtonEnter" 
++            @mouseleave="handleButtonLeave" 
++            @click="togglePopover"
++          >
++          <div class="button-content">
++            <img alt="per" src="@/imgs/person.png" class="per-icon" />
++            <span>{{ currentUser ? currentUser.username : '个人信息' }}</span>
++            </div>
++          </el-button>
++            <!-- 将悬浮卡片移到这里，作为按钮的兄弟元素 -->
++          <div v-if="showPopover" class="popover" @mouseenter="handlePopoverEnter" @mouseleave="handlePopoverLeave">
++            <div class="popover-item" @click="showProfileDialog = true">
++              <img class="pen" src="@/imgs/pen.png" />
++              <span class="xiu">修改个人信息</span>
++            </div>
++            <div class="popover-item" @click="clearAllDialogs">
++              <img class="delete" src="@/imgs/delete.png" />
++              <span class="shan">清空全部对话</span>
++            </div>
++            <div class="popover-item">
++              <img class="set" src="@/imgs/set.png" />
++              <span class="she">设置</span>
++            </div>
++            <div class="popover-item">
++              <img class="call" src="@/imgs/call.png" />
++              <span class="jiao">联系我们</span>
++            </div>
++            <div class="popover-item" @click="logout">
++              <img class="loginout" src="@/imgs/loginout.png" />
++              <span class="tui">退出登录</span>
++            </div>
++          </div>
++        </div>
++      </div>
++    </div>
++
++    <!-- 个人信息编辑对话框 -->
++    <el-dialog
++      v-model="showProfileDialog"
++      title="个人信息"
++      class="profile-dialog"
++      :close-on-click-modal="false"
++      :width="isMobileView() ? '95%' : '500px'"
++    >
++    <el-form 
++        ref="userFormRef"
++        :model="userForm" 
++        :rules="userFormRules" 
++        label-width="100px"
++        label-position="left"
++      >
++        <el-form-item label="用户名" prop="username">
++          <el-input v-model="userForm.username"></el-input>
++        </el-form-item>
++        <el-form-item label="邮箱" prop="email">
++          <el-input v-model="userForm.email"></el-input>
++        </el-form-item>
++        <el-form-item label="当前密码" prop="current_password">
++          <el-input v-model="userForm.current_password" type="password"></el-input>
++        </el-form-item>
++        <el-form-item label="新密码" prop="new_password">
++          <el-input v-model="userForm.new_password" type="password"></el-input>
++          <div class="form-help-text">不修改密码请留空</div>
++        </el-form-item>
++        <el-form-item label="确认新密码" prop="confirm_password">
++          <el-input v-model="userForm.confirm_password" type="password"></el-input>
++        </el-form-item>
++      </el-form>
++      <template #footer>
++        <span class="dialog-footer">
++          <el-button @click="showProfileDialog = false">取消</el-button>
++          <el-button type="primary" @click="updateUserProfile" :loading="updating">
++            保存
++          </el-button>
++        </span>
++      </template>
++    </el-dialog>
++
++    <!-- 搜索对话框 -->
++    <el-dialog
++      v-model="showSearchDialog"
++      title="搜索历史对话"
++      class="search-dialog"
++      :close-on-click-modal="true"
++      :width="isMobileView() ? '95%' : '500px'"
++    >
++      <div class="search-container">
++        <el-input
++          v-model="searchQuery"
++          placeholder="输入关键词搜索历史对话..."
++          clearable
++          @keyup.enter="searchDialogs"
++        >
++          <template #append>
++            <el-button :icon="Search" @click="searchDialogs" :loading="searching">
++              搜索
++            </el-button>
++          </template>
++        </el-input>
++
++        <!-- 搜索提示 -->
++        <div v-if="!hasSearched" class="search-tips">
++          <p>搜索提示:</p>
++          <ul>
++            <li>输入关键词可以搜索对话标题</li>
++            <li>中文关键词支持拆分匹配</li>
++            <li>支持完整词组匹配</li>
++          </ul>
++        </div>
++        
++        <!-- 搜索结果 -->
++        <div v-if="hasSearched">
++          <div v-if="searchResults.length > 0" class="search-results">
++            <div 
++              v-for="dialog in searchResults" 
++              :key="dialog.id" 
++              class="search-result-item"
++              @click="loadDialogFromSearch(dialog.id)"
++            >
++              <div class="search-result-name">{{ dialog.name }}</div>
++            </div>
++          </div>
++          <div v-else class="no-results">
++            <p>没有找到匹配的对话记录</p>
++            <div class="search-suggestion">
++              <p>建议尝试:</p>
++              <ul>
++                <li>使用更短的关键词</li>
++                <li>检查关键词拼写</li>
++                <li>尝试更一般性的词语</li>
++              </ul>
++            </div>
++          </div>
++        </div>
++      </div>
++    </el-dialog>
++    <div class="content" :class="{ 'content-shifted': isSidebarOpen }">
++
++    <!-- 页面内容 -->
++    <point01 />
++  </div>
++</div>
++
++</template>
++<script setup>
++import { ref, onMounted, onUnmounted, reactive } from 'vue';
++const API_BASE_URL = '/api/auth';
++import { ElMessage, ElMessageBox, ElForm } from "element-plus";
++import { 
++  Memo, Edit, Delete, Search, Menu, Close, 
++  ArrowDown, ArrowUp 
++} from '@element-plus/icons-vue'; // 添加Menu和Close图标
++import point01 from './point01.vue';
++import { useRouter } from 'vue-router';
++import axios from 'axios';
++import {
++  getConversations,
++  deleteConversation,
++  renameConversation,
++} from '@/api/dify';
++const router = useRouter();
++// 添加移动端屏幕检测
++const isMobileView = () => {
++  return window.innerWidth <= 768;
++};
++// 状态管理
++const isSidebarOpen = ref(!isMobileView());
++const isDialogListVisible = ref(false);
++const showPopover = ref(false);
++const isPopoverHovered = ref(false);
++const isButtonHovered = ref(false);
++const currentUser = ref(null);
++const showProfileDialog = ref(false);
++const updating = ref(false);
++const userFormRef = ref(null);
++const showSearchDialog = ref(false);
++const searchQuery = ref('');
++const searchResults = ref([]);
++const searching = ref(false);
++const hasSearched = ref(false);
++const dialogs = ref([]);
++const aiComponent = ref(null);
++const currentDialogId = ref(null);
++const sidebarRef = ref(null);
++const mobileMenuButtonRef = ref(null);
++// 用户表单数据
++const userForm = reactive({
++  username: '',
++  email: '',
++  current_password: '',
++  new_password: '',
++  confirm_password: ''
++});
++
++// 表单验证规则
++const userFormRules = {
++  username: [
++    { required: true, message: '请输入用户名', trigger: 'blur' },
++    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
++  ],
++  email: [
++    { required: true, message: '请输入邮箱地址', trigger: 'blur' },
++    { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
++  ],
++  current_password: [
++    { required: true, message: '请输入当前密码', trigger: 'blur' }
++  ],
++  confirm_password: [
++    { validator: (rule, value, callback) => {
++      if (userForm.new_password && value !== userForm.new_password) {
++        callback(new Error('两次输入密码不一致'));
++      } else {
++        callback();
++      }
++    }, trigger: 'blur' }
++  ]
++};
++
++// 加载用户信息
++const loadUserInfo = () => {
++  const userJson = localStorage.getItem('user');
++  if (userJson) {
++    try {
++      currentUser.value = JSON.parse(userJson);
++      // 初始化表单数据
++      userForm.username = currentUser.value.username;
++      userForm.email = currentUser.value.email;
++    } catch (error) {
++      console.error('解析用户信息失败:', error);
++    }
++  }
++};
++// 更新用户信息
++const updateUserProfile = async () => {
++  if (!userFormRef.value) return;
++  
++  await userFormRef.value.validate(async (valid) => {
++    if (!valid) return;
++    
++    // 如果没有输入新密码，则移除相关字段
++    const updateData = { ...userForm };
++    if (!updateData.new_password) {
++      delete updateData.new_password;
++    }
++    // 移除确认密码字段，后端不需要
++    delete updateData.confirm_password;
++    
++    updating.value = true;
++    try {
++      const response = await axios.post(`${API_BASE_URL}/update-profile`, updateData);
++      
++      if (response.data.success) {
++        ElMessage.success('个人信息更新成功');
++        
++        // 更新本地存储的用户信息
++        localStorage.setItem('user', JSON.stringify(response.data.user));
++        currentUser.value = response.data.user;
++        
++        // 清空密码字段
++        userForm.current_password = '';
++        userForm.new_password = '';
++        userForm.confirm_password = '';
++        
++        // 关闭对话框
++        showProfileDialog.value = false;
++      } else {
++        ElMessage.error(response.data.message || '更新失败');
++      }
++    } catch (error) {
++      console.error('更新用户信息失败:', error);
++      const errorMsg = error.response?.data?.message || '更新失败，请稍后重试';
++      ElMessage.error(errorMsg);
++    } finally {
++      updating.value = false;
++    }
++  });
++};
++
++const logout = () => {
++  try {
++    // 清除所有认证信息
++    localStorage.removeItem('token');
++    localStorage.removeItem('user');
++    localStorage.removeItem('currentDialogId');
++    // 删除认证请求头
++    if (axios && axios.defaults.headers.common['Authorization']) {
++      delete axios.defaults.headers.common['Authorization'];
++    }
++    
++    // 显示成功消息
++    ElMessage.success('已成功退出登录');
++    
++    // 跳转到登录页面
++    router.push('/login');
++  } catch (error) {
++    console.error('退出登录失败:', error);
++    ElMessage.error('退出登录失败，请重试');
++  }
++};
++// 优化更新对话标题的处理函数
++const updateDialogTitle = (dialog) => {
++  if (!dialog || !dialog.id) return;
++  
++  console.log("更新对话标题:", dialog);
++  
++  const dialogIndex = dialogs.value.findIndex(d => d.id === dialog.id);
++  if (dialogIndex !== -1) {
++    // 只在标题确实不同时更新，避免不必要的UI刷新
++    if (dialogs.value[dialogIndex].name !== dialog.name) {
++      console.log(`对话 ${dialog.id} 标题从 "${dialogs.value[dialogIndex].name}" 更新为 "${dialog.name}"`);
++      dialogs.value[dialogIndex].name = dialog.name;
++    }
++  } else {
++    console.warn("找不到要更新标题的对话:", dialog.id);
++  }
++};
++const loadRecentDialogs = async () => {
++  try {
++    const response = await getConversations();
++    if (response && response.data) {
++      dialogs.value = response.data.map(conv => ({
++        id: conv.id,
++        name: conv.name || '未命名对话'
++      }));
++    }
++  } catch (error) {
++    console.error("加载对话列表失败:", error);
++    ElMessage.error("加载对话列表失败");
++  }
++};
++
++// 完善deleteDialog函数
++const deleteDialog = async (id) => {
++  try {
++    await deleteConversation(id);
++    // 从列表中移除
++    dialogs.value = dialogs.value.filter(dialog => dialog.id !== id);
++    ElMessage.success('对话删除成功');
++    
++    // 如果删除的是当前打开的对话，则创建新对话
++    const currentDialogId = localStorage.getItem('currentDialogId');
++    if (currentDialogId === id && aiComponent.value) {
++      aiComponent.value.handleNewDialog();
++    }
++  } catch (error) {
++    console.error("删除对话失败:", error);
++    ElMessage.error("删除对话失败");
++  }
++};
++// 完全重写加载对话函数，确保可靠切换
++const loadDialog = async (id) => {
++  if (!id) {
++    console.error("无效ID");
++    ElMessage.error("无效的对话ID");
++    return;
++  }
++  
++  // 即使加载失败，也要先记住当前选择的对话ID
++  currentDialogId.value = id;
++  localStorage.setItem('currentDialogId', id);
++  
++  try {
++    if (aiComponent.value) {
++      console.log("尝试加载对话:", id);
++      
++      // 设置当前活跃对话样式
++      await aiComponent.value.loadDialogFromLocal(id);
++      
++      // 无论成功与否都不改变顺序
++      ElMessage.success('对话加载成功');
++    } else {
++      console.error("AI组件未初始化");
++      ElMessage.error("系统未就绪，请刷新页面");
++    }
++  } catch (error) {
++    console.error("加载对话失败:", error);
++    ElMessage.error("加载对话失败，但已选择该对话");
++    
++    // 即使加载失败也保持当前选择的对话ID
++    // 这样用户可以看到选择了哪个对话，即使内容加载失败
++  }
++};
++// 添加新建对话函数
++const handleNewDialog = () => {
++  if (aiComponent.value) {
++    // 清除本地存储中的当前对话ID
++    localStorage.removeItem('currentDialogId');
++    currentDialogId.value = null;
++    
++    // 创建新对话
++    aiComponent.value.handleNewDialog();
++    
++    // 通知用户
++    ElMessage.success('已创建新对话');
++  }
++};
++
++
++// 优化添加到最近对话列表的方法
++const addToRecentDialogs = (dialog) => {
++  // 确保dialog是对象格式
++  if (typeof dialog === 'string') {
++    // 如果传入的是字符串，创建对话对象
++    dialog = {
++      id: Date.now().toString(),
++      name: dialog
++    };
++  }
++  
++  // 检查是否已存在相同ID的对话
++  const existingIndex = dialogs.value.findIndex(d => d.id === dialog.id);
++  
++  if (existingIndex !== -1) {
++    // 已存在相同ID的对话，只更新名称，不改变位置
++    dialogs.value[existingIndex].name = dialog.name || dialogs.value[existingIndex].name;
++  } else {
++    // 不存在相同ID的对话，添加到列表顶部（只有新对话才会被添加到顶部）
++    dialogs.value.unshift({
++      id: dialog.id,
++      name: dialog.name || '未命名对话'
++    });
++  }
++  
++  // 保存当前对话ID
++  if (dialog.id) {
++    localStorage.setItem('currentDialogId', dialog.id);
++    currentDialogId.value = dialog.id;
++  }
++};
++// 完善clearAllDialogs函数
++const clearAllDialogs = async () => {
++  try {
++    // 添加确认对话框
++    await ElMessageBox.confirm(
++      '确定要删除所有历史对话记录吗？此操作不可恢复。',
++      '确认删除',
++      {
++        confirmButtonText: '确定',
++        cancelButtonText: '取消',
++        type: 'warning',
++      }
++    );
++    
++    // 用户确认后，逐个删除所有对话
++    for (const dialog of dialogs.value) {
++      try {
++        await deleteConversation(dialog.id);
++      } catch (err) {
++        console.error(`删除对话 ${dialog.id} 失败:`, err);
++      }
++    }
++    
++    // 清空本地列表
++    dialogs.value = [];
++    ElMessage.success('所有对话已清空');
++    
++    // 创建新对话
++    if (aiComponent.value) {
++      aiComponent.value.handleNewDialog();
++    }
++  } catch (error) {
++    if (error === 'cancel') {
++      // 用户取消删除操作
++      ElMessage.info('已取消删除操作');
++    } else {
++      console.error("清空对话失败:", error);
++      ElMessage.error("清空对话失败");
++    }
++  }
++};
++
++// 修复renameDialog函数
++const renameDialog = async (index) => {
++  const newValue = prompt('请输入新的名称', dialogs.value[index].name);
++  if (newValue !== null && newValue.trim() !== '') {
++    try {
++      const dialogId = dialogs.value[index].id;
++      await renameConversation(dialogId, newValue, false);
++      dialogs.value[index].name = newValue;
++      ElMessage.success('对话已重命名');
++    } catch (error) {
++      console.error("重命名对话失败:", error);
++      ElMessage.error("重命名对话失败");
++    }
++  }
++};
++// 打开搜索对话框
++const openSearchDialog = () => {
++  searchQuery.value = '';
++  searchResults.value = [];
++  hasSearched.value = false; // 重置搜索状态
++  showSearchDialog.value = true;
++};
++
++// 搜索对话历史
++// 更新的搜索对话历史功能
++// 改进的搜索对话历史功能
++const searchDialogs = async () => {
++  if (!searchQuery.value.trim()) {
++    searchResults.value = [];
++    hasSearched.value = true;
++    return;
++  }
++
++  searching.value = true;
++  hasSearched.value = true;
++  try {
++    // 对搜索关键词进行处理
++    const query = searchQuery.value.trim();
++    console.log("原始搜索关键词:", query);
++    
++    // 将中文关键词拆分成单字，以便进行更灵活的匹配
++    const queryChars = Array.from(query);
++    
++    console.log("拆分后的搜索关键词:", queryChars);
++    console.log("当前对话列表:", dialogs.value);
++    
++    // 增强的匹配逻辑
++    searchResults.value = dialogs.value.filter(dialog => {
++      // 确保dialog.name存在且是字符串
++      if (!dialog.name || typeof dialog.name !== 'string') return false;
++      
++      // 对话名称
++      const dialogName = dialog.name;
++      
++      // 1. 完整匹配检查 (不区分大小写)
++      if (dialogName.toLowerCase().includes(query.toLowerCase())) {
++        console.log(`对话 "${dialogName}" 完整匹配关键词 "${query}"`);
++        return true;
++      }
++      
++      // 2. 中文分字匹配 - 任意连续两个字符匹配
++      if (queryChars.length >= 2) {
++        for (let i = 0; i < queryChars.length - 1; i++) {
++          const twoChars = queryChars[i] + queryChars[i + 1];
++          if (dialogName.includes(twoChars)) {
++            console.log(`对话 "${dialogName}" 部分匹配关键词 "${twoChars}"`);
++            return true;
++          }
++        }
++      }
++      
++      // 3. 单字匹配率检查 - 如果超过50%的字符匹配则视为匹配成功
++      let matchedChars = 0;
++      for (const char of queryChars) {
++        if (dialogName.includes(char)) {
++          matchedChars++;
++        }
++      }
++      
++      // 计算匹配率
++      const matchRate = queryChars.length > 0 ? matchedChars / queryChars.length : 0;
++      const threshold = 0.5; // 50%的匹配率阈值
++      
++      if (matchRate >= threshold) {
++        console.log(`对话 "${dialogName}" 字符匹配率: ${(matchRate * 100).toFixed(1)}%, 超过阈值 ${threshold * 100}%`);
++        return true;
++      }
++      
++      console.log(`对话 "${dialogName}" 不匹配关键词 "${query}"`);
++      return false;
++    });
++    
++    console.log("搜索结果:", searchResults.value);
++    
++    // 添加搜索结果反馈
++    if (searchResults.value.length > 0) {
++      ElMessage.success(`找到 ${searchResults.value.length} 个匹配结果`);
++    } else {
++      ElMessage.info('未找到匹配的对话记录');
++    }
++  } catch (error) {
++    console.error("搜索对话失败:", error);
++    ElMessage.error("搜索对话失败");
++  } finally {
++    searching.value = false;
++  }
++};
++
++// 从搜索结果加载对话
++const loadDialogFromSearch = (id) => {
++  loadDialog(id);
++  showSearchDialog.value = false;
++};
++// 删除所有对话记录
++const deleteAllDialogs = () => {
++  dialogs.value = [];
++};
++
++// 修改toggleSidebar函数以处理移动端
++const toggleSidebar = () => {
++  isSidebarOpen.value = !isSidebarOpen.value;
++  
++  // 在移动端打开侧栏时，添加body类阻止滚动
++  if (isMobileView()) {
++    if (isSidebarOpen.value) {
++      document.body.classList.add('sidebar-open-mobile');
++    } else {
++      document.body.classList.remove('sidebar-open-mobile');
++    }
++  }
++};
++// 修改移动端体验：点击内容区域关闭侧栏
++const closeOnClickOutside = (event) => {
++  // 仅在侧边栏打开且为移动视图时处理
++  if (isSidebarOpen.value && isMobileView()) {
++    const sidebar = sidebarRef.value;
++    const menuButton = mobileMenuButtonRef.value;
++    
++    // 检查点击是否在侧边栏和菜单按钮之外
++    if (sidebar && !sidebar.contains(event.target) && 
++        (!menuButton || !menuButton.contains(event.target))) {
++      console.log('关闭侧边栏 - 外部点击');
++      isSidebarOpen.value = false;
++      document.body.classList.remove('sidebar-open-mobile');
++    }
++  }
++};
++// 监听屏幕大小变化
++const handleResize = () => {
++  if (!isMobileView() && document.body.classList.contains('sidebar-open-mobile')) {
++    document.body.classList.remove('sidebar-open-mobile');
++  }
++};
++const toggleDialogList = () => {
++  isDialogListVisible.value = !isDialogListVisible.value;
++  // 确保箭头图标在点击后始终向下旋转
++  if (isDialogListVisible.value) {
++    // 这里可以添加旋转动画
++    const arrowIcon = document.querySelector('.arrow-icon');
++    if (arrowIcon) {
++      arrowIcon.style.transform = 'rotate(180deg)';
++    }
++  } else {
++    const arrowIcon = document.querySelector('.arrow-icon');
++    if (arrowIcon) {
++      arrowIcon.style.transform = 'rotate(0deg)';
++    }
++  }
++};
++
++// 悬浮卡片管理
++const handleButtonEnter = () => {
++  isButtonHovered.value = true;
++  showPopover.value = true;
++};
++
++const handleButtonLeave = () => {
++  isButtonHovered.value = false;
++  if (!isPopoverHovered.value) {
++    setTimeout(() => {
++      if (!isPopoverHovered.value && !isButtonHovered.value) {
++        showPopover.value = false;
++      }
++    }, 300); // 延迟时间从100ms增加到300ms
++  }
++};
++
++const handlePopoverEnter = () => {
++  isPopoverHovered.value = true;
++};
++
++const handlePopoverLeave = () => {
++  isPopoverHovered.value = false;
++  if (!isButtonHovered.value) {
++    setTimeout(() => {
++      if (!isButtonHovered.value && !isPopoverHovered.value) {
++        showPopover.value = false;
++      }
++    }, 300); // 增加延迟到300ms，使隐藏更平滑
++  }
++};
++
++const togglePopover = () => {
++  showPopover.value = !showPopover.value;
++};
++onMounted(() => {
++  // 添加全局点击事件监听器
++  document.addEventListener('click', closeOnClickOutside ,true);
++  // 添加窗口大小变化监听器
++  window.addEventListener('resize', handleResize);
++  
++  // 保留原有的初始化逻辑
++  const token = localStorage.getItem('token');
++  if (!token) {
++    ElMessage.warning('您尚未登录，请先登录');
++    router.push('/login');
++    return;
++  }
++  loadUserInfo();
++  loadRecentDialogs();
++  
++  // 设置拦截器
++  const interceptorId = axios.interceptors.response.use(
++    response => response,
++    error => {
++      if (error.response && error.response.status === 401) {
++        ElMessage.error('登录已过期，请重新登录');
++        router.push('/login');
++      }
++      return Promise.reject(error);
++    }
++  );
++  
++  // 组件卸载时移除拦截器
++  onUnmounted(() => {
++    axios.interceptors.response.eject(interceptorId);
++    // 移除事件监听器
++    document.removeEventListener('click', closeOnClickOutside ,true);
++    window.removeEventListener('resize', handleResize);
++  });
++});
++</script>
++
++
++<style>
++/* 仅针对自动填充的元素添加全局样式 */
++input:-webkit-autofill,
++input:-webkit-autofill:hover,
++input:-webkit-autofill:focus,
++input:-webkit-autofill:active {
++  transition: background-color 5000s ease-in-out 0s !important;
++  -webkit-text-fill-color: inherit !important;
++  box-shadow: 0 0 0px 1000px transparent inset !important;
++}
++</style>
++<style scoped>
++/* 基础样式和布局容器 */
++body, html {
++  margin: 0;
++  padding: 0;
++  height: 100%;
++  width: 100%;
++  overflow-x: hidden;
++  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 
++    'Open Sans', 'Helvetica Neue', sans-serif;
++}
++
++/* 防止移动端侧栏打开时页面滚动 */
++body.sidebar-open-mobile {
++  overflow: hidden;
++}
++
++.container {
++  display: flex;
++  min-height: 100vh;
++  position: relative;
++  overflow-x: hidden;
++}
++
++/* 移动端菜单按钮 */
++.mobile-menu-button {
++  position: fixed;
++  top: 1rem;
++  left: 1rem;
++  z-index: 1000;
++  background: linear-gradient(
++    90deg,
++    rgba(170, 239, 242, 1) 0.92%,
++    rgba(136, 191, 242, 0.95) 33.49%,
++    rgba(162, 169, 252, 0.89) 74.36%,
++    rgba(113, 61, 235, 0.8) 100%
++  );
++  border-radius: 50%;
++  width: 40px;
++  height: 40px;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
++  cursor: pointer;
++  display: none; /* 默认隐藏，在移动端显示 */
++}
++.mobile-menu-button img {
++  width: 24px;
++  height: 24px;
++  object-fit: contain; /* 确保图片正确显示 */
++}
++.mobile-menu-button .el-icon {
++  font-size: 1.5rem;
++  color: rgba(111, 58, 246, 1);
++}
++
++/* 移动端关闭按钮 */
++.mobile-close-button {
++  position: absolute;
++  top: 1rem;
++  right: 1rem;
++  z-index: 1010;
++  display: none;
++  cursor: pointer;
++}
++
++.mobile-close-button .el-icon {
++  font-size: 1.5rem;
++  color: rgba(111, 58, 246, 1);
++}
++
++/* 页面内容区域 */
++.content {
++  flex: 1;
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  justify-content: center;
++  transition: margin-left 0.3s ease;
++  max-width: calc(100vw - 80px);
++  margin-left: 80px;
++}
++
++.content-shifted {
++  margin-left: 280px;
++  max-width: calc(100vw - 280px);
++  position: relative;
++}
++
++/* 侧边栏基础样式 */
++.sidebar {
++  height: 100vh;
++  background-color: #ffffff;
++  box-shadow: 4px 0 8px 0 rgba(0, 0, 0, 0.1);
++  color: white;
++  position: fixed;
++  top: 0;
++  left: 0;
++  transition: all 0.3s ease;
++  z-index: 1000;
++  overflow-y: auto;
++}
++
++.sidebar-collapsed {
++  width: 80px;
++  overflow: hidden;
++}
++
++.sidebar-open {
++  width: 280px;
++}
++
++/* 侧栏内容容器 */
++.collapsed-content {
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  padding-top: 1.5rem;
++  height: 100%;
++  justify-content: flex-start;
++}
++
++.collapsed-content .logo {
++  margin-bottom: 1.5rem;
++}
++
++/* 修复menu-icon位置，避免与logo重叠 */
++.collapsed-content .menu-icon {
++  position: relative;
++  top: auto;
++  right: auto;
++  margin-bottom: 0.5rem;
++  font-size: 1.5rem;
++}
++
++/* 优化按钮垂直分布 */
++.collapsed-content .sidebar-button {
++  margin: 0.5rem auto;
++}
++
++.sidebar .sidebar-button + .sidebar-button,
++.sidebar-collapsed .sidebar-button + .sidebar-button,
++.sidebar-open .sidebar-button + .sidebar-button,
++.collapsed-content .sidebar-button + .sidebar-button,
++.expanded-content .sidebar-button + .sidebar-button {
++  margin-left: auto;
++}
++/* .collapsed-content .el-button {
++  margin: 0.75rem auto !important;
++  margin-left: auto !important;
++  margin-right: auto !important;
++} */
++
++.expanded-content {
++  padding: 1.5rem 1rem;
++  position: relative;
++  height: calc(100% - 3rem);
++  display: flex;
++  flex-direction: column;
++  gap: 0.5rem; /* 添加统一的间距 */
++}
++
++/* 菜单图标样式 */
++.menu-icon {
++  color: rgba(164, 128, 252, 1);
++  position: absolute;
++  top: 1rem;
++  right: 1rem;
++  font-size: 1.25rem;
++  cursor: pointer;
++}
++
++.menu-icon:hover {
++  color: #409eff;
++}
++
++.menu-icon-top-right {
++  position: absolute;
++  top: 1rem;
++  right: 1rem;
++  color: rgba(164, 128, 252, 1);
++  font-size: 1.25rem;
++  cursor: pointer;
++}
++
++.menu-icon-top-right:hover {
++  color: #409eff;
++}
++
++/* 侧栏图像元素 */
++.logo {
++  width: 3.125rem;
++  height: 3.125rem;
++  display: block;
++  margin-top: 0.625rem;
++}
++
++.math {
++  width: 100%; /* 改为100%，避免溢出 */
++  max-width: 200px;
++  height: auto;
++  top: 4%;
++  position: relative;
++  margin: 0 auto 1.5rem;
++  display: block;
++  transform: scale(1.06); /* 如需要略微放大，使用transform而不是宽度溢出 */
++  transform-origin: center; /* 确保从中心放大 */
++}
++
++.line {
++  width: 93%;
++  max-width: 190px;
++  height: auto;
++  margin: 1rem auto;
++  display: block;
++  left: 1%;
++    position: relative;
++}
++
++/* 按钮基础样式 */
++.sidebar-button {
++  opacity: 1;
++  border-radius: 10px;
++  display: flex;
++  align-items: center;
++  border: none;
++  margin: 0.25rem auto; /* 调整垂直间距 */
++  width: 100%;
++  max-width: 220px;
++  background: rgba(237, 230, 255, 0.81);
++}
++
++.sidebar-button:hover {
++  background-color: rgb(88.6%, 83.9%, 100%);
++  color: rgba(111, 58, 246, 1);
++}
++
++/* 收起侧栏按钮的居中对齐 */
++.collapsed-icon {
++  width: 1.5rem;
++  height: 1.5rem;
++  max-width: 100%;
++  object-fit: contain;
++  margin: 0 auto;
++  display: block;
++}
++
++/* 优化折叠侧栏按钮 */
++.bo01, .bo02, .bo03, .bo04 {
++  width: 3rem;
++  height: 3rem;
++  padding: 0;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  margin: 0.5rem auto;
++}
++
++/* 展开侧栏按钮样式 */
++.bo05, .bo06, .bo07, .bo08 {
++  height: 3.2rem;
++  color: rgba(111, 58, 246, 1);
++  justify-content: flex-start;
++  padding-left: 1rem;
++  padding-right: 1rem;
++  font-weight: 550;
++  font-size: 14px;
++  display: flex;
++  align-items: center;
++  width: 80%;
++  left: 1%;
++}
++.bo05{
++  position: relative;
++    top: 1.3%;
++    width: 80%;
++    left: 1%;
++}
++.bo06{
++  position: relative;
++  top:-1%;
++}
++/* 按钮内图标 */
++.button-content {
++  display: flex;
++  align-items: center;
++  width: 100%;
++  height: 100%;
++  position: relative;
++}
++.button-content span {
++  margin-right: 8px; /* 文本与箭头保持间距 */
++}
++.button-content img {
++  width: 1.25rem;
++  height: 1.25rem;
++  margin-right: 0.75rem;
++  margin-top:0.16rem ;
++}
++
++/* 箭头图标固定位置 */
++.arrow-icon {
++  transition: transform 0.8s ease;
++  margin-left: auto; /* 使用auto margin定位到右侧 */
++  margin-right: 0;   /* 取消原来的auto */
++  position: relative; /* 不再依赖绝对定位 */
++}
++
++.arrow-icon.rotate {
++  transform: rotate(180deg);
++}
++
++/* 调整用户配置容器的间距 */
++.user-profile-container {
++  margin-top: auto;
++  margin-bottom: 1.5rem;
++  width: 100%;
++  position: relative;  /* 相对定位 */
++}
++
++/* 个人信息悬浮卡片 */
++.popover {
++  position: absolute;
++  bottom: 100%;  /* 定位到按钮上方 */
++  left: 50%;     /* 水平居中对齐 */
++  transform: translateX(-50%);  /* 水平居中对齐 */
++  width: 72%;
++  height: 363%;
++  background: rgba(255, 255, 255, 1);
++  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
++  border: 1px solid #eee;
++  border-radius: 10px;
++  padding: 0.5rem;
++  z-index: 1010;
++  margin-bottom: 10px;  /* 与按钮保持间距 */
++}
++
++.popover-item {
++  display: flex;
++  align-items: center;
++  padding: 0.75rem 1rem;
++  cursor: pointer;
++  border-radius: 6px;
++  transition: background-color 0.2s;
++}
++
++.popover-item:hover {
++  background-color: rgba(237, 230, 255, 0.81);
++}
++
++.popover-item img {
++  width: 1.25rem;
++  height: 1.25rem;
++  margin-right: 0.75rem;
++}
++
++.popover-item span {
++  color: #333;
++  font-size: 0.8rem;
++}
++
++/* 确保近期对话列表有统一的缩进 */
++.recent-dialog-list {
++  margin-top: 0.5rem; /* 改为与其他元素一致的间距 */
++  margin-left: 0;
++  margin-right: 0;
++  padding-left: 0;
++  padding-right: 0;
++  max-height: 17.2rem;
++  overflow-y: auto;
++  overflow-x: hidden;
++  width: 85%;
++  left: 7%;
++  position: relative;
++  border-radius: 10px;
++  background: transparent;
++}
++
++.recent-dialog-list::-webkit-scrollbar {
++  width: 4px;
++}
++
++.recent-dialog-list::-webkit-scrollbar-track {
++  background: transparent;
++}
++
++.recent-dialog-list::-webkit-scrollbar-thumb {
++  background-color: rgba(111, 58, 246, 0.5);
++  border-radius: 4px;
++}
++
++/* 对话项 */
++.dialog-item {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  padding: 0.5rem;
++  color: rgba(111, 58, 246, 1);
++  background-color: rgba(249, 246, 255, 1);
++  font-size: 0.875rem;
++  cursor: pointer;
++  border-radius: 6px;
++  margin-bottom: 0.25rem;
++  width: 94%;
++    left: 4%;
++    box-sizing: border-box;
++    position: relative;
++}
++.dialog-active {
++  background-color: rgba(237, 230, 255, 0.81);
++  font-weight: bold;
++}
++
++.dialog-name {
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++  max-width: 100%;
++  margin: 0.1875rem;
++}
++
++.dialog-item:hover {
++  background-color: rgba(237, 230, 255, 0.81);
++}
++
++.icon-container {
++  display: flex;
++  gap: 0.5rem;
++}
++
++.edit-icon, .delete-icon {
++  cursor: pointer;
++  color: rgba(111, 58, 246, 0.7);
++}
++
++.edit-icon:hover, .delete-icon:hover {
++  color: rgba(111, 58, 246, 1);
++}
++
++/* 搜索结果样式 */
++.search-container {
++  width: 100%;
++}
++
++.search-results {
++  margin-top: 1rem;
++  max-height: 300px;
++  overflow-y: auto;
++  border-radius: 8px;
++  background-color: rgba(249, 246, 255, 1);
++}
++
++.search-result-item {
++  padding: 0.75rem;
++  cursor: pointer;
++  border-bottom: 1px solid rgba(237, 230, 255, 0.81);
++  color: rgba(111, 58, 246, 1);
++  transition: background-color 0.2s;
++}
++
++.search-result-item:hover {
++  background-color: rgba(237, 230, 255, 0.81);
++}
++
++.search-result-name {
++  font-size: 0.875rem;
++}
++
++/* 搜索提示和无结果提示 */
++.search-tips,
++.no-results {
++  margin-top: 1rem;
++  padding: 1rem;
++  background-color: rgba(249, 246, 255, 0.5);
++  border-radius: 8px;
++}
++
++
++/* 对话框样式优化 */
++.profile-dialog,
++.search-dialog {
++  border-radius: 12px;
++  overflow: hidden;
++}
++
++/* 表单帮助文本 */
++.form-help-text {
++  font-size: 0.75rem;
++  color: #909399;
++  margin-top: 0.25rem;
++}
++
++/* 媒体查询 - 中等屏幕
++@media (max-width: 1024px) {
++  .content-shifted {
++    margin-left: 250px;
++    max-width: calc(100vw - 250px);
++  }
++  
++  .sidebar-open {
++    width: 250px;
++  }
++} */
++
++/* 媒体查询 - 平板设备 */
++@media (max-width: 768px) {
++  .mobile-menu-button,
++  .mobile-close-button {
++    display: flex;
++  }
++  
++  .menu-icon,
++  .menu-icon-top-right {
++    display: none;
++  }
++  
++  .content {
++    margin-left: 0;
++    max-width: 100vw;
++  }
++  
++  .content-shifted {
++    margin-left: 0;
++    max-width: 100vw;
++    filter: blur(3px);
++    pointer-events: none;
++  }
++  
++  .sidebar {
++    transform: translateX(-100%);
++    width: 80vw;
++    max-width: 280px;
++  }
++  
++  .sidebar-open {
++    transform: translateX(0);
++    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
++  }
++
++  .sidebar-collapsed {
++    transform: translateX(-100%);
++  }
++  
++  /* 悬浮卡片位置调整 */
++  .popover {
++    left: 50%;
++    transform: translateX(-50%);
++    width: 80%;
++    max-width: 250px;
++  }
++}
++
++/* 媒体查询 - 移动设备 */
++@media (max-width: 480px) {
++  .mobile-menu-button {
++    top: 0.75rem;
++    left: 0.75rem;
++    width: 36px;
++    height: 36px;
++  }
++  
++  .sidebar {
++    width: 85vw;
++  }
++  
++  .math {
++    width: 70%;
++  }
++  
++  .popover {
++    width: 90%;
++  }
++  
++  .search-results {
++    max-height: 250px;
++  }
++  
++  .dialog-item {
++    padding: 0.4rem;
++  }
++
++  .collapsed-icon {
++    width: 1.25rem;
++    height: 1.25rem;
++  }
++  
++  .bo01, .bo02, .bo03, .bo04 {
++    width: 2.5rem;
++    height: 2.5rem;
++    margin: 0.5rem auto;
++  }
++
++  .button-content img {
++    width: 1.1rem;
++    height: 1.1rem;
++    margin-right: 0.5rem;
++  }
++
++  .arrow-icon {
++    font-size: 0.9rem;
++  }
++
++}
++</style>
+\ No newline at end of file
+diff --git a/frontend/src/views/HomeView.vue b/frontend/src/views/HomeView.vue
+index 0b7b46f..a780ebd 100644
+--- a/frontend/src/views/HomeView.vue
++++ b/frontend/src/views/HomeView.vue
+@@ -1,5 +1,5 @@
+ <script setup lang="ts">
+-import HelloWorld from '@/views/home.vue'
++import HelloWorld from '@/views/Home.vue'
+ </script>
+ 
+ <template>
+diff --git a/frontend/src/views/Leading.vue b/frontend/src/views/Leading.vue
+new file mode 100644
+index 0000000..d87ec5a
+--- /dev/null
++++ b/frontend/src/views/Leading.vue
+@@ -0,0 +1,1427 @@
++<template>
++  <div class="container">
++    <!-- 移动端菜单按钮 -->
++    <div class="mobile-menu-button" ref="mobileMenuButtonRef" v-if="!isSidebarOpen" @click="toggleSidebar">
++      <img alt="" src="@/imgs/mobile-menu-button.png" />
++    </div>
++
++    <!-- 边栏 -->
++    <div
++      ref="sidebarRef"
++      class="sidebar"
++      :class="{ 'sidebar-open': isSidebarOpen, 'sidebar-collapsed': !isSidebarOpen }"
++    >
++      <!-- 关闭按钮 (移动端) -->
++      <div class="mobile-close-button" v-if="isSidebarOpen" @click="toggleSidebar">
++        <el-icon><Close /></el-icon>
++      </div>
++      
++      <!-- 侧栏收起时的内容 -->
++      <div v-if="!isSidebarOpen" class="collapsed-content">
++        <el-icon class="menu-icon" @click="toggleSidebar">
++          <Memo />
++        </el-icon>
++        <img alt="logo" class="logo" src="@/imgs/logo.png" />
++        <el-button type="primary" class="sidebar-button bo01" @click="toggleSidebar">
++          <img alt="dia" src="@/imgs/dia.png" class="collapsed-icon" />
++        </el-button>
++        <el-button type="primary" class="sidebar-button bo02" @click="toggleSidebar">
++          <img alt="sear" src="@/imgs/search.png" class="collapsed-icon" />
++        </el-button>
++        <el-button type="primary" class="sidebar-button bo03" @click="toggleSidebar">
++          <img alt="late" src="@/imgs/lately.png" class="collapsed-icon" />
++        </el-button>
++        <el-button type="primary" class="sidebar-button bo04" @click="toggleSidebar">
++          <img alt="per" src="@/imgs/person.png" class="collapsed-icon" />
++        </el-button>
++      </div>
++
++      <!-- 侧栏展开时的内容 -->
++      <div v-else class="expanded-content">
++        <el-icon class="menu-icon-top-right" @click="toggleSidebar">
++          <Memo />
++        </el-icon>
++        <img class="math" src="@/imgs/math.png" />
++
++        <el-button type="primary" class="sidebar-button bo05" @click="handleNewDialog">
++          <div class="button-content">
++            <img alt="dia" src="@/imgs/dia.png" class="dia-icon" />
++            <span>新建对话</span>
++          </div>
++        </el-button>
++
++        <img class="line" src="@/imgs/line.png" />
++
++        <el-button type="primary" class="sidebar-button bo06" @click="openSearchDialog">
++          <div class="button-content">
++            <img alt="" src="@/imgs/search.png" class="search-icon" />
++            <span>搜索历史记录</span>
++          </div>
++        </el-button>
++        
++        <el-button type="primary" class="sidebar-button bo07" @click="toggleDialogList">
++          <div class="button-content">
++            <img alt="" src="@/imgs/lately.png" class="lately-icon" />
++            <span>近期对话</span>
++            <el-icon :class="['arrow-icon', { 'rotate': isDialogListVisible }]">
++              <ArrowDown v-if="!isDialogListVisible" />
++              <ArrowUp v-else />
++            </el-icon>
++          </div>
++        </el-button>
++        <!-- 近期对话列表 -->
++        <div v-if="isDialogListVisible" class="recent-dialog-list">
++          <div 
++            v-for="(dialog, index) in dialogs" 
++            :key="dialog.id"
++            :class="['dialog-item', { 'dialog-active': currentDialogId === dialog.id }]"
++            @click="loadDialog(dialog.id)"
++          >
++            <span class="dialog-name">{{ dialog.name }}</span>
++            <div class="icon-container">
++              <el-icon class="edit-icon" @click.stop="renameDialog(index)">
++                <Edit />
++              </el-icon>
++              <el-icon class="delete-icon" @click.stop="deleteDialog(dialog.id)">
++                <Delete />
++              </el-icon>
++            </div>
++          </div>
++        </div>
++        
++        <div class="user-profile-container">
++          <el-button type="primary" class="sidebar-button bo08" 
++            @mouseenter="handleButtonEnter" 
++            @mouseleave="handleButtonLeave" 
++            @click="togglePopover"
++          >
++          <div class="button-content">
++            <img alt="per" src="@/imgs/person.png" class="per-icon" />
++            <span>{{ currentUser ? currentUser.username : '个人信息' }}</span>
++            </div>
++          </el-button>
++            <!-- 将悬浮卡片移到这里，作为按钮的兄弟元素 -->
++          <div v-if="showPopover" class="popover" @mouseenter="handlePopoverEnter" @mouseleave="handlePopoverLeave">
++            <div class="popover-item" @click="showProfileDialog = true">
++              <img class="pen" src="@/imgs/pen.png" />
++              <span class="xiu">修改个人信息</span>
++            </div>
++            <div class="popover-item" @click="clearAllDialogs">
++              <img class="delete" src="@/imgs/delete.png" />
++              <span class="shan">清空全部对话</span>
++            </div>
++            <div class="popover-item">
++              <img class="set" src="@/imgs/set.png" />
++              <span class="she">设置</span>
++            </div>
++            <div class="popover-item">
++              <img class="call" src="@/imgs/call.png" />
++              <span class="jiao">联系我们</span>
++            </div>
++            <div class="popover-item" @click="logout">
++              <img class="loginout" src="@/imgs/loginout.png" />
++              <span class="tui">退出登录</span>
++            </div>
++          </div>
++        </div>
++      </div>
++    </div>
++
++    <!-- 个人信息编辑对话框 -->
++    <el-dialog
++      v-model="showProfileDialog"
++      title="个人信息"
++      class="profile-dialog"
++      :close-on-click-modal="false"
++      :width="isMobileView() ? '95%' : '500px'"
++    >
++    <el-form 
++        ref="userFormRef"
++        :model="userForm" 
++        :rules="userFormRules" 
++        label-width="100px"
++        label-position="left"
++      >
++        <el-form-item label="用户名" prop="username">
++          <el-input v-model="userForm.username"></el-input>
++        </el-form-item>
++        <el-form-item label="邮箱" prop="email">
++          <el-input v-model="userForm.email"></el-input>
++        </el-form-item>
++        <el-form-item label="当前密码" prop="current_password">
++          <el-input v-model="userForm.current_password" type="password"></el-input>
++        </el-form-item>
++        <el-form-item label="新密码" prop="new_password">
++          <el-input v-model="userForm.new_password" type="password"></el-input>
++          <div class="form-help-text">不修改密码请留空</div>
++        </el-form-item>
++        <el-form-item label="确认新密码" prop="confirm_password">
++          <el-input v-model="userForm.confirm_password" type="password"></el-input>
++        </el-form-item>
++      </el-form>
++      <template #footer>
++        <span class="dialog-footer">
++          <el-button @click="showProfileDialog = false">取消</el-button>
++          <el-button type="primary" @click="updateUserProfile" :loading="updating">
++            保存
++          </el-button>
++        </span>
++      </template>
++    </el-dialog>
++
++    <!-- 搜索对话框 -->
++    <el-dialog
++      v-model="showSearchDialog"
++      title="搜索历史对话"
++      class="search-dialog"
++      :close-on-click-modal="true"
++      :width="isMobileView() ? '95%' : '500px'"
++    >
++      <div class="search-container">
++        <el-input
++          v-model="searchQuery"
++          placeholder="输入关键词搜索历史对话..."
++          clearable
++          @keyup.enter="searchDialogs"
++        >
++          <template #append>
++            <el-button :icon="Search" @click="searchDialogs" :loading="searching">
++              搜索
++            </el-button>
++          </template>
++        </el-input>
++
++        <!-- 搜索提示 -->
++        <div v-if="!hasSearched" class="search-tips">
++          <p>搜索提示:</p>
++          <ul>
++            <li>输入关键词可以搜索对话标题</li>
++            <li>中文关键词支持拆分匹配</li>
++            <li>支持完整词组匹配</li>
++          </ul>
++        </div>
++        
++        <!-- 搜索结果 -->
++        <div v-if="hasSearched">
++          <div v-if="searchResults.length > 0" class="search-results">
++            <div 
++              v-for="dialog in searchResults" 
++              :key="dialog.id" 
++              class="search-result-item"
++              @click="loadDialogFromSearch(dialog.id)"
++            >
++              <div class="search-result-name">{{ dialog.name }}</div>
++            </div>
++          </div>
++          <div v-else class="no-results">
++            <p>没有找到匹配的对话记录</p>
++            <div class="search-suggestion">
++              <p>建议尝试:</p>
++              <ul>
++                <li>使用更短的关键词</li>
++                <li>检查关键词拼写</li>
++                <li>尝试更一般性的词语</li>
++              </ul>
++            </div>
++          </div>
++        </div>
++      </div>
++    </el-dialog>
++    <div class="content" :class="{ 'content-shifted': isSidebarOpen }">
++
++    <!-- 页面内容 -->
++     <list />
++    <point02 />
++  </div>
++</div>
++
++</template>
++<script setup>
++import { ref, onMounted, onUnmounted, reactive } from 'vue';
++const API_BASE_URL = '/api/auth';
++import { ElMessage, ElMessageBox, ElForm } from "element-plus";
++import { 
++  Memo, Edit, Delete, Search, Menu, Close, 
++  ArrowDown, ArrowUp 
++} from '@element-plus/icons-vue'; // 添加Menu和Close图标
++import point02 from './point02.vue';
++import list from './menu02.vue';
++
++import { useRouter } from 'vue-router';
++import axios from 'axios';
++import {
++  getConversations,
++  deleteConversation,
++  renameConversation,
++} from '@/api/dify';
++const router = useRouter();
++// 添加移动端屏幕检测
++const isMobileView = () => {
++  return window.innerWidth <= 768;
++};
++// 状态管理
++const isSidebarOpen = ref(!isMobileView());
++const isDialogListVisible = ref(false);
++const showPopover = ref(false);
++const isPopoverHovered = ref(false);
++const isButtonHovered = ref(false);
++const currentUser = ref(null);
++const showProfileDialog = ref(false);
++const updating = ref(false);
++const userFormRef = ref(null);
++const showSearchDialog = ref(false);
++const searchQuery = ref('');
++const searchResults = ref([]);
++const searching = ref(false);
++const hasSearched = ref(false);
++const dialogs = ref([]);
++const aiComponent = ref(null);
++const currentDialogId = ref(null);
++const sidebarRef = ref(null);
++const mobileMenuButtonRef = ref(null);
++// 用户表单数据
++const userForm = reactive({
++  username: '',
++  email: '',
++  current_password: '',
++  new_password: '',
++  confirm_password: ''
++});
++
++// 表单验证规则
++const userFormRules = {
++  username: [
++    { required: true, message: '请输入用户名', trigger: 'blur' },
++    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
++  ],
++  email: [
++    { required: true, message: '请输入邮箱地址', trigger: 'blur' },
++    { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
++  ],
++  current_password: [
++    { required: true, message: '请输入当前密码', trigger: 'blur' }
++  ],
++  confirm_password: [
++    { validator: (rule, value, callback) => {
++      if (userForm.new_password && value !== userForm.new_password) {
++        callback(new Error('两次输入密码不一致'));
++      } else {
++        callback();
++      }
++    }, trigger: 'blur' }
++  ]
++};
++
++// 加载用户信息
++const loadUserInfo = () => {
++  const userJson = localStorage.getItem('user');
++  if (userJson) {
++    try {
++      currentUser.value = JSON.parse(userJson);
++      // 初始化表单数据
++      userForm.username = currentUser.value.username;
++      userForm.email = currentUser.value.email;
++    } catch (error) {
++      console.error('解析用户信息失败:', error);
++    }
++  }
++};
++// 更新用户信息
++const updateUserProfile = async () => {
++  if (!userFormRef.value) return;
++  
++  await userFormRef.value.validate(async (valid) => {
++    if (!valid) return;
++    
++    // 如果没有输入新密码，则移除相关字段
++    const updateData = { ...userForm };
++    if (!updateData.new_password) {
++      delete updateData.new_password;
++    }
++    // 移除确认密码字段，后端不需要
++    delete updateData.confirm_password;
++    
++    updating.value = true;
++    try {
++      const response = await axios.post(`${API_BASE_URL}/update-profile`, updateData);
++      
++      if (response.data.success) {
++        ElMessage.success('个人信息更新成功');
++        
++        // 更新本地存储的用户信息
++        localStorage.setItem('user', JSON.stringify(response.data.user));
++        currentUser.value = response.data.user;
++        
++        // 清空密码字段
++        userForm.current_password = '';
++        userForm.new_password = '';
++        userForm.confirm_password = '';
++        
++        // 关闭对话框
++        showProfileDialog.value = false;
++      } else {
++        ElMessage.error(response.data.message || '更新失败');
++      }
++    } catch (error) {
++      console.error('更新用户信息失败:', error);
++      const errorMsg = error.response?.data?.message || '更新失败，请稍后重试';
++      ElMessage.error(errorMsg);
++    } finally {
++      updating.value = false;
++    }
++  });
++};
++
++const logout = () => {
++  try {
++    // 清除所有认证信息
++    localStorage.removeItem('token');
++    localStorage.removeItem('user');
++    localStorage.removeItem('currentDialogId');
++    // 删除认证请求头
++    if (axios && axios.defaults.headers.common['Authorization']) {
++      delete axios.defaults.headers.common['Authorization'];
++    }
++    
++    // 显示成功消息
++    ElMessage.success('已成功退出登录');
++    
++    // 跳转到登录页面
++    router.push('/login');
++  } catch (error) {
++    console.error('退出登录失败:', error);
++    ElMessage.error('退出登录失败，请重试');
++  }
++};
++// 优化更新对话标题的处理函数
++const updateDialogTitle = (dialog) => {
++  if (!dialog || !dialog.id) return;
++  
++  console.log("更新对话标题:", dialog);
++  
++  const dialogIndex = dialogs.value.findIndex(d => d.id === dialog.id);
++  if (dialogIndex !== -1) {
++    // 只在标题确实不同时更新，避免不必要的UI刷新
++    if (dialogs.value[dialogIndex].name !== dialog.name) {
++      console.log(`对话 ${dialog.id} 标题从 "${dialogs.value[dialogIndex].name}" 更新为 "${dialog.name}"`);
++      dialogs.value[dialogIndex].name = dialog.name;
++    }
++  } else {
++    console.warn("找不到要更新标题的对话:", dialog.id);
++  }
++};
++const loadRecentDialogs = async () => {
++  try {
++    const response = await getConversations();
++    if (response && response.data) {
++      dialogs.value = response.data.map(conv => ({
++        id: conv.id,
++        name: conv.name || '未命名对话'
++      }));
++    }
++  } catch (error) {
++    console.error("加载对话列表失败:", error);
++    ElMessage.error("加载对话列表失败");
++  }
++};
++
++// 完善deleteDialog函数
++const deleteDialog = async (id) => {
++  try {
++    await deleteConversation(id);
++    // 从列表中移除
++    dialogs.value = dialogs.value.filter(dialog => dialog.id !== id);
++    ElMessage.success('对话删除成功');
++    
++    // 如果删除的是当前打开的对话，则创建新对话
++    const currentDialogId = localStorage.getItem('currentDialogId');
++    if (currentDialogId === id && aiComponent.value) {
++      aiComponent.value.handleNewDialog();
++    }
++  } catch (error) {
++    console.error("删除对话失败:", error);
++    ElMessage.error("删除对话失败");
++  }
++};
++// 完全重写加载对话函数，确保可靠切换
++const loadDialog = async (id) => {
++  if (!id) {
++    console.error("无效ID");
++    ElMessage.error("无效的对话ID");
++    return;
++  }
++  
++  // 即使加载失败，也要先记住当前选择的对话ID
++  currentDialogId.value = id;
++  localStorage.setItem('currentDialogId', id);
++  
++  try {
++    if (aiComponent.value) {
++      console.log("尝试加载对话:", id);
++      
++      // 设置当前活跃对话样式
++      await aiComponent.value.loadDialogFromLocal(id);
++      
++      // 无论成功与否都不改变顺序
++      ElMessage.success('对话加载成功');
++    } else {
++      console.error("AI组件未初始化");
++      ElMessage.error("系统未就绪，请刷新页面");
++    }
++  } catch (error) {
++    console.error("加载对话失败:", error);
++    ElMessage.error("加载对话失败，但已选择该对话");
++    
++    // 即使加载失败也保持当前选择的对话ID
++    // 这样用户可以看到选择了哪个对话，即使内容加载失败
++  }
++};
++// 添加新建对话函数
++const handleNewDialog = () => {
++  if (aiComponent.value) {
++    // 清除本地存储中的当前对话ID
++    localStorage.removeItem('currentDialogId');
++    currentDialogId.value = null;
++    
++    // 创建新对话
++    aiComponent.value.handleNewDialog();
++    
++    // 通知用户
++    ElMessage.success('已创建新对话');
++  }
++};
++
++
++// 优化添加到最近对话列表的方法
++const addToRecentDialogs = (dialog) => {
++  // 确保dialog是对象格式
++  if (typeof dialog === 'string') {
++    // 如果传入的是字符串，创建对话对象
++    dialog = {
++      id: Date.now().toString(),
++      name: dialog
++    };
++  }
++  
++  // 检查是否已存在相同ID的对话
++  const existingIndex = dialogs.value.findIndex(d => d.id === dialog.id);
++  
++  if (existingIndex !== -1) {
++    // 已存在相同ID的对话，只更新名称，不改变位置
++    dialogs.value[existingIndex].name = dialog.name || dialogs.value[existingIndex].name;
++  } else {
++    // 不存在相同ID的对话，添加到列表顶部（只有新对话才会被添加到顶部）
++    dialogs.value.unshift({
++      id: dialog.id,
++      name: dialog.name || '未命名对话'
++    });
++  }
++  
++  // 保存当前对话ID
++  if (dialog.id) {
++    localStorage.setItem('currentDialogId', dialog.id);
++    currentDialogId.value = dialog.id;
++  }
++};
++// 完善clearAllDialogs函数
++const clearAllDialogs = async () => {
++  try {
++    // 添加确认对话框
++    await ElMessageBox.confirm(
++      '确定要删除所有历史对话记录吗？此操作不可恢复。',
++      '确认删除',
++      {
++        confirmButtonText: '确定',
++        cancelButtonText: '取消',
++        type: 'warning',
++      }
++    );
++    
++    // 用户确认后，逐个删除所有对话
++    for (const dialog of dialogs.value) {
++      try {
++        await deleteConversation(dialog.id);
++      } catch (err) {
++        console.error(`删除对话 ${dialog.id} 失败:`, err);
++      }
++    }
++    
++    // 清空本地列表
++    dialogs.value = [];
++    ElMessage.success('所有对话已清空');
++    
++    // 创建新对话
++    if (aiComponent.value) {
++      aiComponent.value.handleNewDialog();
++    }
++  } catch (error) {
++    if (error === 'cancel') {
++      // 用户取消删除操作
++      ElMessage.info('已取消删除操作');
++    } else {
++      console.error("清空对话失败:", error);
++      ElMessage.error("清空对话失败");
++    }
++  }
++};
++
++// 修复renameDialog函数
++const renameDialog = async (index) => {
++  const newValue = prompt('请输入新的名称', dialogs.value[index].name);
++  if (newValue !== null && newValue.trim() !== '') {
++    try {
++      const dialogId = dialogs.value[index].id;
++      await renameConversation(dialogId, newValue, false);
++      dialogs.value[index].name = newValue;
++      ElMessage.success('对话已重命名');
++    } catch (error) {
++      console.error("重命名对话失败:", error);
++      ElMessage.error("重命名对话失败");
++    }
++  }
++};
++// 打开搜索对话框
++const openSearchDialog = () => {
++  searchQuery.value = '';
++  searchResults.value = [];
++  hasSearched.value = false; // 重置搜索状态
++  showSearchDialog.value = true;
++};
++
++// 搜索对话历史
++// 更新的搜索对话历史功能
++// 改进的搜索对话历史功能
++const searchDialogs = async () => {
++  if (!searchQuery.value.trim()) {
++    searchResults.value = [];
++    hasSearched.value = true;
++    return;
++  }
++
++  searching.value = true;
++  hasSearched.value = true;
++  try {
++    // 对搜索关键词进行处理
++    const query = searchQuery.value.trim();
++    console.log("原始搜索关键词:", query);
++    
++    // 将中文关键词拆分成单字，以便进行更灵活的匹配
++    const queryChars = Array.from(query);
++    
++    console.log("拆分后的搜索关键词:", queryChars);
++    console.log("当前对话列表:", dialogs.value);
++    
++    // 增强的匹配逻辑
++    searchResults.value = dialogs.value.filter(dialog => {
++      // 确保dialog.name存在且是字符串
++      if (!dialog.name || typeof dialog.name !== 'string') return false;
++      
++      // 对话名称
++      const dialogName = dialog.name;
++      
++      // 1. 完整匹配检查 (不区分大小写)
++      if (dialogName.toLowerCase().includes(query.toLowerCase())) {
++        console.log(`对话 "${dialogName}" 完整匹配关键词 "${query}"`);
++        return true;
++      }
++      
++      // 2. 中文分字匹配 - 任意连续两个字符匹配
++      if (queryChars.length >= 2) {
++        for (let i = 0; i < queryChars.length - 1; i++) {
++          const twoChars = queryChars[i] + queryChars[i + 1];
++          if (dialogName.includes(twoChars)) {
++            console.log(`对话 "${dialogName}" 部分匹配关键词 "${twoChars}"`);
++            return true;
++          }
++        }
++      }
++      
++      // 3. 单字匹配率检查 - 如果超过50%的字符匹配则视为匹配成功
++      let matchedChars = 0;
++      for (const char of queryChars) {
++        if (dialogName.includes(char)) {
++          matchedChars++;
++        }
++      }
++      
++      // 计算匹配率
++      const matchRate = queryChars.length > 0 ? matchedChars / queryChars.length : 0;
++      const threshold = 0.5; // 50%的匹配率阈值
++      
++      if (matchRate >= threshold) {
++        console.log(`对话 "${dialogName}" 字符匹配率: ${(matchRate * 100).toFixed(1)}%, 超过阈值 ${threshold * 100}%`);
++        return true;
++      }
++      
++      console.log(`对话 "${dialogName}" 不匹配关键词 "${query}"`);
++      return false;
++    });
++    
++    console.log("搜索结果:", searchResults.value);
++    
++    // 添加搜索结果反馈
++    if (searchResults.value.length > 0) {
++      ElMessage.success(`找到 ${searchResults.value.length} 个匹配结果`);
++    } else {
++      ElMessage.info('未找到匹配的对话记录');
++    }
++  } catch (error) {
++    console.error("搜索对话失败:", error);
++    ElMessage.error("搜索对话失败");
++  } finally {
++    searching.value = false;
++  }
++};
++
++// 从搜索结果加载对话
++const loadDialogFromSearch = (id) => {
++  loadDialog(id);
++  showSearchDialog.value = false;
++};
++// 删除所有对话记录
++const deleteAllDialogs = () => {
++  dialogs.value = [];
++};
++
++// 修改toggleSidebar函数以处理移动端
++const toggleSidebar = () => {
++  isSidebarOpen.value = !isSidebarOpen.value;
++  
++  // 在移动端打开侧栏时，添加body类阻止滚动
++  if (isMobileView()) {
++    if (isSidebarOpen.value) {
++      document.body.classList.add('sidebar-open-mobile');
++    } else {
++      document.body.classList.remove('sidebar-open-mobile');
++    }
++  }
++};
++// 修改移动端体验：点击内容区域关闭侧栏
++const closeOnClickOutside = (event) => {
++  // 仅在侧边栏打开且为移动视图时处理
++  if (isSidebarOpen.value && isMobileView()) {
++    const sidebar = sidebarRef.value;
++    const menuButton = mobileMenuButtonRef.value;
++    
++    // 检查点击是否在侧边栏和菜单按钮之外
++    if (sidebar && !sidebar.contains(event.target) && 
++        (!menuButton || !menuButton.contains(event.target))) {
++      console.log('关闭侧边栏 - 外部点击');
++      isSidebarOpen.value = false;
++      document.body.classList.remove('sidebar-open-mobile');
++    }
++  }
++};
++// 监听屏幕大小变化
++const handleResize = () => {
++  if (!isMobileView() && document.body.classList.contains('sidebar-open-mobile')) {
++    document.body.classList.remove('sidebar-open-mobile');
++  }
++};
++const toggleDialogList = () => {
++  isDialogListVisible.value = !isDialogListVisible.value;
++  // 确保箭头图标在点击后始终向下旋转
++  if (isDialogListVisible.value) {
++    // 这里可以添加旋转动画
++    const arrowIcon = document.querySelector('.arrow-icon');
++    if (arrowIcon) {
++      arrowIcon.style.transform = 'rotate(180deg)';
++    }
++  } else {
++    const arrowIcon = document.querySelector('.arrow-icon');
++    if (arrowIcon) {
++      arrowIcon.style.transform = 'rotate(0deg)';
++    }
++  }
++};
++
++// 悬浮卡片管理
++const handleButtonEnter = () => {
++  isButtonHovered.value = true;
++  showPopover.value = true;
++};
++
++const handleButtonLeave = () => {
++  isButtonHovered.value = false;
++  if (!isPopoverHovered.value) {
++    setTimeout(() => {
++      if (!isPopoverHovered.value && !isButtonHovered.value) {
++        showPopover.value = false;
++      }
++    }, 300); // 延迟时间从100ms增加到300ms
++  }
++};
++
++const handlePopoverEnter = () => {
++  isPopoverHovered.value = true;
++};
++
++const handlePopoverLeave = () => {
++  isPopoverHovered.value = false;
++  if (!isButtonHovered.value) {
++    setTimeout(() => {
++      if (!isButtonHovered.value && !isPopoverHovered.value) {
++        showPopover.value = false;
++      }
++    }, 300); // 增加延迟到300ms，使隐藏更平滑
++  }
++};
++
++const togglePopover = () => {
++  showPopover.value = !showPopover.value;
++};
++onMounted(() => {
++  // 添加全局点击事件监听器
++  document.addEventListener('click', closeOnClickOutside ,true);
++  // 添加窗口大小变化监听器
++  window.addEventListener('resize', handleResize);
++  
++  // 保留原有的初始化逻辑
++  const token = localStorage.getItem('token');
++  if (!token) {
++    ElMessage.warning('您尚未登录，请先登录');
++    router.push('/login');
++    return;
++  }
++  loadUserInfo();
++  loadRecentDialogs();
++  
++  // 设置拦截器
++  const interceptorId = axios.interceptors.response.use(
++    response => response,
++    error => {
++      if (error.response && error.response.status === 401) {
++        ElMessage.error('登录已过期，请重新登录');
++        router.push('/login');
++      }
++      return Promise.reject(error);
++    }
++  );
++  
++  // 组件卸载时移除拦截器
++  onUnmounted(() => {
++    axios.interceptors.response.eject(interceptorId);
++    // 移除事件监听器
++    document.removeEventListener('click', closeOnClickOutside ,true);
++    window.removeEventListener('resize', handleResize);
++  });
++});
++</script>
++
++
++<style>
++/* 仅针对自动填充的元素添加全局样式 */
++input:-webkit-autofill,
++input:-webkit-autofill:hover,
++input:-webkit-autofill:focus,
++input:-webkit-autofill:active {
++  transition: background-color 5000s ease-in-out 0s !important;
++  -webkit-text-fill-color: inherit !important;
++  box-shadow: 0 0 0px 1000px transparent inset !important;
++}
++</style>
++<style scoped>
++/* 基础样式和布局容器 */
++body, html {
++  margin: 0;
++  padding: 0;
++  height: 100%;
++  width: 100%;
++  overflow-x: hidden;
++  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 
++    'Open Sans', 'Helvetica Neue', sans-serif;
++}
++
++/* 防止移动端侧栏打开时页面滚动 */
++body.sidebar-open-mobile {
++  overflow: hidden;
++}
++
++.container {
++  display: flex;
++  min-height: 100vh;
++  position: relative;
++  overflow-x: hidden;
++}
++
++/* 移动端菜单按钮 */
++.mobile-menu-button {
++  position: fixed;
++  top: 1rem;
++  left: 1rem;
++  z-index: 1000;
++  background: linear-gradient(
++    90deg,
++    rgba(170, 239, 242, 1) 0.92%,
++    rgba(136, 191, 242, 0.95) 33.49%,
++    rgba(162, 169, 252, 0.89) 74.36%,
++    rgba(113, 61, 235, 0.8) 100%
++  );
++  border-radius: 50%;
++  width: 40px;
++  height: 40px;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
++  cursor: pointer;
++  display: none; /* 默认隐藏，在移动端显示 */
++}
++.mobile-menu-button img {
++  width: 24px;
++  height: 24px;
++  object-fit: contain; /* 确保图片正确显示 */
++}
++.mobile-menu-button .el-icon {
++  font-size: 1.5rem;
++  color: rgba(111, 58, 246, 1);
++}
++
++/* 移动端关闭按钮 */
++.mobile-close-button {
++  position: absolute;
++  top: 1rem;
++  right: 1rem;
++  z-index: 1010;
++  display: none;
++  cursor: pointer;
++}
++
++.mobile-close-button .el-icon {
++  font-size: 1.5rem;
++  color: rgba(111, 58, 246, 1);
++}
++
++/* 页面内容区域 */
++.content {
++  flex: 1;
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  justify-content: center;
++  transition: margin-left 0.3s ease;
++  max-width: calc(100vw - 80px);
++  margin-left: 80px;
++}
++
++.content-shifted {
++  margin-left: 280px;
++  max-width: calc(100vw - 280px);
++  position: relative;
++}
++
++/* 侧边栏基础样式 */
++.sidebar {
++  height: 100vh;
++  background-color: #ffffff;
++  box-shadow: 4px 0 8px 0 rgba(0, 0, 0, 0.1);
++  color: white;
++  position: fixed;
++  top: 0;
++  left: 0;
++  transition: all 0.3s ease;
++  z-index: 1000;
++  overflow-y: auto;
++}
++
++.sidebar-collapsed {
++  width: 80px;
++  overflow: hidden;
++}
++
++.sidebar-open {
++  width: 280px;
++}
++
++/* 侧栏内容容器 */
++.collapsed-content {
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  padding-top: 1.5rem;
++  height: 100%;
++  justify-content: flex-start;
++}
++
++.collapsed-content .logo {
++  margin-bottom: 1.5rem;
++}
++
++/* 修复menu-icon位置，避免与logo重叠 */
++.collapsed-content .menu-icon {
++  position: relative;
++  top: auto;
++  right: auto;
++  margin-bottom: 0.5rem;
++  font-size: 1.5rem;
++}
++
++/* 优化按钮垂直分布 */
++.collapsed-content .sidebar-button {
++  margin: 0.5rem auto;
++}
++
++.sidebar .sidebar-button + .sidebar-button,
++.sidebar-collapsed .sidebar-button + .sidebar-button,
++.sidebar-open .sidebar-button + .sidebar-button,
++.collapsed-content .sidebar-button + .sidebar-button,
++.expanded-content .sidebar-button + .sidebar-button {
++  margin-left: auto;
++}
++/* .collapsed-content .el-button {
++  margin: 0.75rem auto !important;
++  margin-left: auto !important;
++  margin-right: auto !important;
++} */
++
++.expanded-content {
++  padding: 1.5rem 1rem;
++  position: relative;
++  height: calc(100% - 3rem);
++  display: flex;
++  flex-direction: column;
++  gap: 0.5rem; /* 添加统一的间距 */
++}
++
++/* 菜单图标样式 */
++.menu-icon {
++  color: rgba(164, 128, 252, 1);
++  position: absolute;
++  top: 1rem;
++  right: 1rem;
++  font-size: 1.25rem;
++  cursor: pointer;
++}
++
++.menu-icon:hover {
++  color: #409eff;
++}
++
++.menu-icon-top-right {
++  position: absolute;
++  top: 1rem;
++  right: 1rem;
++  color: rgba(164, 128, 252, 1);
++  font-size: 1.25rem;
++  cursor: pointer;
++}
++
++.menu-icon-top-right:hover {
++  color: #409eff;
++}
++
++/* 侧栏图像元素 */
++.logo {
++  width: 3.125rem;
++  height: 3.125rem;
++  display: block;
++  margin-top: 0.625rem;
++}
++
++.math {
++  width: 100%; /* 改为100%，避免溢出 */
++  max-width: 200px;
++  height: auto;
++  top: 4%;
++  position: relative;
++  margin: 0 auto 1.5rem;
++  display: block;
++  transform: scale(1.06); /* 如需要略微放大，使用transform而不是宽度溢出 */
++  transform-origin: center; /* 确保从中心放大 */
++}
++
++.line {
++  width: 93%;
++  max-width: 190px;
++  height: auto;
++  margin: 1rem auto;
++  display: block;
++  left: 1%;
++    position: relative;
++}
++
++/* 按钮基础样式 */
++.sidebar-button {
++  opacity: 1;
++  border-radius: 10px;
++  display: flex;
++  align-items: center;
++  border: none;
++  margin: 0.25rem auto; /* 调整垂直间距 */
++  width: 100%;
++  max-width: 220px;
++  background: rgba(237, 230, 255, 0.81);
++}
++
++.sidebar-button:hover {
++  background-color: rgb(88.6%, 83.9%, 100%);
++  color: rgba(111, 58, 246, 1);
++}
++
++/* 收起侧栏按钮的居中对齐 */
++.collapsed-icon {
++  width: 1.5rem;
++  height: 1.5rem;
++  max-width: 100%;
++  object-fit: contain;
++  margin: 0 auto;
++  display: block;
++}
++
++/* 优化折叠侧栏按钮 */
++.bo01, .bo02, .bo03, .bo04 {
++  width: 3rem;
++  height: 3rem;
++  padding: 0;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  margin: 0.5rem auto;
++}
++
++/* 展开侧栏按钮样式 */
++.bo05, .bo06, .bo07, .bo08 {
++  height: 3.2rem;
++  color: rgba(111, 58, 246, 1);
++  justify-content: flex-start;
++  padding-left: 1rem;
++  padding-right: 1rem;
++  font-weight: 550;
++  font-size: 14px;
++  display: flex;
++  align-items: center;
++  width: 80%;
++  left: 1%;
++}
++.bo05{
++  position: relative;
++    top: 1.3%;
++    width: 80%;
++    left: 1%;
++}
++.bo06{
++  position: relative;
++  top:-1%;
++}
++/* 按钮内图标 */
++.button-content {
++  display: flex;
++  align-items: center;
++  width: 100%;
++  height: 100%;
++  position: relative;
++}
++.button-content span {
++  margin-right: 8px; /* 文本与箭头保持间距 */
++}
++.button-content img {
++  width: 1.25rem;
++  height: 1.25rem;
++  margin-right: 0.75rem;
++  margin-top:0.16rem ;
++}
++
++/* 箭头图标固定位置 */
++.arrow-icon {
++  transition: transform 0.8s ease;
++  margin-left: auto; /* 使用auto margin定位到右侧 */
++  margin-right: 0;   /* 取消原来的auto */
++  position: relative; /* 不再依赖绝对定位 */
++}
++
++.arrow-icon.rotate {
++  transform: rotate(180deg);
++}
++
++/* 调整用户配置容器的间距 */
++.user-profile-container {
++  margin-top: auto;
++  margin-bottom: 1.5rem;
++  width: 100%;
++  position: relative;  /* 相对定位 */
++}
++
++/* 个人信息悬浮卡片 */
++.popover {
++  position: absolute;
++  bottom: 100%;  /* 定位到按钮上方 */
++  left: 50%;     /* 水平居中对齐 */
++  transform: translateX(-50%);  /* 水平居中对齐 */
++  width: 72%;
++  height: 363%;
++  background: rgba(255, 255, 255, 1);
++  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
++  border: 1px solid #eee;
++  border-radius: 10px;
++  padding: 0.5rem;
++  z-index: 1010;
++  margin-bottom: 10px;  /* 与按钮保持间距 */
++}
++
++.popover-item {
++  display: flex;
++  align-items: center;
++  padding: 0.75rem 1rem;
++  cursor: pointer;
++  border-radius: 6px;
++  transition: background-color 0.2s;
++}
++
++.popover-item:hover {
++  background-color: rgba(237, 230, 255, 0.81);
++}
++
++.popover-item img {
++  width: 1.25rem;
++  height: 1.25rem;
++  margin-right: 0.75rem;
++}
++
++.popover-item span {
++  color: #333;
++  font-size: 0.8rem;
++}
++
++/* 确保近期对话列表有统一的缩进 */
++.recent-dialog-list {
++  margin-top: 0.5rem; /* 改为与其他元素一致的间距 */
++  margin-left: 0;
++  margin-right: 0;
++  padding-left: 0;
++  padding-right: 0;
++  max-height: 17.2rem;
++  overflow-y: auto;
++  overflow-x: hidden;
++  width: 85%;
++  left: 7%;
++  position: relative;
++  border-radius: 10px;
++  background: transparent;
++}
++
++.recent-dialog-list::-webkit-scrollbar {
++  width: 4px;
++}
++
++.recent-dialog-list::-webkit-scrollbar-track {
++  background: transparent;
++}
++
++.recent-dialog-list::-webkit-scrollbar-thumb {
++  background-color: rgba(111, 58, 246, 0.5);
++  border-radius: 4px;
++}
++
++/* 对话项 */
++.dialog-item {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  padding: 0.5rem;
++  color: rgba(111, 58, 246, 1);
++  background-color: rgba(249, 246, 255, 1);
++  font-size: 0.875rem;
++  cursor: pointer;
++  border-radius: 6px;
++  margin-bottom: 0.25rem;
++  width: 94%;
++    left: 4%;
++    box-sizing: border-box;
++    position: relative;
++}
++.dialog-active {
++  background-color: rgba(237, 230, 255, 0.81);
++  font-weight: bold;
++}
++
++.dialog-name {
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++  max-width: 100%;
++  margin: 0.1875rem;
++}
++
++.dialog-item:hover {
++  background-color: rgba(237, 230, 255, 0.81);
++}
++
++.icon-container {
++  display: flex;
++  gap: 0.5rem;
++}
++
++.edit-icon, .delete-icon {
++  cursor: pointer;
++  color: rgba(111, 58, 246, 0.7);
++}
++
++.edit-icon:hover, .delete-icon:hover {
++  color: rgba(111, 58, 246, 1);
++}
++
++/* 搜索结果样式 */
++.search-container {
++  width: 100%;
++}
++
++.search-results {
++  margin-top: 1rem;
++  max-height: 300px;
++  overflow-y: auto;
++  border-radius: 8px;
++  background-color: rgba(249, 246, 255, 1);
++}
++
++.search-result-item {
++  padding: 0.75rem;
++  cursor: pointer;
++  border-bottom: 1px solid rgba(237, 230, 255, 0.81);
++  color: rgba(111, 58, 246, 1);
++  transition: background-color 0.2s;
++}
++
++.search-result-item:hover {
++  background-color: rgba(237, 230, 255, 0.81);
++}
++
++.search-result-name {
++  font-size: 0.875rem;
++}
++
++/* 搜索提示和无结果提示 */
++.search-tips,
++.no-results {
++  margin-top: 1rem;
++  padding: 1rem;
++  background-color: rgba(249, 246, 255, 0.5);
++  border-radius: 8px;
++}
++
++
++/* 对话框样式优化 */
++.profile-dialog,
++.search-dialog {
++  border-radius: 12px;
++  overflow: hidden;
++}
++
++/* 表单帮助文本 */
++.form-help-text {
++  font-size: 0.75rem;
++  color: #909399;
++  margin-top: 0.25rem;
++}
++
++/* 媒体查询 - 中等屏幕
++@media (max-width: 1024px) {
++  .content-shifted {
++    margin-left: 250px;
++    max-width: calc(100vw - 250px);
++  }
++  
++  .sidebar-open {
++    width: 250px;
++  }
++} */
++
++/* 媒体查询 - 平板设备 */
++@media (max-width: 768px) {
++  .mobile-menu-button,
++  .mobile-close-button {
++    display: flex;
++  }
++  
++  .menu-icon,
++  .menu-icon-top-right {
++    display: none;
++  }
++  
++  .content {
++    margin-left: 0;
++    max-width: 100vw;
++  }
++  
++  .content-shifted {
++    margin-left: 0;
++    max-width: 100vw;
++    filter: blur(3px);
++    pointer-events: none;
++  }
++  
++  .sidebar {
++    transform: translateX(-100%);
++    width: 80vw;
++    max-width: 280px;
++  }
++  
++  .sidebar-open {
++    transform: translateX(0);
++    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
++  }
++
++  .sidebar-collapsed {
++    transform: translateX(-100%);
++  }
++  
++  /* 悬浮卡片位置调整 */
++  .popover {
++    left: 50%;
++    transform: translateX(-50%);
++    width: 80%;
++    max-width: 250px;
++  }
++}
++
++/* 媒体查询 - 移动设备 */
++@media (max-width: 480px) {
++  .mobile-menu-button {
++    top: 0.75rem;
++    left: 0.75rem;
++    width: 36px;
++    height: 36px;
++  }
++  
++  .sidebar {
++    width: 85vw;
++  }
++  
++  .math {
++    width: 70%;
++  }
++  
++  .popover {
++    width: 90%;
++  }
++  
++  .search-results {
++    max-height: 250px;
++  }
++  
++  .dialog-item {
++    padding: 0.4rem;
++  }
++
++  .collapsed-icon {
++    width: 1.25rem;
++    height: 1.25rem;
++  }
++  
++  .bo01, .bo02, .bo03, .bo04 {
++    width: 2.5rem;
++    height: 2.5rem;
++    margin: 0.5rem auto;
++  }
++
++  .button-content img {
++    width: 1.1rem;
++    height: 1.1rem;
++    margin-right: 0.5rem;
++  }
++
++  .arrow-icon {
++    font-size: 0.9rem;
++  }
++
++}
++</style>
+\ No newline at end of file
+diff --git a/frontend/src/views/QMathify.vue b/frontend/src/views/QMathify.vue
+index ded1802..54212ef 100644
+--- a/frontend/src/views/QMathify.vue
++++ b/frontend/src/views/QMathify.vue
+@@ -229,7 +229,9 @@
+     </el-dialog>
+ 
+     <!-- 页面内容 -->
++    
+     <div class="content" :class="{ 'content-shifted': isSidebarOpen }">
++      <list />
+       <ai 
+         ref="aiComponent" 
+         :dialogs="dialogs" 
+@@ -248,6 +250,7 @@ import {
+   ArrowDown, ArrowUp 
+ } from '@element-plus/icons-vue'; // 添加Menu和Close图标
+ import ai from './ai.vue';
++import list from './menu01.vue';
+ import { useRouter } from 'vue-router';
+ import axios from 'axios';
+ import {
+@@ -1009,7 +1012,17 @@ body.sidebar-open-mobile {
+ .menu-icon-top-right:hover {
+   color: #409eff;
+ }
+-
++.list{
++  position: relative;
++  left: 10%;
++  top: 10%;
++  width: 20%;
++  height: auto;
++  z-index: 1000;
++}
++.ai{
++  z-index: 1;
++}
+ /* 侧栏图像元素 */
+ .logo {
+   width: 3.125rem;
+@@ -1147,7 +1160,7 @@ body.sidebar-open-mobile {
+   bottom: 100%;  /* 定位到按钮上方 */
+   left: 50%;     /* 水平居中对齐 */
+   transform: translateX(-50%);  /* 水平居中对齐 */
+-  width: 80%;
++  width: 72%;
+   height: 363%;
+   background: rgba(255, 255, 255, 1);
+   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index 1af610b..81d323b 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -345,7 +345,7 @@ const isValidUUID = (str) => {
+ };
+ // 判断是否为问候语
+ const isGreeting = (content) => {
+-  const greetingText = '亲爱的用户,你好!我是你的智能数学助手QMathify。我可以帮助你解答数学问题,包括但不限于：代数问题求解，概率统计计算 数学知识归纳....请告诉我你的问题，我会为你解答。';
++  const greetingText = '亲爱的用户,你好!我是你的智能数学助手QMathify。<br>我可以帮助你解答数学问题,包括但不限于：<br>代数问题求解<br>概率统计计算 <br>数学知识归纳<br>请告诉我你的问题，我会为你解答。';
+   return content === greetingText;
+ };
+ const copyMessage = (text) => {
+@@ -513,7 +513,7 @@ const loadDialogFromLocal = async (id) => {
+     // 定义欢迎消息
+     const welcomeMessage = {
+       type: 'ai',
+-      content: '亲爱的用户,你好!我是你的智能数学助手QMathify。我可以帮助你解答数学问题,包括但不限于：代数问题求解，概率统计计算 数学知识归纳....请告诉我你的问题，我会为你解答。'
++      content: '亲爱的用户,你好!我是你的智能数学助手QMathify。<br>我可以帮助你解答数学问题,包括但不限于：<br>代数问题求解<br>概率统计计算 <br>数学知识归纳<br>请告诉我你的问题，我会为你解答。'
+     };
+ 
+     // 尝试加载历史记录
+@@ -1094,7 +1094,7 @@ const handleNewDialog = () => {
+   // 添加欢迎消息
+   messageList.value.push({
+     type: 'ai',
+-    content: '亲爱的用户,你好!我是你的智能数学助手QMathify。我可以帮助你解答数学问题,包括但不限于：代数问题求解，概率统计计算 数学知识归纳....请告诉我你的问题，我会为你解答。'
++    content: '亲爱的用户,你好!我是你的智能数学助手QMathify。<br>我可以帮助你解答数学问题,包括但不限于：<br>代数问题求解<br>概率统计计算 <br>数学知识归纳<br>请告诉我你的问题，我会为你解答。'
+   });
+ };
+ 
+@@ -1347,8 +1347,9 @@ body {
+ /* 响应式聊天容器 */
+ .chat-container {
+   position: relative;
+-  width: 90%;
+-  height: calc(100vh - 50px);
++  top: 1%;
++    width: 85%;
++    height: calc(100vh - 90px);
+   min-height: 500px;
+   margin: 0 auto;
+   display: flex;
+@@ -1399,7 +1400,7 @@ body {
+   border-radius: 15px;
+   align-self: flex-end;
+   margin-left: auto;
+-  margin-right: 3.5rem;
++  margin-right: 6.6rem;
+   padding: 0.5rem;
+   position: relative;
+   width: fit-content;
+@@ -1427,8 +1428,8 @@ body {
+ .ai-message {
+   background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+-  margin-left: 3.5rem;
+-  max-width: 83.7%;
++  margin-left: 5.5rem;
++  max-width: 80.9%;
+   margin-bottom: 48px; /* 减小为更合理的值 */
+   position: relative;
+   padding: 0.5rem;
+@@ -1487,8 +1488,10 @@ body {
+   border-radius: 14px;
+   padding: 0.5rem;
+   max-width: 85%;
+-  margin-left: 3.5rem;
+-  margin-bottom: 35px;
++  align-self: flex-start;
++  margin-left: 6.7rem;
++  max-width: 78.9%;
++  box-sizing: border-box;
+ }
+ 
+ .thinking-message::before {
+@@ -1515,7 +1518,7 @@ body {
+   height: 2.5rem;
+   border-radius: 50%;
+   position: absolute;
+-  left: -3rem;
++  left: -4rem;
+   top: 0;
+ }
+ 
+@@ -1524,7 +1527,7 @@ body {
+   height: 2.5rem;
+   border-radius: 50%;
+   position: absolute;
+-  right: -3rem;
++  right: -4rem;
+   top: 0;
+ }
+ 
+@@ -1615,7 +1618,7 @@ body {
+   background-color: transparent;
+   background-color: transparent;
+   margin-left: 3.5rem; /* 添加与AI消息相同的左边距 */
+-  left: 2.6%; /* 添加与AI消息相同的左偏移 */
++  left: 5.6%; /* 添加与AI消息相同的左偏移 */
+   box-sizing: border-box;
+ }
+ 
+diff --git a/frontend/src/views/login.vue b/frontend/src/views/login.vue
+index 1c30af6..f7264a3 100644
+--- a/frontend/src/views/login.vue
++++ b/frontend/src/views/login.vue
+@@ -119,7 +119,7 @@ const handleLogin = async () => {
+       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+       
+       // 跳转到主页
+-      router.push('/QMathify');
++      router.push('/function');
+     } else {
+       ElMessage.error(response.data.message || '登录失败');
+     }
+diff --git a/frontend/src/views/menu01.vue b/frontend/src/views/menu01.vue
+new file mode 100644
+index 0000000..2126b9f
+--- /dev/null
++++ b/frontend/src/views/menu01.vue
+@@ -0,0 +1,72 @@
++<template>
++  <el-row class="tac">
++    <el-col :span="12">
++      <el-menu
++        active-text-color="rgba(151, 110, 245, 1)"
++        class="custom-menu"
++        default-active="2"
++        text-color="rgba(151, 110, 245, 1)"
++        @open="handleOpen"
++        @close="handleClose"
++      >
++        <el-sub-menu index="1">
++          <template #title>
++            <el-icon><location /></el-icon>
++            <span    font-size="19px" 
++            >问题对话实时解答</span>
++          </template>
++            <el-menu-item index="1-1"  @click="goToPage02" >启发提问引导思考</el-menu-item>
++        
++        
++        </el-sub-menu>
++      </el-menu>
++    </el-col>
++  </el-row>
++</template>
++
++<script lang="ts" setup>
++import { Location } from '@element-plus/icons-vue';
++
++const handleOpen = (key: string, keyPath: string[]) => {
++  console.log(key, keyPath);
++};
++const handleClose = (key: string, keyPath: string[]) => {
++  console.log(key, keyPath);
++};
++const goToPage02 = () => {
++  window.location.href = '/Leading';
++};
++</script>
++<style scoped>
++:deep(.custom-menu) {
++  background: linear-gradient(
++    132.73deg,
++    rgba(194, 247, 252, 0.2) 0%,
++    rgba(177, 223, 252, 0.2) 29.73%,
++    rgba(194, 210, 255, 0.2) 57.22%,
++    rgba(226, 214, 255, 0.2) 100%
++  ) !important;
++  border: none;
++  width: 203%;
++  border-radius: 10px;
++  font-size: 19px;
++  position: relative; /* 确保父容器是相对定位 */
++  z-index: 1000; /* 设置较高的 z-index */
++}
++
++:deep(.el-sub-menu .el-menu) {
++  position: absolute; /* 子菜单使用绝对定位 */
++  z-index: 1001; /* 设置比父菜单更高的 z-index */
++  top: 100%; /* 子菜单从父菜单底部开始 */
++  left: 0;
++  width: 100%; /* 子菜单宽度与父菜单一致 */
++  background-color: white; /* 设置背景色，避免透明 */
++  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
++}
++
++:deep(.el-menu-item) {
++  z-index: 1002; /* 菜单项的 z-index 更高 */
++}
++.custom-menu::hovor{  border-radius: 10px;
++}
++</style>
+\ No newline at end of file
+diff --git a/frontend/src/views/menu02.vue b/frontend/src/views/menu02.vue
+new file mode 100644
+index 0000000..8ae0e42
+--- /dev/null
++++ b/frontend/src/views/menu02.vue
+@@ -0,0 +1,72 @@
++<template>
++  <el-row class="tac">
++    <el-col :span="12">
++      <el-menu
++        active-text-color="rgba(151, 110, 245, 1)"
++        class="custom-menu"
++        default-active="2"
++        text-color="rgba(151, 110, 245, 1)"
++        @open="handleOpen"
++        @close="handleClose"
++      >
++        <el-sub-menu index="1">
++          <template #title>
++            <el-icon><location /></el-icon>
++            <span    font-size="19px" 
++            >启发提问引导思考</span>
++          </template>
++            <el-menu-item index="1-1"  @click="goToPage02" >问题对话实时解答</el-menu-item>
++        
++        
++        </el-sub-menu>
++      </el-menu>
++    </el-col>
++  </el-row>
++</template>
++
++<script lang="ts" setup>
++import { Location } from '@element-plus/icons-vue';
++
++const handleOpen = (key: string, keyPath: string[]) => {
++  console.log(key, keyPath);
++};
++const handleClose = (key: string, keyPath: string[]) => {
++  console.log(key, keyPath);
++};
++const goToPage02 = () => {
++  window.location.href = '/QMathify';
++};
++</script>
++<style scoped>
++:deep(.custom-menu) {
++  background: linear-gradient(
++    132.73deg,
++    rgba(194, 247, 252, 0.2) 0%,
++    rgba(177, 223, 252, 0.2) 29.73%,
++    rgba(194, 210, 255, 0.2) 57.22%,
++    rgba(226, 214, 255, 0.2) 100%
++  ) !important;
++  border: none;
++  width: 203%;
++  border-radius: 10px;
++  font-size: 19px;
++  position: relative; /* 确保父容器是相对定位 */
++  z-index: 1000; /* 设置较高的 z-index */
++}
++
++:deep(.el-sub-menu .el-menu) {
++  position: absolute; /* 子菜单使用绝对定位 */
++  z-index: 1001; /* 设置比父菜单更高的 z-index */
++  top: 100%; /* 子菜单从父菜单底部开始 */
++  left: 0;
++  width: 100%; /* 子菜单宽度与父菜单一致 */
++  background-color: white; /* 设置背景色，避免透明 */
++  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
++}
++
++:deep(.el-menu-item) {
++  z-index: 1002; /* 菜单项的 z-index 更高 */
++}
++.custom-menu::hovor{  border-radius: 10px;
++}
++</style>
+\ No newline at end of file
+diff --git a/frontend/src/views/point01.vue b/frontend/src/views/point01.vue
+new file mode 100644
+index 0000000..85ddee8
+--- /dev/null
++++ b/frontend/src/views/point01.vue
+@@ -0,0 +1,207 @@
++<template>
++  <div>
++  
++    <div class="chat-container" :class="{ 'content-shifted': isSidebarOpen }" >
++  
++      <!-- 消息显示区域 -->
++      <div class="chat-messages" ref="chatMessagesRef">
++     
++          <!-- AI 消息显示头像 -->
++          <img
++            class="aitou"
++            src="@/imgs/bot.png"
++            alt="AI Avatar"
++          />
++          </div>
++          <span style="font-size: 30px; position: relative; left: 16%; top: 8.4%;" >你好,我是QMathify!</span>
++          <span style="font-size: 20px; position: relative; left: -13%; top: 13.4%;font-weight: 400;color: rgba(56, 56, 56, 1);">作为你的智能数学问答助手，我可以帮你解决数学各方面问题。</span>
++          <div class="box01"  >
++            <span class="font01">问题对话实时解答</span>
++            <span class="font02">小学、初中、高中所有数学问题都能详细分析、智能解答，你可以问我：</span>
++            <el-button type="primary"  class="bo01"  @click="goToPage01" >
++              开始
++            </el-button>
++            <el-button type="primary"  class="bo02">
++              什么是全概率公式？它和贝叶斯公式有何关系？
++            </el-button>
++            <el-button type="primary"  class="bo03">
++              当a=14,b=-5时,代数式2a+3b的值等于多少?            </el-button>
++          </div>
++          <div class="box02"  >
++            <span class="font01">启发提问引导思考</span>
++            <span class="font02">根据你所给的题目，我会递进式地反问你相关知识点，暂时不给出答案，引导你思考。</span>
++            <el-button type="primary"  class="bo04"  @click="goToPage02">
++              开始
++            </el-button>
++            <el-button type="primary"  class="bo05">
++              圆和扇形的半径相等,圆面积是30平方米,扇形圆心角是36度,扇形的面积？<br>
++              反问：圆的面积公式是什么？<br>
++              A:πr²       B:πd²       C:2πr       D:2πd
++            </el-button>
++           </div>
++
++        </div>
++  
++      </div>
++    </template>
++    <script setup> 
++  import { ref} from 'vue';
++  import { Memo} from '@element-plus/icons-vue'; // 引入图标
++  
++  const isSidebarOpen = ref(false); // 侧栏展开状态
++  // 侧栏管理
++  const toggleSidebar = () => {
++    isSidebarOpen.value = !isSidebarOpen.value;
++  };
++  const goToPage01 = () => {
++  window.location.href = '/QMathify';
++};
++const goToPage02 = () => {
++  window.location.href = '/Leading';
++};
++  </script>
++    <style scoped> 
++  .menu-icon {
++    color: rgba(164, 128, 252, 1);
++    position: absolute;
++    top: 15px;
++    right: 5px;
++    font-size: 14px;
++    cursor: pointer;
++  }
++  .chat-container {
++    position: absolute;
++    width: 80%;
++    height: 86%;
++    align-items: center;
++    justify-content: center;
++    opacity: 1;
++    border-radius: 20px;
++    margin: 0 auto; /* 居中显示 */
++    background: linear-gradient(
++      132.73deg,
++      rgba(194, 247, 252, 0.2) 0%,
++      rgba(177, 223, 252, 0.2) 29.73%,
++      rgba(194, 210, 255, 0.2) 57.22%,
++      rgba(194, 175, 240, 0.2) 100%
++    );
++    top: 12%;
++    bottom: 0%;
++    overflow-y: hidden;
++    left: 13%;
++    transition: left 0.3s ease; /* 添加过渡动画 */
++      /* 新增样式，根据侧栏状态调整 */
++  /*width: calc(100% - 0px);*/
++  }
++  .box01{
++    top:16%;
++    left:15.2%;
++    position: relative;
++    width: 33%;
++  height: 31%;
++  opacity: 1;
++  border-radius: 20px;
++  background: rgba(255, 255, 255, 1);
++  border: 1px solid rgba(182, 182, 250, 1);
++  box-shadow: 0px 2px 4px  rgba(0, 0, 0, 0.25);}
++  .font01 {
++    font-size: 22px;
++    font-weight: 600;
++    position: relative;
++    left: 4%;
++    top: 5%;
++    }
++    .font02 {
++      font-size: 14px;
++    position: relative;
++    left: 4%;
++    top: 8%;
++    color: grey;
++    display: block;}
++  .box02{
++    top:-15.3%;
++    left:51.2%;
++    position: relative;
++    width: 33%;
++  height: 31%;
++  opacity: 1;
++  border-radius: 20px;
++  background: rgba(255, 255, 255, 1);
++  border: 1px solid rgba(182, 182, 250, 1);
++  box-shadow: 0px 2px 4px  rgba(0, 0, 0, 0.25);}
++  .content-shifted {
++    margin-left: 178px;
++    position: absolute; /* 保持绝对定位 */
++    left: calc(15.6% + 280px); /* 初始位置 + 侧栏宽度 */
++  
++  }
++  .bo01{position: relative;
++    top: -27%;
++    left: 71%;
++    opacity: 1;
++    border: none;
++border-radius: 10px;
++background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191, 242, 0.95) 33.49%, rgba(162, 169, 252, 0.89) 74.36%, rgba(151, 107, 255, 0.8) 100%);}
++.bo02{
++  position: relative;
++    left: -2%;
++    top: 0%;
++    opacity: 1;
++    border-radius: 10px;
++    background: #f4f0ff;
++    width: 96%;
++    height: 17%;
++    color: black;
++    border: none;
++} 
++.bo03{    position: relative;
++    left: -2%;
++    top: 5%;
++    opacity: 1;
++    border-radius: 10px;
++    background: #f4f0ff;
++    width: 96%;
++    height: 17%;
++    color: black;
++    border: none;
++} 
++.bo04{position: relative;
++    top: -27%;
++    left: 71%;
++    opacity: 1;
++    border: none;
++border-radius: 10px;
++background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191, 242, 0.95) 33.49%, rgba(162, 169, 252, 0.89) 74.36%, rgba(151, 107, 255, 0.8) 100%);}
++.bo05{    position: relative;
++    left: -2%;
++    top: -1%;
++    opacity: 1;
++    border-radius: 10px;
++    background: #f4f0ff;
++    width: 96%;
++    height: 40%;
++    color: black;
++    border: none;
++    text-align: left;
++      white-space: pre-line; /* 保留换行符 */
++      padding: 10px; /* 可根据需要调整内边距 */
++      line-height: 1.5; /* 调整行间距，可根据需要修改该值 */
++} 
++.aitou {
++    width: 45px; /* 头像大小 */
++    height: 45px;
++    border-radius: 50%; /* 圆形头像 */
++    position: absolute;
++    left: 8%;
++    top: 9.5%;
++    transform: translateY(0); /* 移除 translateY(-50%)，因为不再需要垂直居中 */
++  }
++  .sidebar {
++    transition: width 0.3s ease;
++    z-index: 1000; /* 确保侧边栏在聊天容器之上 */
++  }
++  .main-content {
++    position: relative;
++    z-index: 1;
++  }
++  </style >
+\ No newline at end of file
+diff --git a/frontend/src/views/point02.vue b/frontend/src/views/point02.vue
+new file mode 100644
+index 0000000..ddef5bd
+--- /dev/null
++++ b/frontend/src/views/point02.vue
+@@ -0,0 +1,2033 @@
++<template>
++  <div class="chat-container">
++    <!-- 消息显示区域 -->
++    <div class="chat-messages" ref="chatMessagesRef">
++      <!-- 循环渲染消息列表 -->
++      <template v-for="(message, index) in messageList" :key="index">
++        <div
++          :class="['message', 
++                  message.type === 'user' ? 'user-message' : 
++                  message.type === 'thinking' ? 'thinking-message' : 
++                  isGreeting(message.content) ? 'ai-message greeting-message' : 
++                  (message.sources && message.sources.length > 0) ? 'ai-message has-references' : 'ai-message']"
++        >
++          <!-- AI 消息显示头像 -->
++          <img
++            v-if="message.type === 'ai' || message.type === 'thinking' || isGreeting(message.content)"
++            class="aitou"
++            src="@/imgs/bot.png"
++            alt="AI Avatar"
++          />
++          <img
++            v-if="message.type === 'user'"
++            class="usertou"
++            src="@/imgs/user.png"
++            alt="User Avatar"
++          />
++          <!-- 显示深度思考内容 --> 
++          <div v-if="message.thinkingContent" class="thinking-content">
++            {{ message.thinkingContent }}
++          </div>
++        
++          <!-- 显示消息内容 - 修改AI消息为Markdown渲染 -->
++          <div v-if="message.content && !message.isImageOnly">
++            <div v-if="message.type === 'ai' || isGreeting(message.content)" class="markdown-body" v-html="renderMarkdown(message.content)"></div>
++            <div v-else>{{ message.content }}</div>
++          </div>
++          <!-- 思考中状态 -->
++          <div v-if="message.type === 'thinking'" class="thinking">
++            <span></span>
++            <div class="loader"></div>
++          </div>
++          
++          <!-- 操作图标 -->
++          <div v-if="message.type === 'ai' && !isGreeting(message.content)" class="action-icons-container">
++            <div class="action-icons">
++              <el-icon class="copy-icon" @click="copyMessage(message.content)">
++                <CopyDocument />
++              </el-icon>
++              <el-icon class="check-icon" @click="likeMessage(index)">
++                <CircleCheck />
++              </el-icon>
++              <el-icon class="close-icon" @click="dislikeMessage(index)">
++                <CircleClose/>
++              </el-icon>
++            </div>
++          </div>
++
++          <!-- 显示图片预览 -->
++          <div class="image-container" v-if="message.images && message.images.length > 0">
++            <div v-for="(img, imgIndex) in message.images" :key="img.id" class="uploaded-image-wrapper">
++              <img
++                :src="img.url"
++                alt="Uploaded Image"
++                class="uploaded-image"
++                @click="openImageInNewTab(img.url)"
++              />
++            </div>
++          </div>
++          
++          <!-- 单图片显示 -->
++          <div class="image-container" v-else-if="message.imageUrl || message.tempImageUrl || message.isUploading">
++            <img
++              :src="message.imageUrl || message.tempImageUrl"
++              alt="Uploaded Image"
++              class="uploaded-image"
++              @click="openImageInNewTab(message.imageUrl || message.tempImageUrl)"
++            />
++            <div v-if="message.isUploading" class="image-uploading-overlay">
++              <div class="uploading-spinner"></div>
++              <span>上传中...</span>
++            </div>
++          </div>
++                  
++          <!-- 文件上传标识 -->
++          <div v-if="message.isFileOnly && message.fileType === 'document'" class="file-upload-indicator">
++            <div class="file-link">
++              <el-icon><Document /></el-icon>
++              <a :href="message.fileUrl" target="_blank" rel="noopener noreferrer">
++                {{ message.fileName || '查看文件' }}
++              </a>
++            </div>
++          </div>
++          
++          <!-- 显示文件附件 -->
++          <div v-if="message.files && message.files.length > 0" class="message-files">
++            <div v-for="(file, fileIndex) in message.files" :key="fileIndex" class="message-file">
++              <img 
++                v-if="file.type === 'image'" 
++                :src="file.url" 
++                :alt="'附件 ' + (fileIndex + 1)" 
++                class="file-image" 
++                @click="openImageInNewTab(file.url)"
++              />
++              <div v-else class="file-link">
++                <el-icon><Document /></el-icon>
++                <a :href="file.url" target="_blank" rel="noopener noreferrer">
++                  查看文件附件
++                </a>
++              </div>
++            </div>
++          </div>
++          <div v-if="message.fileUrl && !message.imageUrl && !message.isImageOnly && !message.isFileOnly" class="file-link">
++            <el-icon><Document /></el-icon>
++            <a :href="message.fileUrl" target="_blank" rel="noopener noreferrer">
++              {{ message.fileName || '查看文件' }}
++            </a>
++          </div>
++        </div>
++        
++        <!-- 参考来源 - 移到AI消息框外部 -->
++        <div 
++          v-if="message.type === 'ai' && message.sources && message.sources.length > 0" 
++          class="references-outside-container"
++        >
++          <div class="references-title">
++            <el-icon><InfoFilled /></el-icon>
++            <span>参考来源 ({{ message.sources.length }})</span>
++          </div>
++          <div class="references-list">
++            <el-tooltip 
++              v-for="(source, sourceIndex) in message.sources" 
++              :key="sourceIndex" 
++              :placement="dynamicPlacement"
++              :effect="'light'"
++              :show-after="300"
++              :popper-class="'reference-tooltip'"
++              :popper-options="{ 
++                strategy: 'absolute',
++                modifiers: [
++                  { name: 'computeStyles', options: { adaptive: true, gpuAcceleration: false } },
++                  { name: 'preventOverflow', options: { padding: 10 } }
++                ] 
++              }"
++              :enterable="true"
++              :hide-after="300"
++            >
++              <template #content>
++                <div class="reference-tooltip-content">
++                  <div class="reference-header">
++                    <span class="reference-position">{{ source.position }}</span>
++                    <span class="reference-name"> {{ source.dataset_name || '知识库' }} / {{ source.document_name || '文档' }}</span>
++                    <span class="reference-score">  相关度 {{ (source.score * 100).toFixed(1) }}%</span>
++                  </div>
++                  <div class="reference-text-full markdown-body" v-html="renderMarkdown(source.content)"></div>
++                </div>
++              </template>
++              <div class="reference-item-compact">
++                <span class="reference-chip">{{ source.position }}</span>
++                <span class="reference-title">{{ source.dataset_name || '知识库' }} / {{ source.document_name || '文档' }}</span>
++                <el-icon class="reference-icon"><ArrowRight /></el-icon>
++              </div>
++            </el-tooltip>
++          </div>
++        </div>
++      </template>
++    </div>
++    
++    <!-- 输入和发送区域 -->
++    <div class="chat-input">
++      <div class="input-wrapper">
++        <textarea
++          v-model="inputMessage"
++          placeholder="请输入您想要问的问题 （Shift+Enter 换行）"
++          @keydown.enter.exact.prevent="sendMessage"
++          @keydown.shift.enter="newLine"
++          ref="textareaRef"
++          rows="1"
++        ></textarea>
++        
++        <div class="tools-bar">
++          <!-- 左侧功能按钮 -->
++          <div class="left-tools">
++            <el-popover
++              placement="top"
++              title="上传图片"
++              :width="200"
++              trigger="hover"
++              content="一次1张,单张最大10MB,支持jpg、png等格式。"
++            >
++              <template #reference>
++                <el-icon @click="triggerImageInput" class="tool-icon">
++                  <Picture />
++                </el-icon>
++              </template>
++            </el-popover>
++            
++            <el-popover
++              placement="top"
++              title="上传文件"
++              :width="200"
++              trigger="hover"
++              content="一次1份,单份最大10MB,支持word、pdf等格式。"
++            >
++              <template #reference>
++                <el-icon @click="triggerFileInput" class="tool-icon">
++                  <FolderOpened />
++                </el-icon>
++              </template>
++            </el-popover>
++            
++            <el-tooltip content="新建对话" placement="top" effect="light">
++              <el-icon @click="handleNewDialog" class="tool-icon">
++                <ChatDotRound />
++              </el-icon>
++            </el-tooltip>
++          </div>
++          
++          <!-- 右侧发送按钮 -->
++          <div class="right-tools">
++            <button v-if="!isGenerating" @click="sendMessage" class="send-button">
++              <img alt="" src="@/imgs/send.png" class="send" />
++            </button>
++            <button v-else @click="stopResponding" class="stop-button">
++              <img alt="" src="@/imgs/stop-button.png" class="send" />
++            </button>
++          </div>
++        </div>
++      </div>
++      
++      <!-- 隐藏的文件输入框 -->
++      <input
++        type="file"
++        ref="imageInput"
++        style="display: none"
++        accept="image/*"
++        @change="handleImageUpload"
++      />
++      <input
++        type="file"
++        ref="fileInput"
++        style="display: none"
++        accept=".doc,.docx,.pdf"
++        @change="handleFileUpload"
++      />
++    </div>
++  </div>
++</template>
++
++<script setup>
++import { ref, onMounted, watch, nextTick } from 'vue';
++import { ElMessage } from "element-plus";
++import { Picture, FolderOpened, ChatDotRound, CopyDocument, Refresh, CircleCheck, CircleClose, VideoPause, InfoFilled ,ArrowRight, Document} from '@element-plus/icons-vue';
++import {
++  sendChatMessage,
++  getConversationHistory,
++  getConversations,
++  deleteConversation,
++  renameConversation,
++  sendFeedback,
++  uploadFile,
++  stopResponse
++} from '@/api/dify'; 
++
++import MarkdownIt from 'markdown-it';
++import texmath from 'markdown-it-texmath';
++import katex from 'katex';
++import 'katex/dist/katex.min.css';
++import hljs from 'highlight.js';
++import 'highlight.js/styles/github.css';
++
++// 创建markdown渲染器
++const md = new MarkdownIt({
++  html: true,
++  linkify: true,
++  typographer: true,
++  highlight: function (str, lang) {
++    if (lang && hljs.getLanguage(lang)) {
++      try {
++        return hljs.highlight(str, { language: lang }).value;
++      } catch (__) {}
++    }
++    return ''; // 使用默认的转义
++  }
++}).use(texmath, {
++  engine: katex,
++  delimiters: ["dollars", "brackets"],
++  katexOptions: {
++    macros: {},
++    throwOnError: false,
++    strict: false
++  }
++});
++
++// 添加Markdown渲染函数
++const renderMarkdown = (text) => {
++  try {
++    return md.render(text);
++  } catch (e) {
++    console.error('Markdown渲染错误', e);
++    return text; // 如果渲染失败，返回原始文本
++  }
++};
++
++// 添加更新对话标题的事件
++const emit = defineEmits(['add-to-recent-dialogs', 'update-dialog-title']);
++const chatMessagesRef = ref(null);
++const messageList = ref([]);
++const inputMessage = ref('');
++const imageInput = ref(null);
++const fileInput = ref(null);
++const isFirstInput = ref(true);
++const currentDialogId = ref(null);
++const isGenerating = ref(false);
++const currentTaskId = ref(null);
++const textareaRef = ref(null);
++// 添加文件和图片上传触发函数
++const triggerImageInput = () => {
++  imageInput.value.click();
++};
++
++const triggerFileInput = () => {
++  fileInput.value.click();
++};
++
++const imageUrlCache = ref({});
++// 添加停止生成函数
++const stopResponding = async () => {
++  if (currentTaskId.value) {
++    try {
++      await stopResponse(currentTaskId.value);
++      isGenerating.value = false;
++      currentTaskId.value = null;
++      ElMessage.success('已停止生成');
++    } catch (error) {
++      ElMessage.error('停止生成失败');
++      console.error('停止生成失败:', error);
++    }
++  }
++};
++// 验证是否为有效的UUID
++const isValidUUID = (str) => {
++  // 简单检查是否符合UUID格式
++  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
++  return typeof str === 'string' && uuidRegex.test(str);
++};
++// 判断是否为问候语
++const isGreeting = (content) => {
++  const greetingText = '你好！我是你的智能数学助手QMathify。你可以向我询问各种数学问题，覆盖小初高各种核心知识点，我会根据你提供的问题进行启发式提问，而不会立即给出正确答案，帮助你独立思考，提升数学思维。例如：你可以问我“圆和扇形的半径相等，圆面积是30平方米，扇形圆心角是36度，扇形的面积？”请告诉我你的问题，我会启发式引导你思考，解决问题。';
++  return content === greetingText;
++};
++const copyMessage = (text) => {
++  navigator.clipboard.writeText(text)
++    .then(() => {
++      ElMessage.success('消息复制成功');
++    })
++    .catch((err) => {
++      console.error('复制失败:', err);
++      alert('复制失败，请手动复制。');
++    });
++};
++// // 重新生成 AI 回答
++// const regenerateResponse = async (index) => {
++//   const message = messageList.value[index];
++//   if (message.type === 'ai') {
++//     // 查找上一个用户消息作为重新生成的输入
++//     let userMessage = '';
++//     for (let i = index - 1; i >= 0; i--) {
++//       if (messageList.value[i].type === 'user') {
++//         userMessage = messageList.value[i].content;
++//         break;
++//       }
++//     }
++
++//     if (userMessage) {
++//       // 将AI响应改为"思考中"状态
++//       messageList.value[index] = {
++//         type: 'thinking',
++//         thinkingContent: `重新思考中...`,
++//         content: '',
++//       };
++
++//       try {
++//         // 调用API重新生成回答，注意参数匹配
++//         await sendChatMessage(
++//           userMessage,
++//           currentDialogId.value,
++//           // 消息流式回调 - 修改参数格式
++//           (text, tid) => {
++//             if (messageList.value[index].type === 'thinking') {
++//               messageList.value[index] = {
++//                 type: 'ai',
++//                 content: text
++//               };
++//             } else {
++//               messageList.value[index].content = text;
++//             }
++            
++//             // 更新任务ID
++//             if (tid && !currentTaskId.value) {
++//               currentTaskId.value = tid;
++//             }
++//           },
++//           // 完成回调 - 修改参数格式
++//           (fullAnswer, msgId, convId) => {
++//             if (messageList.value[index].type === 'thinking') {
++//               messageList.value[index] = {
++//                 type: 'ai',
++//                 content: fullAnswer,
++//                 messageId: msgId
++//               };
++//             } else {
++//               messageList.value[index].content = fullAnswer;
++//               messageList.value[index].messageId = msgId;
++//             }
++            
++//             // 结束生成状态
++//             isGenerating.value = false;
++//             currentTaskId.value = null;
++//           },
++//           // 错误回调
++//           (error) => {
++//             messageList.value[index] = {
++//               type: 'ai',
++//               content: `重新生成回答失败: ${error.message}`
++//             };
++//             ElMessage.error(`重新生成回答失败: ${error.message}`);
++            
++//             // 重置状态
++//             isGenerating.value = false;
++//             currentTaskId.value = null;
++//           }
++//         );
++//       } catch (error) {
++//         console.error('重新生成回答失败:', error);
++//         messageList.value[index] = {
++//           type: 'ai',
++//           content: '重新生成回答失败，请稍后再试。'
++//         };
++//         ElMessage.error(`重新生成回答失败: ${error.message}`);
++        
++//         // 重置状态
++//         isGenerating.value = false;
++//         currentTaskId.value = null;
++//       }
++//     } else {
++//       ElMessage.warning('找不到对应的用户问题，无法重新生成回答');
++//     }
++//   }
++// };
++const likeMessage = async (index) => {
++  const message = messageList.value[index];
++  if (message.type === 'ai' && message.messageId) {
++    try {
++      await sendFeedback(message.messageId, 'like');
++      ElMessage.success('感谢您的喜爱');
++    } catch (error) {
++      ElMessage.error(`发送反馈失败: ${error.message}`);
++    }
++  }
++};
++
++const dislikeMessage = async (index) => {
++  const message = messageList.value[index];
++  if (message.type === 'ai' && message.messageId) {
++    try {
++      await sendFeedback(message.messageId, 'dislike');
++      ElMessage.success('我们已收到您的反馈');
++    } catch (error) {
++      ElMessage.error(`发送反馈失败: ${error.message}`);
++    }
++  }
++};
++// 添加到script部分
++const openImageInNewTab = (url) => {
++  window.open(url, '_blank');
++};
++const saveDialogToLocal = () => {
++  const dialog = {
++    id: currentDialogId.value || Date.now().toString(),
++    messages: messageList.value,
++    timestamp: new Date().toISOString()
++  };
++  localStorage.setItem(`dialog-${dialog.id}`, JSON.stringify(dialog));
++  currentDialogId.value = dialog.id;
++};
++const loadDialogFromLocal = async (id) => {
++  try {
++    console.log("加载对话:", id);
++    
++    // 检查是否是有效ID
++    if (!id) {
++      console.log("无ID，创建新对话");
++      handleNewDialog();
++      return true;
++    }
++
++    // 尝试获取对话信息，包括服务器生成的标题
++    try {
++      const conversations = await getConversations();
++      const conversation = conversations.data.find(conv => conv.id === id);
++      if (conversation && conversation.name) {
++        console.log("获取到服务器标题:", conversation.name);
++        // 通知父组件使用服务器标题
++        emit('update-dialog-title', {
++          id: id,
++          name: conversation.name
++        });
++      }
++    } catch (err) {
++      console.error("获取对话标题失败:", err);
++    }
++
++    // 定义欢迎消息
++    const welcomeMessage = {
++      type: 'ai',
++      content: '你好！我是你的智能数学助手QMathify。你可以向我询问各种数学问题，覆盖小初高各种核心知识点，我会根据你提供的问题进行启发式提问，而不会立即给出正确答案，帮助你独立思考，提升数学思维。例如：你可以问我“圆和扇形的半径相等，圆面积是30平方米，扇形圆心角是36度，扇形的面积？”请告诉我你的问题，我会启发式引导你思考，解决问题。'
++    };
++
++    // 尝试加载历史记录
++    try {
++      const history = await getConversationHistory(id);
++      console.log("获取到历史数据:", history);
++      
++      // 清空当前消息列表
++      messageList.value = [];
++      
++      // 首先添加欢迎消息（无论历史是否为空）
++      messageList.value.push(welcomeMessage);
++      
++      // 处理API返回的数据
++      if (history && Array.isArray(history.data) && history.data.length > 0) {
++        const orderedMessages = [...history.data].reverse();
++        
++        // 处理历史消息，按照消息组处理
++        orderedMessages.forEach(msg => {
++          // 收集该消息相关的所有文件
++          const allFiles = msg.message_files || [];
++          
++          // 分别处理用户图片消息和文本消息
++          const userImages = allFiles.filter(file => 
++            file.belongs_to !== 'assistant' && file.type === 'image'
++          );
++          
++          // 1. 先添加用户的图片消息（如果有）
++          userImages.forEach(file => {
++            let fileUrl = file.url;
++            if (fileUrl && fileUrl.startsWith('/')) {
++              fileUrl = `http://47.99.158.58${fileUrl}`;
++            }
++            
++            // 为每个图片创建独立的消息
++            messageList.value.push({
++              type: 'user',
++              content: '',
++              fileId: file.id,
++              fileType: 'image',
++              imageUrl: fileUrl,
++              isImageOnly: true
++            });
++            
++            // 缓存图片URL
++            imageUrlCache.value[file.id] = fileUrl;
++          });
++          
++          // 2. 处理文档文件（非图片，现在单独显示）
++          const documentFiles = allFiles.filter(file => 
++            file.belongs_to !== 'assistant' && file.type !== 'image'
++          );
++          
++          // 为每个文档文件创建单独的消息
++          documentFiles.forEach(file => {
++            let fileUrl = file.url;
++            if (fileUrl && fileUrl.startsWith('/')) {
++              fileUrl = `http://47.99.158.58${fileUrl}`;
++            }
++            
++            messageList.value.push({
++              type: 'user',
++              content: '',
++              fileId: file.id,
++              fileSent: true,
++              fileType: 'document',
++              fileName: file.name || '文档文件',
++              fileUrl: fileUrl,
++              isFileOnly: true
++            });
++          });
++          
++          // 3. 添加用户文本消息（如果有，现在作为独立消息）
++          if (msg.query && msg.query.trim() !== '') {
++            messageList.value.push({
++              type: 'user',
++              content: msg.query,
++              messageId: msg.id + '_user'
++            });
++          }
++          
++          // 4. 处理AI回复
++          if (msg.answer) {
++            const aiMessage = {
++              type: 'ai',
++              content: msg.answer,
++              messageId: msg.id
++            };
++            
++            // 处理AI回复中的引用资源
++            if (msg.retriever_resources && msg.retriever_resources.length > 0) {
++              aiMessage.sources = msg.retriever_resources;
++            }
++            
++            // 处理AI回复中的附件
++            const aiFiles = allFiles.filter(file => file.belongs_to === 'assistant');
++            if (aiFiles.length > 0) {
++              aiMessage.files = aiFiles.map(file => {
++                let fileUrl = file.url;
++                if (fileUrl && fileUrl.startsWith('/')) {
++                  fileUrl = `http://47.99.158.58${fileUrl}`;
++                }
++                return {
++                  id: file.id,
++                  type: file.type,
++                  url: fileUrl
++                };
++              });
++            }
++            
++            messageList.value.push(aiMessage);
++          }
++        });
++        
++        // 更新对话ID和状态
++        currentDialogId.value = id;
++        isFirstInput.value = false;
++        return true;
++      } else {
++        console.log("历史数据为空或格式不匹配");
++        
++        // 已经添加了欢迎消息，保留传入的对话ID
++        currentDialogId.value = id;
++        isFirstInput.value = true;
++        return true;
++      }
++    } catch (error) {
++      console.error("获取历史消息失败:", error);
++      
++      // 创建带默认欢迎消息的对话，但保留ID
++      messageList.value = [welcomeMessage];
++      
++      currentDialogId.value = id;
++      isFirstInput.value = true;
++      return true;
++    }
++  } catch (error) {
++    console.error("加载对话整体失败:", error);
++    ElMessage.error(`加载对话失败: ${error.message}`);
++    
++    return false;
++  }
++};
++const deleteDialogFromLocal = (id) => {
++  localStorage.removeItem(`dialog-${id}`);
++};
++
++const clearAllDialogs = () => {
++  const keys = Object.keys(localStorage).filter((key) => key.startsWith('dialog - '));
++  keys.forEach((key) => localStorage.removeItem(key));
++};
++
++watch(messageList, () => {
++  saveDialogToLocal();
++  nextTick(() => {
++    scrollToBottom();
++  });
++}, { deep: true });
++const adjustTextareaHeight = () => {
++  const textarea = textareaRef.value;
++  if (!textarea) return;
++  
++  // 重置高度以便准确测量
++  textarea.style.height = 'auto';
++  
++  // 计算内容实际高度并设置（最大高度90px）
++  const newHeight = Math.min(textarea.scrollHeight, 90);
++  textarea.style.height = `${newHeight}px`;
++};
++const newLine = (e) => {
++  // Shift+Enter默认行为是换行，这里不需要特殊处理
++  // 调整文本框高度
++  nextTick(() => {
++    adjustTextareaHeight();
++  });
++};
++watch(inputMessage, () => {
++  nextTick(() => {
++    adjustTextareaHeight();
++  });
++});
++const scrollToBottom = () => {
++  if (chatMessagesRef.value) {
++    chatMessagesRef.value.scrollTop = chatMessagesRef.value.scrollHeight;
++  }
++};
++
++// 修改发送消息函数，添加任务ID捕获
++// 修改发送消息函数，添加任务ID捕获
++// 修改send Message函数解决流式生成问题
++// 添加到sendMessage函数中，在构建payload前
++const sendMessage = async () => {
++  const trimmedMessage = inputMessage.value.trim();
++  
++  // 查找所有未发送的文件上传消息
++  const fileUploads = messageList.value.filter(
++    msg => msg.type === 'user' && msg.fileId && !msg.fileSent
++  );
++  
++  let files = null;
++  if (fileUploads.length > 0) {
++    // 构建多文件数组
++    files = fileUploads.map(upload => ({
++      type: upload.fileType === 'image' ? 'image' : 'document',
++      transfer_method: "local_file",
++      upload_file_id: upload.fileId
++    }));
++    
++    console.log("发送文件参数:", files);
++    
++    // 标记所有文件已被发送
++    fileUploads.forEach(msg => {
++      const index = messageList.value.indexOf(msg);
++      if (index !== -1) {
++        messageList.value[index].fileSent = true;
++      }
++    });
++  }
++  
++  // 只有当文本消息不为空时才添加文本消息
++  if (trimmedMessage) {
++    // 添加用户文本消息到列表
++    messageList.value.push({
++      type: 'user',
++      content: trimmedMessage
++    });
++
++    inputMessage.value = '';
++    scrollToBottom();
++
++    // 设置生成状态为true
++    isGenerating.value = true;
++
++    try {
++      // 添加AI思考中状态
++      messageList.value.push({
++        type: 'thinking',
++        content: '思考中...'
++      });
++      scrollToBottom();
++      
++      console.log("发送消息", {
++        message: trimmedMessage,
++        conversationId: currentDialogId.value,
++        files: files
++      });
++      
++      // 调用API发送消息
++      await sendChatMessage(
++        trimmedMessage,
++        currentDialogId.value,
++        // 流式回调处理...
++        // 其余代码保持不变
++        (text, tid, msgId) => {
++          // 现有代码不变
++          if (tid && !currentTaskId.value) {
++            currentTaskId.value = tid;
++          }
++          
++          // 移除思考中状态或更新现有AI回复
++          const thinkingMsgIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
++          if (thinkingMsgIndex !== -1) {
++            // 替换思考中消息为AI回复
++            messageList.value.splice(thinkingMsgIndex, 1, {
++              type: 'ai',
++              content: text,
++              messageId: msgId
++            });
++          } else {
++            // 查找并更新现有AI回复
++            const aiMsg = messageList.value[messageList.value.length - 1];
++            if (aiMsg && aiMsg.type === 'ai') {
++              aiMsg.content = text;
++              if (messageId) {
++                aiMsg.messageId = msgId;
++              }
++            } else {
++              // 如果没有找到现有消息，添加新的
++              messageList.value.push({
++                type: 'ai',
++                content: text,
++                messageId: msgId
++              });
++            }
++          }
++          scrollToBottom();
++        },
++        // 其余回调函数保持不变...
++        (fullAnswer, msgId, convId) => {
++          // 现有代码保持不变
++          isGenerating.value = false;
++          currentTaskId.value = null;
++          
++          // 更新对话ID
++          if (convId) {
++            const wasFirstMessage = isFirstInput.value;
++            currentDialogId.value = convId;
++            
++            // 如果是首次输入，添加到对话列表并尝试获取服务器标题
++            if (wasFirstMessage) {
++              isFirstInput.value = false;
++              
++              // 先添加带临时标题的对话
++              emit('add-to-recent-dialogs', {
++                id: convId,
++                name: '新对话' // 临时标题
++              });
++              
++              // 保存到本地存储
++              localStorage.setItem('currentDialogId', convId);
++              
++              // 获取服务器返回的正确对话标题
++              setTimeout(async () => {
++                try {
++                  const conversations = await getConversations();
++                  const conversation = conversations.data.find(conv => conv.id === convId);
++                  if (conversation && conversation.name) {
++                    console.log("更新对话标题:", conversation.name);
++                    // 通知父组件更新对话标题
++                    emit('update-dialog-title', {
++                      id: convId,
++                      name: conversation.name
++                    });
++                  }
++                } catch (err) {
++                  console.error("获取对话标题失败:", err);
++                }
++              }, 1000); // 延迟1秒，确保服务器已处理完成
++            }
++          }
++          
++          // 处理思考中状态
++          const remainingThinkingIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
++          if (remainingThinkingIndex !== -1) {
++            messageList.value.splice(remainingThinkingIndex, 1, {
++              type: 'ai',
++              content: fullAnswer,
++              messageId: msgId
++            });
++          }
++          
++          // 确保最终消息有正确的messageId
++          const finalAiMsg = messageList.value.find(msg => msg.type === 'ai' && !msg.messageId);
++          if (finalAiMsg && msgId) {
++            finalAiMsg.messageId = msgId;
++          }
++        },
++        (error) => {
++          // 处理错误
++          isGenerating.value = false;
++          currentTaskId.value = null;
++          ElMessage.error('发送消息失败：' + error.message);
++          
++          // 移除思考中状态
++          const thinkingIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
++          if (thinkingIndex !== -1) {
++            messageList.value.splice(thinkingIndex, 1, {
++              type: 'ai',
++              content: '回答生成失败，请重试。'
++            });
++          }
++        },
++        files,
++        (metadata, msgId) => {
++          // 元数据回调代码保持不变
++          console.log("处理元数据:", metadata);
++          
++          // 确保有引用资源
++          if (metadata && metadata.retriever_resources && metadata.retriever_resources.length > 0) {
++            console.log("找到参考来源:", metadata.retriever_resources.length);
++            
++            // 查找最后一条AI消息 - 使用两种策略
++            // 1. 通过ID直接找（如果提供）
++            if (msgId) {
++              const aiMsgIndex = messageList.value.findIndex(msg => 
++                msg.type === 'ai' && msg.messageId === msgId
++              );
++              if (aiMsgIndex !== -1) {
++                console.log("通过ID找到消息，添加引用来源");
++                messageList.value[aiMsgIndex].sources = metadata.retriever_resources;
++                return; // 已找到并处理，退出
++              }
++            }
++            
++            // 2. 找最后一条AI消息（备用策略）
++            for (let i = messageList.value.length - 1; i >= 0; i--) {
++              if (messageList.value[i].type === 'ai') {
++                console.log("找到最后一条AI消息，添加引用来源");
++                messageList.value[i].sources = metadata.retriever_resources;
++                // 确保如果消息没有ID但我们有ID，添加上
++                if (!messageList.value[i].messageId && msgId) {
++                  messageList.value[i].messageId = msgId;
++                }
++                break;
++              }
++            }
++          }
++        }
++      );
++    } catch (error) {
++      isGenerating.value = false;
++      currentTaskId.value = null;
++      ElMessage.error('发送消息失败');
++      console.error('发送消息失败:', error);
++      
++      // 移除思考中状态
++      const thinkingIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
++      if (thinkingIndex !== -1) {
++        messageList.value.splice(thinkingIndex, 1, {
++          type: 'ai',
++          content: '发送消息失败，请重试。'
++        });
++      }
++    }
++  } else if (files) {
++    // 如果只有文件上传但没有文本，也触发API请求
++    // 添加AI思考中状态
++    messageList.value.push({
++      type: 'thinking',
++      content: '思考中...'
++    });
++    scrollToBottom();
++    
++    // 设置生成状态为true
++    isGenerating.value = true;
++    
++    try {
++      // 调用API发送消息，使用空文本
++      await sendChatMessage(
++        "", // 空文本
++        currentDialogId.value,
++        // 与上面相同的回调函数
++        // 省略相同代码...
++        (text, tid) => {
++          // 现有代码不变
++          if (tid && !currentTaskId.value) {
++            currentTaskId.value = tid;
++          }
++          
++          // 移除思考中状态或更新现有AI回复
++          const thinkingMsgIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
++          if (thinkingMsgIndex !== -1) {
++            // 替换思考中消息为AI回复
++            messageList.value.splice(thinkingMsgIndex, 1, {
++              type: 'ai',
++              content: text
++            });
++          } else {
++            // 查找并更新现有AI回复
++            const aiMsg = messageList.value[messageList.value.length - 1];
++            if (aiMsg && aiMsg.type === 'ai') {
++              aiMsg.content = text;
++            } else {
++              // 如果没有找到现有消息，添加新的
++              messageList.value.push({
++                type: 'ai',
++                content: text
++              });
++            }
++          }
++          scrollToBottom();
++        },
++        (fullAnswer, msgId, convId) => {
++          // 与上面相同的回调
++          isGenerating.value = false;
++          currentTaskId.value = null;
++          
++          // 更新对话ID
++          if (convId) {
++            const wasFirstMessage = isFirstInput.value;
++            currentDialogId.value = convId;
++            
++            if (wasFirstMessage) {
++              isFirstInput.value = false;
++              emit('add-to-recent-dialogs', {
++                id: convId,
++                name: '新对话'
++              });
++              localStorage.setItem('currentDialogId', convId);
++              
++              setTimeout(async () => {
++                try {
++                  const conversations = await getConversations();
++                  const conversation = conversations.data.find(conv => conv.id === convId);
++                  if (conversation && conversation.name) {
++                    emit('update-dialog-title', {
++                      id: convId,
++                      name: conversation.name
++                    });
++                  }
++                } catch (err) {
++                  console.error("获取对话标题失败:", err);
++                }
++              }, 1000);
++            }
++          }
++          
++          const remainingThinkingIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
++          if (remainingThinkingIndex !== -1) {
++            messageList.value.splice(remainingThinkingIndex, 1, {
++              type: 'ai',
++              content: fullAnswer,
++              messageId: msgId
++            });
++          }
++          
++          const finalAiMsg = messageList.value.find(msg => msg.type === 'ai' && !msg.messageId);
++          if (finalAiMsg && msgId) {
++            finalAiMsg.messageId = msgId;
++          }
++        },
++        (error) => {
++          // 与上面相同的错误处理
++          isGenerating.value = false;
++          currentTaskId.value = null;
++          ElMessage.error('发送消息失败：' + error.message);
++          
++          const thinkingIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
++          if (thinkingIndex !== -1) {
++            messageList.value.splice(thinkingIndex, 1, {
++              type: 'ai',
++              content: '回答生成失败，请重试。'
++            });
++          }
++        },
++        files,
++        (metadata, msgId) => {
++          // 与上面相同的元数据处理
++          console.log("处理元数据:", metadata);
++          
++          if (metadata && metadata.retriever_resources && metadata.retriever_resources.length > 0) {
++            console.log("找到参考来源:", metadata.retriever_resources.length);
++            
++            if (msgId) {
++              const aiMsgIndex = messageList.value.findIndex(msg => 
++                msg.type === 'ai' && msg.messageId === msgId
++              );
++              if (aiMsgIndex !== -1) {
++                messageList.value[aiMsgIndex].sources = metadata.retriever_resources;
++                return;
++              }
++            }
++            
++            for (let i = messageList.value.length - 1; i >= 0; i--) {
++              if (messageList.value[i].type === 'ai') {
++                messageList.value[i].sources = metadata.retriever_resources;
++                if (!messageList.value[i].messageId && msgId) {
++                  messageList.value[i].messageId = msgId;
++                }
++                break;
++              }
++            }
++          }
++        }
++      );
++    } catch (error) {
++      isGenerating.value = false;
++      currentTaskId.value = null;
++      ElMessage.error('处理文件失败');
++      console.error('处理文件失败:', error);
++      
++      const thinkingIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
++      if (thinkingIndex !== -1) {
++        messageList.value.splice(thinkingIndex, 1, {
++          type: 'ai',
++          content: '处理文件失败，请重试。'
++        });
++      }
++    }
++  }
++};
++// 移除临时ID，简化新建对话函数
++const handleNewDialog = () => {
++  messageList.value = [];
++  currentDialogId.value = null; // 重要：置空ID，确保服务器生成新ID
++  isFirstInput.value = true;
++  
++  // 添加欢迎消息
++  messageList.value.push({
++    type: 'ai',
++    content: '你好！我是你的智能数学助手QMathify。<br>你可以向我询问各种数学问题，覆盖小初高各种核心知识点，我会根据你提供的问题进行启发式提问，而不会立即给出正确答案，帮助你独立思考，提升数学思维。<br>例如：你可以问我“圆和扇形的半径相等，圆面积是30平方米，扇形圆心角是36度，扇形的面积？”<br>请告诉我你的问题，我会启发式引导你思考，解决问题。'
++  });
++};
++
++// 修复图片上传函数
++// 修复图片上传函数
++const handleImageUpload = async (e) => {
++  const file = e.target.files[0];
++  if (!file) return;
++
++  // 检查文件类型
++  if (!file.type.startsWith('image/')) {
++    ElMessage.error('请上传图片文件');
++    imageInput.value.value = '';
++    return;
++  }
++
++  // 检查文件大小（限制为10MB）
++  if (file.size > 10 * 1024 * 1024) {
++    ElMessage.error('图片大小不能超过10MB');
++    imageInput.value.value = '';
++    return;
++  }
++
++  try {
++    // 显示上传中提示，但不添加到消息列表
++    ElMessage.info('图片上传中...');
++
++    // 上传文件到服务器
++    const result = await uploadFile(file);
++    console.log("图片上传结果:", result);
++
++    if (!result || !result.id) {
++      throw new Error('服务器没有返回有效的文件ID');
++    }
++    
++    // 构建文件URL，与历史记录处理一致
++    let fileUrl = result.url || '';
++    if (fileUrl && fileUrl.startsWith('/')) {
++      fileUrl = `http://47.99.158.58${fileUrl}`;
++    }
++    
++    // 添加纯图片消息 - 不包含任何文本内容，保持与历史记录的结构一致
++    messageList.value.push({
++      type: 'user',
++      content: '', // 清空内容
++      fileId: result.id,
++      fileType: 'image',
++      imageUrl: fileUrl, // 使用服务器URL
++      tempImageUrl: URL.createObjectURL(file), // 本地预览URL
++      isImageOnly: true, // 标记这是纯图片消息
++      fileSent: false    // 标记图片尚未发送给API
++    });
++    
++    ElMessage.success('图片上传成功');
++    
++    // 缓存图片URL
++    imageUrlCache.value[result.id] = fileUrl;
++    
++    // 自动滚动到底部
++    scrollToBottom();
++  } catch (error) {
++    console.error("图片上传失败:", error);
++    ElMessage.error(`图片上传失败: ${error.message}`);
++  } finally {
++    // 清空文件输入，允许用户重新选择同一文件
++    imageInput.value.value = '';
++  }
++};
++
++// 修复文件上传函数
++const handleFileUpload = async (e) => {
++  const file = e.target.files[0];
++  if (!file) return;
++
++  // 检查文件类型
++  const allowedTypes = ['.doc', '.docx', '.pdf', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
++  const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
++  if (!allowedTypes.some(type => file.type.includes(type) || fileExtension === type)) {
++    ElMessage.error('请上传Word或PDF文件');
++    fileInput.value.value = '';
++    return;
++  }
++
++  // 检查文件大小（限制为10MB）
++  if (file.size > 10 * 1024 * 1024) {
++    ElMessage.error('文件大小不能超过10MB');
++    fileInput.value.value = '';
++    return;
++  }
++
++  try {
++    // 先显示上传中状态
++    messageList.value.push({
++      type: 'user',
++      content: '上传文件中...',
++      fileName: file.name,
++    });
++    
++    scrollToBottom();
++
++    // 上传文件到服务器
++    const result = await uploadFile(file);
++    console.log("文件上传结果:", result);
++
++    // 根据API文档，上传成功后返回的是文件ID和其他元数据
++    if (!result || !result.id) {
++      throw new Error('服务器没有返回有效的文件ID');
++    }
++    
++    // 构建文件URL（与loadDialogFromLocal函数一致）
++    let fileUrl = result.url || '';
++    if (fileUrl && fileUrl.startsWith('/')) {
++      fileUrl = `http://47.99.158.58${fileUrl}`;
++    }
++    
++    // 上传成功后，修改消息内容，保存文件ID用于后续API调用
++    const lastIndex = messageList.value.length - 1;
++    messageList.value[lastIndex] = {
++      type: 'user',
++      content: '', // 确保内容为空
++      fileId: result.id,
++      fileName: file.name,
++      fileType: 'document',
++      fileUrl: fileUrl, // 添加fileUrl与历史记录一致
++      isFileOnly: true, // 显式标记为仅文件消息
++      fileSent: false   // 标记文件尚未发送给API
++    };
++    
++    ElMessage.success('文件上传成功');
++    
++  } catch (error) {
++    console.error("文件上传失败:", error);
++    
++    // 移除上传中状态消息或更新为错误消息
++    const lastIndex = messageList.value.length - 1;
++    if (lastIndex >= 0 && messageList.value[lastIndex].content === '上传文件中...') {
++      messageList.value.splice(lastIndex, 1);
++    }
++    
++    ElMessage.error(`文件上传失败: ${error.message}`);
++  } finally {
++    // 清空文件输入，允许用户重新选择同一文件
++    fileInput.value.value = '';
++  }
++};
++const existingOnMounted = onMounted;
++onMounted(() => {
++  handleNewDialog();
++  if (typeof existingOnMounted === 'function') {
++    existingOnMounted();
++  }
++  
++  // 初始化文本框高度
++  nextTick(() => {
++    adjustTextareaHeight();
++  });
++});
++defineExpose({
++  handleNewDialog,
++  loadDialogFromLocal,
++  deleteDialogFromLocal,
++  clearAllDialogs
++});
++
++</script>
++
++<style>
++/* 由于需要让markdown-it-texmath正确应用样式，这里的样式改为全局样式 */
++.katex-display {
++  overflow-x: auto;
++  overflow-y: hidden;
++  max-width: 100%;
++  border-radius: 15px;
++
++}
++
++.markdown-body {
++  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
++  font-size: 16px;
++  line-height: 1.5;
++  word-wrap: break-word;
++  word-break: break-word; /* 添加单词断行 */
++  overflow-wrap: break-word; /* 增强文本换行能力 */
++  background: transparent;
++  border-radius: 15px;
++  width: 100%; /* 确保最大填满父容器宽度 */
++  box-sizing: border-box;
++}
++
++.markdown-body table {
++  border-collapse: collapse;
++  width: 100%;
++  overflow-x: auto; /* 允许表格横向滚动 */
++  display: block; /* 修改为块级元素以便滚动 */
++  max-width: 100%;
++  border-radius: 15px;
++}
++
++.markdown-body table th,
++.markdown-body table td {
++  border: 1px solid transparent;
++  border-radius: 15px;
++
++}
++
++.markdown-body table tr {
++  background-color: #fff;
++  border-top: 1px solid transparent;
++  border-radius: 15px;
++
++}
++
++.markdown-body table tr:nth-child(2n) {
++  background-color: #f6f8fa;
++  border-radius: 15px;
++
++}
++
++.markdown-body pre {
++  background-color: #f6f8fa;
++  border-radius: 3px;
++  overflow-x: auto; /* 允许代码块横向滚动 */
++  max-width: 100%; /* 限制最大宽度 */
++  border-radius: 15px;
++}
++
++.markdown-body code {
++  background-color: rgba(27, 31, 35, 0.05);
++  border-radius: 3px;
++  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
++  font-size: 85%;
++  padding: 0.2em 0.2em;
++  border-radius: 15px;
++
++}
++
++.markdown-body pre > code {
++  background-color: transparent;
++  padding: 0;
++  border-radius: 15px;
++
++}
++body {
++  margin: 0;
++  padding: 0;
++}
++</style>
++
++<style scoped>
++/* 响应式聊天容器 */
++.chat-container {
++  position: relative;
++  top: 1%;
++    width: 85%;
++    height: calc(100vh - 90px);
++  min-height: 500px;
++  margin: 0 auto;
++  display: flex;
++  flex-direction: column;
++  background: linear-gradient(
++    132.73deg,
++    rgba(194, 247, 252, 0.2) 0%,
++    rgba(177, 223, 252, 0.2) 29.73%,
++    rgba(194, 210, 255, 0.2) 57.22%,
++    rgba(194, 175, 240, 0.2) 100%
++  );
++  border-radius: 20px;
++}
++
++/* 消息显示区域样式 */
++.chat-messages {
++  flex: 1;
++  padding: 1rem;
++  overflow-y: auto;
++  overflow-x: hidden;
++  margin-top: 1rem;
++}
++
++.chat-messages::-webkit-scrollbar {
++  width: 0;
++  height: 0;
++}
++
++/* 单条消息样式 */
++.message {
++  padding: 0.5rem;
++  margin: 1rem 0;
++  border-radius: 15px;
++  display: flex;
++  align-items: flex-start;
++  position: relative;
++  max-width: 85%;
++  word-wrap: break-word;
++}
++
++.greeting-message {
++  margin-bottom: 20px !important; /* 使用更小的底部间距，并使用!important确保覆盖原有样式 */
++}
++
++/* 用户消息样式 */
++.user-message {
++  background: rgba(255, 255, 255, 1);
++  border-radius: 15px;
++  align-self: flex-end;
++  margin-left: auto;
++  margin-right: 6.6rem;
++  padding: 0.5rem;
++  position: relative;
++  width: fit-content;
++}
++
++.user-message::before {
++  content: '';
++  position: absolute;
++  top: -2px;
++  left: -2px;
++  right: -2px;
++  bottom: -2px;
++  background: linear-gradient(
++    90deg,
++    rgba(170, 239, 242, 1) 0.92%,
++    rgba(136, 191, 242, 0.95) 33.49%,
++    rgba(162, 169, 252, 0.89) 74.36%,
++    rgba(113, 61, 235, 0.8) 100%
++  );
++  border-radius: 17px;
++  z-index: -1;
++}
++
++/* AI 消息样式 */
++.ai-message {
++  background: rgba(255, 255, 255, 1);
++  align-self: flex-start;
++  margin-left: 5.5rem;
++  max-width: 80.9%;
++  margin-bottom: 48px; /* 减小为更合理的值 */
++  position: relative;
++  padding: 0.5rem;
++  width: auto;
++  box-sizing: border-box;
++}
++
++.ai-message::before {
++  content: '';
++  position: absolute;
++  top: -2px;
++  left: -2px;
++  right: -2px;
++  bottom: -2px;
++  background: linear-gradient(
++    90deg,
++    rgba(170, 239, 242, 1) 0.92%,
++    rgba(136, 191, 242, 0.95) 33.49%,
++    rgba(162, 169, 252, 0.89) 74.36%,
++    rgba(113, 61, 235, 0.8) 100%
++  );
++  border-radius: 17px;
++  z-index: -1;
++}
++
++/* 思考中状态的旋转动画 */
++.thinking {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++}
++
++.loader {
++  width: 20px;
++  height: 20px;
++  border: 3px solid rgba(151, 107, 255, 0.3);
++  border-radius: 50%;
++  border-top-color: rgba(151, 107, 255, 0.9);
++  animation: spin 1s infinite ease-in-out;
++}
++
++@keyframes spin {
++  0% {
++    transform: rotate(0deg);
++  }
++  100% {
++    transform: rotate(360deg);
++  }
++}
++
++/* 思考中状态样式 */
++.thinking-message {
++  background-color: #ffffff;
++  width: fit-content;
++  position: relative;
++  border-radius: 14px;
++  padding: 0.5rem;
++  max-width: 85%;
++  align-self: flex-start;
++  margin-left: 6.7rem;
++  max-width: 78.9%;
++  box-sizing: border-box;
++}
++
++.thinking-message::before {
++  content: '';
++  position: absolute;
++  top: -2px;
++  left: -2px;
++  right: -2px;
++  bottom: -2px;
++  background: linear-gradient(
++    90deg,
++    rgba(170, 239, 242, 1) 0.92%,
++    rgba(136, 191, 242, 0.95) 33.49%,
++    rgba(162, 169, 252, 0.89) 74.36%,
++    rgba(151, 107, 255, 0.8) 100%
++  );
++  border-radius: 16px;
++  z-index: -1;
++}
++
++/* 头像样式 */
++.aitou {
++  width: 2.5rem;
++  height: 2.5rem;
++  border-radius: 50%;
++  position: absolute;
++  left: -4rem;
++  top: 0;
++}
++
++.usertou {
++  width: 2.5rem;
++  height: 2.5rem;
++  border-radius: 50%;
++  position: absolute;
++  right: -4rem;
++  top: 0;
++}
++
++/* 图片容器响应式样式 */
++.image-container {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 10px;
++  width: 100%;
++  justify-content: center;
++  align-items: center;
++}
++
++.uploaded-image-wrapper {
++  display: inline-block;
++  text-align: center;
++}
++
++.uploaded-image {
++  max-width: 100%;
++  max-height: 200px;
++  border-radius: 8px;
++  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
++  cursor: pointer;
++  transition: transform 0.3s ease;
++}
++
++.uploaded-image:hover {
++  transform: scale(1.03);
++}
++
++/* 功能图标区域样式 */
++.action-icons-container {
++  position: absolute;
++  bottom: -36px;  /* 调整下移距离 */
++  right: 0;       
++  display: flex;
++  z-index: 5;
++}
++
++.action-icons {
++  display: flex;
++  gap: clamp(6px, 2vw, 10px); /* 响应式间距 */
++  background: rgba(255, 255, 255, 0.95);
++  padding: clamp(4px, 1vw, 6px) clamp(6px, 2vw, 10px);
++  border-radius: 10px;
++  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
++  transition: transform 0.2s;
++}
++
++.action-icons:hover {
++  transform: translateY(-2px); /* 添加悬停效果 */
++}
++
++/* 图标样式 */
++.copy-icon,
++.check-icon,
++.close-icon{
++  cursor: pointer;
++  color: #8f9bf1; /* 更改为与应用主题一致的颜色 */
++  font-size: 1.25rem;
++  transition: color 0.2s, transform 0.2s;
++}
++
++.copy-icon:hover,
++.check-icon:hover,
++.close-icon:hover {
++  color: #713deb; /* 悬停时颜色加深 */
++  transform: scale(1.1);
++}
++
++.has-references {
++  margin-bottom: 20px !important; /* 减少底部间距，让参考资源更靠近消息 */
++}
++
++/* 参考资源样式 */
++.references-outside-container {
++  position: relative; /* 改为相对定位 */
++  padding: 0;
++  background-color: transparent;
++  border-radius: 0;
++  max-width: 84%; /* 调整最大宽度 */
++  border: none;
++  box-shadow: none;
++  display: inline-flex;
++  flex-direction: column;
++  width: 100%;
++  background-color: transparent;
++  background-color: transparent;
++  margin-left: 3.5rem; /* 添加与AI消息相同的左边距 */
++  left: 5.6%; /* 添加与AI消息相同的左偏移 */
++  box-sizing: border-box;
++}
++
++.references-title {
++  display: flex;
++  align-items: center;
++  gap: 5px;
++  color: #713deb;
++  font-size: 0.8rem;
++  font-weight: 500;
++  margin-bottom: 2px;
++}
++
++.references-list {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 6px;
++  width: 100%; /* 确保使用全部可用宽度 */
++}
++
++.reference-item-compact {
++  display: flex;
++  align-items: center;
++  gap: 4px; /* 减少内部间距 */
++  background: linear-gradient(
++    90deg, 
++    rgba(170, 239, 242, 0.3) 0%, 
++    rgba(162, 169, 252, 0.3) 100%
++  );
++  border-radius: 8px;
++  padding: 4px 6px; /* 减少左右内边距 */
++  cursor: pointer;
++  transition: transform 0.2s;
++}
++
++.reference-item-compact:hover {
++  transform: translateY(-2px);
++}
++
++.reference-chip {
++  background-color: rgba(151, 107, 255, 0.8);
++  color: white;
++  border-radius: 50%;
++  min-width: 18px; /* 使用min-width确保不会缩小 */
++  height: 18px;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  font-size: 0.75rem;
++  font-weight: bold;
++  flex-shrink: 0; /* 防止数字缩小 */
++}
++
++.reference-title {
++  font-size: 0.85rem;
++  color: #555;
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++  max-width: fit-content; /* 增加标题最大宽度 */
++  flex-grow: 1; /* 让标题占据更多可用空间 */
++  margin-right: 2px; /* 为图标留出一点间距 */
++}
++
++.reference-icon {
++  color: rgba(151, 107, 255, 0.8);
++  font-size: 0.85rem; /* 稍微减小图标尺寸 */
++  flex-shrink: 0; /* 防止图标缩小 */
++}
++
++.reference-tooltip {
++  max-width: clamp(250px, 40vw, 600px) !important;
++  width: auto !important;
++  padding: 12px !important;
++  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
++  border-radius: 10px !important;
++  border: 1px solid rgba(162, 169, 252, 0.3) !important;
++  z-index: 9999 !important;
++}
++
++.reference-tooltip-content {
++  overflow: auto;
++  max-height: clamp(180px, 40vh, 500px);
++}
++
++.reference-header {
++  display: flex;
++  align-items: center;
++  margin-bottom: 10px;
++  flex-wrap: wrap;
++  gap: 4px;
++}
++
++.reference-position {
++  font-weight: bold;
++  color: rgba(151, 107, 255, 0.8);
++}
++
++.reference-name {
++  font-weight: 500;
++  color: #333;
++}
++
++.reference-score {
++  color: #666;
++  font-size: 0.9em;
++  margin-left: auto;
++}
++
++.reference-text-full {
++  border-top: 1px solid rgba(162, 169, 252, 0.3);
++  padding-top: 10px;
++  line-height: 1.5;
++  font-size: 0.95rem;
++}
++
++/* 确保引用中的代码块正确显示 */
++.reference-text-full pre {
++  margin: 0.8em 0;
++  padding: 0.8em;
++  background-color: #f6f8fa;
++  border-radius: 6px;
++  overflow-x: auto;
++}
++
++.reference-text-full code {
++  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
++  font-size: 0.9em;
++}
++
++/* 输入区域样式 */
++.chat-input {
++  display: flex;
++  position: relative;
++  width: 100%;
++  padding: 0 1rem 1rem;
++  margin-top: 0;
++  flex-shrink: 0;
++  box-sizing: border-box;
++  justify-content: center;
++}
++
++.input-wrapper {
++  width: 100%;
++  max-width: 800px;
++  margin: 0 auto;
++  display: flex;
++  flex-direction: column;
++  position: relative;
++  border-radius: 15px;
++  background: white;
++  border: 2px solid rgba(182, 182, 250, 1);
++  overflow: hidden;
++}
++
++/* 文本框样式 */
++textarea {
++  width: 100%;
++  padding: 0.75rem;
++  border: none;
++  font-family: inherit;
++  font-size: inherit;
++  resize: none;
++  overflow-y: auto;
++  line-height: 1.5;
++  max-height: 90px;
++  min-height: 38px;
++  background-color: transparent;
++  box-sizing: border-box;
++}
++
++textarea:focus {
++  outline: none;
++}
++
++/* 工具栏 */
++.tools-bar {
++  display: flex;
++  justify-content: space-between;
++  align-items: center;
++  padding: 0.25rem 0.75rem;
++  border-top: 1px solid rgba(230, 230, 250, 0.8);
++}
++
++.tool-icon {
++  font-size: 1.25rem;
++  color: rgb(152, 158, 162);
++  cursor: pointer;
++  padding: 3px;
++  transition: color 0.3s;
++}
++
++/* 发送按钮样式 */
++.send-button, .stop-button {
++  width: 3rem;
++  height: 2rem;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  background: linear-gradient(
++    90deg,
++    rgba(170, 239, 242, 1) 0.92%,
++    rgba(136, 191, 242, 0.95) 33.49%,
++    rgba(162, 169, 252, 0.89) 74.36%,
++    rgba(151, 107, 255, 0.8) 100%
++  );
++  border: none;
++  cursor: pointer;
++  border-radius: 6px;
++  transition: opacity 0.2s, transform 0.2s;
++}
++
++.send-button:hover, .stop-button:hover {
++  opacity: 0.9;
++  transform: translateY(-1px);
++}
++
++.send-button:active, .stop-button:active {
++  transform: translateY(0);
++}
++
++.send {
++  width: 1.25rem;
++  height: 1.25rem;
++}
++
++.ai-message div, .user-message div {
++  max-width: 100%; /* 确保内部div不会溢出 */
++  overflow-wrap: break-word;
++}
++
++/* 确保代码块和数学公式可以滚动查看 */
++.markdown-body pre {
++  white-space: pre;
++}
++
++/* 解决KaTeX公式换行问题 */
++.katex-display > .katex {
++  max-width: 100%;
++  overflow-x: auto;
++  overflow-y: hidden;
++}
++
++/* 媒体查询 - 平板设备 */
++@media (max-width: 768px) {
++  .chat-container {
++    width: 95%;
++    height: calc(100vh - 30px);
++  }
++  
++  .message {
++    max-width: 90%;
++  }
++  
++  .user-message {
++    margin-right: 3rem;
++  }
++  
++  .ai-message .ai-message-greeting {
++    margin-left: 3rem;
++  }
++
++  .action-icons-container {
++    padding-right: 10px;
++    bottom: -35.3px;
++  }
++  
++  .references-outside-container {
++    margin-left: 3rem;
++  }
++  
++  .reference-title {
++    max-width: 160px;
++  }
++
++  .reference-tooltip {
++    max-width: 90vw !important;
++    padding: 10px !important;
++  }
++  
++  .reference-tooltip-content {
++    max-height: 60vh;
++  }
++  
++  .reference-header {
++    flex-direction: column;
++    align-items: flex-start;
++    gap: 2px;
++  }
++  
++  .reference-score {
++    margin-left: 0;
++  }
++}
++
++/* 媒体查询 - 移动设备 */
++@media (max-width: 480px) {
++  .chat-container {
++    width: 100%;
++    height: calc(100vh - 10px);
++    border-radius: 10px;
++  }
++  
++  .message {
++    max-width: 95%;
++  }
++  
++  .user-message {
++    margin-right: 2.5rem;
++  }
++  
++  .ai-message-greeting {
++    margin-left: 2.5rem;
++    margin-bottom: 20px;
++  }
++
++  .ai-message{
++    margin-left: 2.5rem;
++    margin-bottom: 28px;
++  }
++
++  .thinking-message {
++    margin-left: 2.5rem;
++  }
++  
++  .aitou {
++    width: 2rem;
++    height: 2rem;
++    left: -2.25rem;
++  }
++  
++  .usertou {
++    width: 2rem;
++    height: 2rem;
++    right: -2.25rem;
++  }
++  
++  .action-icons-container {
++    padding-right: 5px;
++    bottom: -20px;
++  }
++  
++  .action-icons {
++    padding: 4px 8px;
++    gap: 8px;
++  }
++  
++  .references-outside-container {
++    margin-left: 2.5rem;
++  }
++  
++  .references-list {
++    flex-direction: column;
++    gap: 5px;
++  }
++
++  .reference-item-compact {
++    max-width: fit-content;
++    width: 90%;
++  }
++
++  .copy-icon,
++  .check-icon,
++  .close-icon{
++    font-size: 1rem;
++  }
++  
++  .reference-title {
++    max-width: 130px;
++  }
++  
++  .reference-tooltip {
++    max-width: 95vw !important;
++    padding: 8px !important;
++  }
++  
++  .reference-tooltip-content {
++    max-height: 70vh;
++  }
++  
++  .reference-text-full {
++    font-size: 0.9rem;
++  }
++
++  .uploaded-image {
++    max-width: 100%;
++  }
++  
++  .input-wrapper {
++    margin-left: 0;
++    margin-right: 0;
++  }
++  
++  .tools-bar {
++    padding: 0.25rem 0.5rem;
++  }
++  
++  .tool-icon {
++    font-size: 1.1rem;
++  }
++  
++  .send-button, .stop-button{
++    width: 2.5rem;
++    height: 1.75rem;
++  }
++  
++  .send {
++    width: 1rem;
++    height: 1rem;
++  }
++}
++</style>
+\ No newline at end of file
+diff --git a/package-lock.json b/package-lock.json
+new file mode 100644
+index 0000000..d29bb80
+--- /dev/null
++++ b/package-lock.json
+@@ -0,0 +1,545 @@
++{
++  "name": "frontend",
++  "lockfileVersion": 3,
++  "requires": true,
++  "packages": {
++    "": {
++      "dependencies": {
++        "@element-plus/icons-vue": "^2.3.1",
++        "element-plus": "^2.9.6"
++      }
++    },
++    "node_modules/@babel/helper-string-parser": {
++      "version": "7.25.9",
++      "resolved": "https://registry.npmjs.org/@babel/helper-string-parser/-/helper-string-parser-7.25.9.tgz",
++      "integrity": "sha512-4A/SCr/2KLd5jrtOMFzaKjVtAei3+2r/NChoBNoZ3EyP/+GlhoaEGoWOZUmFmoITP7zOJyHIMm+DYRd8o3PvHA==",
++      "license": "MIT",
++      "peer": true,
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/helper-validator-identifier": {
++      "version": "7.25.9",
++      "resolved": "https://registry.npmjs.org/@babel/helper-validator-identifier/-/helper-validator-identifier-7.25.9.tgz",
++      "integrity": "sha512-Ed61U6XJc3CVRfkERJWDz4dJwKe7iLmmJsbOGu9wSloNSFttHV0I8g6UAgb7qnK5ly5bGLPd4oXZlxCdANBOWQ==",
++      "license": "MIT",
++      "peer": true,
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@babel/parser": {
++      "version": "7.26.9",
++      "resolved": "https://registry.npmjs.org/@babel/parser/-/parser-7.26.9.tgz",
++      "integrity": "sha512-81NWa1njQblgZbQHxWHpxxCzNsa3ZwvFqpUg7P+NNUU6f3UU2jBEg4OlF/J6rl8+PQGh1q6/zWScd001YwcA5A==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@babel/types": "^7.26.9"
++      },
++      "bin": {
++        "parser": "bin/babel-parser.js"
++      },
++      "engines": {
++        "node": ">=6.0.0"
++      }
++    },
++    "node_modules/@babel/types": {
++      "version": "7.26.9",
++      "resolved": "https://registry.npmjs.org/@babel/types/-/types-7.26.9.tgz",
++      "integrity": "sha512-Y3IR1cRnOxOCDvMmNiym7XpXQ93iGDDPHx+Zj+NM+rg0fBaShfQLkg+hKPaZCEvg5N/LeCo4+Rj/i3FuJsIQaw==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@babel/helper-string-parser": "^7.25.9",
++        "@babel/helper-validator-identifier": "^7.25.9"
++      },
++      "engines": {
++        "node": ">=6.9.0"
++      }
++    },
++    "node_modules/@ctrl/tinycolor": {
++      "version": "3.6.1",
++      "resolved": "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.6.1.tgz",
++      "integrity": "sha512-SITSV6aIXsuVNV3f3O0f2n/cgyEDWoSqtZMYiAmcsYHydcKrOz3gUxB/iXd/Qf08+IZX4KpgNbvUdMBmWz+kcA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/@element-plus/icons-vue": {
++      "version": "2.3.1",
++      "resolved": "https://registry.npmjs.org/@element-plus/icons-vue/-/icons-vue-2.3.1.tgz",
++      "integrity": "sha512-XxVUZv48RZAd87ucGS48jPf6pKu0yV5UCg9f4FFwtrYxXOwWuVJo6wOvSLKEoMQKjv8GsX/mhP6UsC1lRwbUWg==",
++      "license": "MIT",
++      "peerDependencies": {
++        "vue": "^3.2.0"
++      }
++    },
++    "node_modules/@floating-ui/core": {
++      "version": "1.6.9",
++      "resolved": "https://registry.npmjs.org/@floating-ui/core/-/core-1.6.9.tgz",
++      "integrity": "sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==",
++      "license": "MIT",
++      "dependencies": {
++        "@floating-ui/utils": "^0.2.9"
++      }
++    },
++    "node_modules/@floating-ui/dom": {
++      "version": "1.6.13",
++      "resolved": "https://registry.npmjs.org/@floating-ui/dom/-/dom-1.6.13.tgz",
++      "integrity": "sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==",
++      "license": "MIT",
++      "dependencies": {
++        "@floating-ui/core": "^1.6.0",
++        "@floating-ui/utils": "^0.2.9"
++      }
++    },
++    "node_modules/@floating-ui/utils": {
++      "version": "0.2.9",
++      "resolved": "https://registry.npmjs.org/@floating-ui/utils/-/utils-0.2.9.tgz",
++      "integrity": "sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==",
++      "license": "MIT"
++    },
++    "node_modules/@jridgewell/sourcemap-codec": {
++      "version": "1.5.0",
++      "resolved": "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.0.tgz",
++      "integrity": "sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==",
++      "license": "MIT",
++      "peer": true
++    },
++    "node_modules/@popperjs/core": {
++      "name": "@sxzz/popperjs-es",
++      "version": "2.11.7",
++      "resolved": "https://registry.npmjs.org/@sxzz/popperjs-es/-/popperjs-es-2.11.7.tgz",
++      "integrity": "sha512-Ccy0NlLkzr0Ex2FKvh2X+OyERHXJ88XJ1MXtsI9y9fGexlaXaVTPzBCRBwIxFkORuOb+uBqeu+RqnpgYTEZRUQ==",
++      "license": "MIT",
++      "funding": {
++        "type": "opencollective",
++        "url": "https://opencollective.com/popperjs"
++      }
++    },
++    "node_modules/@types/lodash": {
++      "version": "4.17.16",
++      "resolved": "https://registry.npmjs.org/@types/lodash/-/lodash-4.17.16.tgz",
++      "integrity": "sha512-HX7Em5NYQAXKW+1T+FiuG27NGwzJfCX3s1GjOa7ujxZa52kjJLOr4FUxT+giF6Tgxv1e+/czV/iTtBw27WTU9g==",
++      "license": "MIT"
++    },
++    "node_modules/@types/lodash-es": {
++      "version": "4.17.12",
++      "resolved": "https://registry.npmjs.org/@types/lodash-es/-/lodash-es-4.17.12.tgz",
++      "integrity": "sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==",
++      "license": "MIT",
++      "dependencies": {
++        "@types/lodash": "*"
++      }
++    },
++    "node_modules/@types/web-bluetooth": {
++      "version": "0.0.16",
++      "resolved": "https://registry.npmjs.org/@types/web-bluetooth/-/web-bluetooth-0.0.16.tgz",
++      "integrity": "sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ==",
++      "license": "MIT"
++    },
++    "node_modules/@vue/compiler-core": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/compiler-core/-/compiler-core-3.5.13.tgz",
++      "integrity": "sha512-oOdAkwqUfW1WqpwSYJce06wvt6HljgY3fGeM9NcVA1HaYOij3mZG9Rkysn0OHuyUAGMbEbARIpsG+LPVlBJ5/Q==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@babel/parser": "^7.25.3",
++        "@vue/shared": "3.5.13",
++        "entities": "^4.5.0",
++        "estree-walker": "^2.0.2",
++        "source-map-js": "^1.2.0"
++      }
++    },
++    "node_modules/@vue/compiler-dom": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/compiler-dom/-/compiler-dom-3.5.13.tgz",
++      "integrity": "sha512-ZOJ46sMOKUjO3e94wPdCzQ6P1Lx/vhp2RSvfaab88Ajexs0AHeV0uasYhi99WPaogmBlRHNRuly8xV75cNTMDA==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@vue/compiler-core": "3.5.13",
++        "@vue/shared": "3.5.13"
++      }
++    },
++    "node_modules/@vue/compiler-sfc": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/compiler-sfc/-/compiler-sfc-3.5.13.tgz",
++      "integrity": "sha512-6VdaljMpD82w6c2749Zhf5T9u5uLBWKnVue6XWxprDobftnletJ8+oel7sexFfM3qIxNmVE7LSFGTpv6obNyaQ==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@babel/parser": "^7.25.3",
++        "@vue/compiler-core": "3.5.13",
++        "@vue/compiler-dom": "3.5.13",
++        "@vue/compiler-ssr": "3.5.13",
++        "@vue/shared": "3.5.13",
++        "estree-walker": "^2.0.2",
++        "magic-string": "^0.30.11",
++        "postcss": "^8.4.48",
++        "source-map-js": "^1.2.0"
++      }
++    },
++    "node_modules/@vue/compiler-ssr": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/compiler-ssr/-/compiler-ssr-3.5.13.tgz",
++      "integrity": "sha512-wMH6vrYHxQl/IybKJagqbquvxpWCuVYpoUJfCqFZwa/JY1GdATAQ+TgVtgrwwMZ0D07QhA99rs/EAAWfvG6KpA==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@vue/compiler-dom": "3.5.13",
++        "@vue/shared": "3.5.13"
++      }
++    },
++    "node_modules/@vue/reactivity": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/reactivity/-/reactivity-3.5.13.tgz",
++      "integrity": "sha512-NaCwtw8o48B9I6L1zl2p41OHo/2Z4wqYGGIK1Khu5T7yxrn+ATOixn/Udn2m+6kZKB/J7cuT9DbWWhRxqixACg==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@vue/shared": "3.5.13"
++      }
++    },
++    "node_modules/@vue/runtime-core": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/runtime-core/-/runtime-core-3.5.13.tgz",
++      "integrity": "sha512-Fj4YRQ3Az0WTZw1sFe+QDb0aXCerigEpw418pw1HBUKFtnQHWzwojaukAs2X/c9DQz4MQ4bsXTGlcpGxU/RCIw==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@vue/reactivity": "3.5.13",
++        "@vue/shared": "3.5.13"
++      }
++    },
++    "node_modules/@vue/runtime-dom": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/runtime-dom/-/runtime-dom-3.5.13.tgz",
++      "integrity": "sha512-dLaj94s93NYLqjLiyFzVs9X6dWhTdAlEAciC3Moq7gzAc13VJUdCnjjRurNM6uTLFATRHexHCTu/Xp3eW6yoog==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@vue/reactivity": "3.5.13",
++        "@vue/runtime-core": "3.5.13",
++        "@vue/shared": "3.5.13",
++        "csstype": "^3.1.3"
++      }
++    },
++    "node_modules/@vue/server-renderer": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/server-renderer/-/server-renderer-3.5.13.tgz",
++      "integrity": "sha512-wAi4IRJV/2SAW3htkTlB+dHeRmpTiVIK1OGLWV1yeStVSebSQQOwGwIq0D3ZIoBj2C2qpgz5+vX9iEBkTdk5YA==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@vue/compiler-ssr": "3.5.13",
++        "@vue/shared": "3.5.13"
++      },
++      "peerDependencies": {
++        "vue": "3.5.13"
++      }
++    },
++    "node_modules/@vue/shared": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/@vue/shared/-/shared-3.5.13.tgz",
++      "integrity": "sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ==",
++      "license": "MIT",
++      "peer": true
++    },
++    "node_modules/@vueuse/core": {
++      "version": "9.13.0",
++      "resolved": "https://registry.npmjs.org/@vueuse/core/-/core-9.13.0.tgz",
++      "integrity": "sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw==",
++      "license": "MIT",
++      "dependencies": {
++        "@types/web-bluetooth": "^0.0.16",
++        "@vueuse/metadata": "9.13.0",
++        "@vueuse/shared": "9.13.0",
++        "vue-demi": "*"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/antfu"
++      }
++    },
++    "node_modules/@vueuse/core/node_modules/vue-demi": {
++      "version": "0.14.10",
++      "resolved": "https://registry.npmjs.org/vue-demi/-/vue-demi-0.14.10.tgz",
++      "integrity": "sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==",
++      "hasInstallScript": true,
++      "license": "MIT",
++      "bin": {
++        "vue-demi-fix": "bin/vue-demi-fix.js",
++        "vue-demi-switch": "bin/vue-demi-switch.js"
++      },
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/antfu"
++      },
++      "peerDependencies": {
++        "@vue/composition-api": "^1.0.0-rc.1",
++        "vue": "^3.0.0-0 || ^2.6.0"
++      },
++      "peerDependenciesMeta": {
++        "@vue/composition-api": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/@vueuse/metadata": {
++      "version": "9.13.0",
++      "resolved": "https://registry.npmjs.org/@vueuse/metadata/-/metadata-9.13.0.tgz",
++      "integrity": "sha512-gdU7TKNAUVlXXLbaF+ZCfte8BjRJQWPCa2J55+7/h+yDtzw3vOoGQDRXzI6pyKyo6bXFT5/QoPE4hAknExjRLQ==",
++      "license": "MIT",
++      "funding": {
++        "url": "https://github.com/sponsors/antfu"
++      }
++    },
++    "node_modules/@vueuse/shared": {
++      "version": "9.13.0",
++      "resolved": "https://registry.npmjs.org/@vueuse/shared/-/shared-9.13.0.tgz",
++      "integrity": "sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==",
++      "license": "MIT",
++      "dependencies": {
++        "vue-demi": "*"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/antfu"
++      }
++    },
++    "node_modules/@vueuse/shared/node_modules/vue-demi": {
++      "version": "0.14.10",
++      "resolved": "https://registry.npmjs.org/vue-demi/-/vue-demi-0.14.10.tgz",
++      "integrity": "sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==",
++      "hasInstallScript": true,
++      "license": "MIT",
++      "bin": {
++        "vue-demi-fix": "bin/vue-demi-fix.js",
++        "vue-demi-switch": "bin/vue-demi-switch.js"
++      },
++      "engines": {
++        "node": ">=12"
++      },
++      "funding": {
++        "url": "https://github.com/sponsors/antfu"
++      },
++      "peerDependencies": {
++        "@vue/composition-api": "^1.0.0-rc.1",
++        "vue": "^3.0.0-0 || ^2.6.0"
++      },
++      "peerDependenciesMeta": {
++        "@vue/composition-api": {
++          "optional": true
++        }
++      }
++    },
++    "node_modules/async-validator": {
++      "version": "4.2.5",
++      "resolved": "https://registry.npmjs.org/async-validator/-/async-validator-4.2.5.tgz",
++      "integrity": "sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==",
++      "license": "MIT"
++    },
++    "node_modules/csstype": {
++      "version": "3.1.3",
++      "resolved": "https://registry.npmjs.org/csstype/-/csstype-3.1.3.tgz",
++      "integrity": "sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==",
++      "license": "MIT",
++      "peer": true
++    },
++    "node_modules/dayjs": {
++      "version": "1.11.13",
++      "resolved": "https://registry.npmjs.org/dayjs/-/dayjs-1.11.13.tgz",
++      "integrity": "sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==",
++      "license": "MIT"
++    },
++    "node_modules/element-plus": {
++      "version": "2.9.6",
++      "resolved": "https://registry.npmjs.org/element-plus/-/element-plus-2.9.6.tgz",
++      "integrity": "sha512-D9zU28Ce0s/9O/Vp3ewemikxzFVA6gdZyMwmWijHijo+t5/9H3sHRTIm1WlfeNpFW2Yq0y8nHXD0fU5YxU6qlQ==",
++      "license": "MIT",
++      "dependencies": {
++        "@ctrl/tinycolor": "^3.4.1",
++        "@element-plus/icons-vue": "^2.3.1",
++        "@floating-ui/dom": "^1.0.1",
++        "@popperjs/core": "npm:@sxzz/popperjs-es@^2.11.7",
++        "@types/lodash": "^4.14.182",
++        "@types/lodash-es": "^4.17.6",
++        "@vueuse/core": "^9.1.0",
++        "async-validator": "^4.2.5",
++        "dayjs": "^1.11.13",
++        "escape-html": "^1.0.3",
++        "lodash": "^4.17.21",
++        "lodash-es": "^4.17.21",
++        "lodash-unified": "^1.0.2",
++        "memoize-one": "^6.0.0",
++        "normalize-wheel-es": "^1.2.0"
++      },
++      "peerDependencies": {
++        "vue": "^3.2.0"
++      }
++    },
++    "node_modules/entities": {
++      "version": "4.5.0",
++      "resolved": "https://registry.npmjs.org/entities/-/entities-4.5.0.tgz",
++      "integrity": "sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==",
++      "license": "BSD-2-Clause",
++      "peer": true,
++      "engines": {
++        "node": ">=0.12"
++      },
++      "funding": {
++        "url": "https://github.com/fb55/entities?sponsor=1"
++      }
++    },
++    "node_modules/escape-html": {
++      "version": "1.0.3",
++      "resolved": "https://registry.npmjs.org/escape-html/-/escape-html-1.0.3.tgz",
++      "integrity": "sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==",
++      "license": "MIT"
++    },
++    "node_modules/estree-walker": {
++      "version": "2.0.2",
++      "resolved": "https://registry.npmjs.org/estree-walker/-/estree-walker-2.0.2.tgz",
++      "integrity": "sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==",
++      "license": "MIT",
++      "peer": true
++    },
++    "node_modules/lodash": {
++      "version": "4.17.21",
++      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz",
++      "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==",
++      "license": "MIT"
++    },
++    "node_modules/lodash-es": {
++      "version": "4.17.21",
++      "resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.21.tgz",
++      "integrity": "sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==",
++      "license": "MIT"
++    },
++    "node_modules/lodash-unified": {
++      "version": "1.0.3",
++      "resolved": "https://registry.npmjs.org/lodash-unified/-/lodash-unified-1.0.3.tgz",
++      "integrity": "sha512-WK9qSozxXOD7ZJQlpSqOT+om2ZfcT4yO+03FuzAHD0wF6S0l0090LRPDx3vhTTLZ8cFKpBn+IOcVXK6qOcIlfQ==",
++      "license": "MIT",
++      "peerDependencies": {
++        "@types/lodash-es": "*",
++        "lodash": "*",
++        "lodash-es": "*"
++      }
++    },
++    "node_modules/magic-string": {
++      "version": "0.30.17",
++      "resolved": "https://registry.npmjs.org/magic-string/-/magic-string-0.30.17.tgz",
++      "integrity": "sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@jridgewell/sourcemap-codec": "^1.5.0"
++      }
++    },
++    "node_modules/memoize-one": {
++      "version": "6.0.0",
++      "resolved": "https://registry.npmjs.org/memoize-one/-/memoize-one-6.0.0.tgz",
++      "integrity": "sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw==",
++      "license": "MIT"
++    },
++    "node_modules/nanoid": {
++      "version": "3.3.9",
++      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.9.tgz",
++      "integrity": "sha512-SppoicMGpZvbF1l3z4x7No3OlIjP7QJvC9XR7AhZr1kL133KHnKPztkKDc+Ir4aJ/1VhTySrtKhrsycmrMQfvg==",
++      "funding": [
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "peer": true,
++      "bin": {
++        "nanoid": "bin/nanoid.cjs"
++      },
++      "engines": {
++        "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
++      }
++    },
++    "node_modules/normalize-wheel-es": {
++      "version": "1.2.0",
++      "resolved": "https://registry.npmjs.org/normalize-wheel-es/-/normalize-wheel-es-1.2.0.tgz",
++      "integrity": "sha512-Wj7+EJQ8mSuXr2iWfnujrimU35R2W4FAErEyTmJoJ7ucwTn2hOUSsRehMb5RSYkxXGTM7Y9QpvPmp++w5ftoJw==",
++      "license": "BSD-3-Clause"
++    },
++    "node_modules/picocolors": {
++      "version": "1.1.1",
++      "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
++      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
++      "license": "ISC",
++      "peer": true
++    },
++    "node_modules/postcss": {
++      "version": "8.5.3",
++      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.3.tgz",
++      "integrity": "sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==",
++      "funding": [
++        {
++          "type": "opencollective",
++          "url": "https://opencollective.com/postcss/"
++        },
++        {
++          "type": "tidelift",
++          "url": "https://tidelift.com/funding/github/npm/postcss"
++        },
++        {
++          "type": "github",
++          "url": "https://github.com/sponsors/ai"
++        }
++      ],
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "nanoid": "^3.3.8",
++        "picocolors": "^1.1.1",
++        "source-map-js": "^1.2.1"
++      },
++      "engines": {
++        "node": "^10 || ^12 || >=14"
++      }
++    },
++    "node_modules/source-map-js": {
++      "version": "1.2.1",
++      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
++      "integrity": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==",
++      "license": "BSD-3-Clause",
++      "peer": true,
++      "engines": {
++        "node": ">=0.10.0"
++      }
++    },
++    "node_modules/vue": {
++      "version": "3.5.13",
++      "resolved": "https://registry.npmjs.org/vue/-/vue-3.5.13.tgz",
++      "integrity": "sha512-wmeiSMxkZCSc+PM2w2VRsOYAZC8GdipNFRTsLSfodVqI9mbejKeXEGr8SckuLnrQPGe3oJN5c3K0vpoU9q/wCQ==",
++      "license": "MIT",
++      "peer": true,
++      "dependencies": {
++        "@vue/compiler-dom": "3.5.13",
++        "@vue/compiler-sfc": "3.5.13",
++        "@vue/runtime-dom": "3.5.13",
++        "@vue/server-renderer": "3.5.13",
++        "@vue/shared": "3.5.13"
++      },
++      "peerDependencies": {
++        "typescript": "*"
++      },
++      "peerDependenciesMeta": {
++        "typescript": {
++          "optional": true
++        }
++      }
++    }
++  }
++}
+diff --git a/package.json b/package.json
+new file mode 100644
+index 0000000..21286be
+--- /dev/null
++++ b/package.json
+@@ -0,0 +1,6 @@
++{
++  "dependencies": {
++    "@element-plus/icons-vue": "^2.3.1",
++    "element-plus": "^2.9.6"
++  }
++}
+-- 
+2.39.5 (Apple Git-154)
+

@@ -1,0 +1,523 @@
+From 1d540481da058bc6bf25695ffe674c1b892def4a Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Sat, 29 Mar 2025 09:53:05 +0800
+Subject: [PATCH 19/20] =?UTF-8?q?=E5=88=A0=E9=99=A4=E6=AC=A2=E8=BF=8E?=
+ =?UTF-8?q?=E8=AF=AD=E5=9B=BE=E6=A0=87=EF=BC=8C=E6=96=B0=E5=A2=9E=E8=B7=B3?=
+ =?UTF-8?q?=E8=BD=AC=E5=9B=BE=E6=A0=87?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/views/point03.vue | 291 +++++++++++++++++++++++++--------
+ 1 file changed, 221 insertions(+), 70 deletions(-)
+
+diff --git a/frontend/src/views/point03.vue b/frontend/src/views/point03.vue
+index 329faa6..9863fa6 100644
+--- a/frontend/src/views/point03.vue
++++ b/frontend/src/views/point03.vue
+@@ -24,22 +24,28 @@
+             src="@/imgs/user.png"
+             alt="User Avatar"
+           />
+-          <!-- 显示深度思考内容 --> 
+-          <div v-if="message.thinkingContent" class="thinking-content">
+-            {{ message.thinkingContent }}
+-          </div>
+-        
+-          <!-- 显示消息内容 - 修改AI消息为Markdown渲染 -->
+-          <div v-if="message.content && !message.isImageOnly">
+-            <div v-if="message.type === 'ai' || isGreeting(message.content)" class="markdown-body" v-html="renderMarkdown(message.content)"></div>
+-            <div v-else>{{ message.content }}</div>
+-          </div>
+-          <!-- 思考中状态 -->
+-          <div v-if="message.type === 'thinking'" class="thinking">
+-            <span></span>
+-            <div class="loader"></div>
+-          </div>
+           
++          <!-- 添加内容容器确保垂直布局 -->
++          <div class="message-content-wrapper">
++            <!-- 显示深度思考内容 --> 
++            <details v-if="message.thinkingContent" class="thinking-details" open>
++              <summary class="thinking-summary">查看思考过程</summary>
++              <div class="thinking-content">
++                {{ message.thinkingContent }}
++              </div>
++            </details>
++          
++            <!-- 显示消息内容 - 修改AI消息为Markdown渲染 -->
++            <div v-if="message.content && !message.isImageOnly">
++              <div v-if="message.type === 'ai' || isGreeting(message.content)" class="markdown-body" v-html="renderMarkdown(message.content)"></div>
++              <div v-else>{{ message.content }}</div>
++            </div>
++            <!-- 思考中状态 -->
++            <div v-if="message.type === 'thinking'" class="thinking">
++              <span>思考中...</span>
++              <div class="loader"></div>
++            </div>
++          </div>
+           <!-- 操作图标 -->
+           <div v-if="message.type === 'ai' && !isGreeting(message.content)" class="action-icons-container">
+             <div class="action-icons">
+@@ -52,6 +58,7 @@
+               <el-icon class="close-icon" @click="dislikeMessage(index)">
+                 <CircleClose/>
+               </el-icon>
++              <el-icon class="close-icon"   @click="togetanswer" ><Position /></el-icon>
+             </div>
+           </div>
+ 
+@@ -249,7 +256,7 @@
+ <script setup>
+ import { ref, onMounted, watch, nextTick,computed } from 'vue';
+ import { ElMessage } from "element-plus";
+-import { Picture, FolderOpened, ChatDotRound, CopyDocument, Refresh, CircleCheck, CircleClose, VideoPause, InfoFilled ,ArrowRight, Document} from '@element-plus/icons-vue';
++import { Picture, FolderOpened, ChatDotRound,Position, CopyDocument, Refresh, CircleCheck, CircleClose, VideoPause, InfoFilled ,ArrowRight, Document} from '@element-plus/icons-vue';
+ import {
+   sendChatMessage,
+   getConversationHistory,
+@@ -312,29 +319,41 @@ const adjustInputWidth = () => {
+ };
+ 
+ // 添加Markdown渲染函数
++// 修改 renderMarkdown 函数，避免思考内容重复显示
+ const renderMarkdown = (text) => {
+   try {
+-    // 检查是否有思考部分
+-    const thinkMatch = /<think>([\s\S]*?)<\/think>/g.exec(text);
+-    
+-    if (!thinkMatch) {
+-      // 没有思考部分，直接渲染全部内容
+-      return md.render(text);
++    // 如果是已标记的仅思考内容消息，直接返回占位符
++    if (text && text.includes('think-only-placeholder')) {
++      return text; // 直接返回包含占位符的HTML
+     }
+     
+-    // 提取思考部分和回答部分
+-    const thinkContent = thinkMatch[1]; // 思考内容
+-    const responseContent = text.replace(/<think>[\s\S]*?<\/think>/, ''); // 回答内容
++    // 检查是否包含思考内容
++    const fullThinkMatch = /<think>([\s\S]*?)<\/think>/g.exec(text);
++    
++    if (fullThinkMatch) {
++      // 只渲染非思考部分(直接移除思考内容标签及内容)
++      const responseContent = text.replace(/<think>[\s\S]*?<\/think>/g, ''); // 使用全局标志g确保移除所有匹配
++      
++      // 如果移除思考内容后内容为空，返回占位符，避免UI显示空白
++      if (!responseContent.trim()) {
++        return '<div class="think-only-placeholder">该回复仅包含思考过程</div>';
++      }
++      
++      return md.render(responseContent);
++    }
+     
+-    // 分别渲染思考内容和回答内容
+-    const renderedThink = `<div class="ai-thinking">${md.render(thinkContent)}</div>`;
+-    const renderedResponse = md.render(responseContent);
++    // 检查是否有未闭合的思考标签
++    const openThinkMatch = /<think>([\s\S]*?)$/g.exec(text);
++    if (openThinkMatch) {
++      // 有未闭合的思考标签，只返回空内容，等待完整回答
++      return '';
++    }
+     
+-    // 组合两部分
+-    return renderedThink + renderedResponse;
++    // 没有思考部分，直接渲染全部内容
++    return md.render(text);
+   } catch (e) {
+     console.error('Markdown渲染错误', e);
+-    return text; // 如果渲染失败，返回原始文本
++    return text;
+   }
+ };
+ 
+@@ -418,6 +437,10 @@ const dislikeMessage = async (index) => {
+     }
+   }
+ };
++
++const togetanswer= () => {
++  window.location.href = '/QMathify';
++};
+ // 添加到script部分
+ const openImageInNewTab = (url) => {
+   window.open(url, '_blank');
+@@ -461,7 +484,7 @@ const loadDialogFromLocal = async (id) => {
+     // 定义欢迎消息
+     const welcomeMessage = {
+       type: 'ai',
+-      content: ' 你好！我是你的智能数学助手QMathify。<br>我能够根据你所给出的知识点或问题生成相关题目，你可以沉浸式思考，加深对知识点的掌握和理解，巩固解题方法。<br>例如：你可以问我“生成一元二次方程相关问题。”<br>请告诉我你的需求，我会为你生成相关题目。'
++      content: '你好！我是你的智能数学助手QMathify。<br>我能够根据你所给出的知识点或问题生成相关题目，你可以沉浸式思考，加深对知识点的掌握和理解，巩固解题方法。<br>例如：你可以问我“生成一元二次方程相关问题。”<br>请告诉我你的需求，我会为你生成相关题目。'
+     };
+ 
+     // 尝试加载历史记录
+@@ -545,10 +568,29 @@ const loadDialogFromLocal = async (id) => {
+           
+           // 4. 处理AI回复
+           if (msg.answer) {
++            // 添加：解析思考内容
++            let thinkingContent = null;
++            let displayContent = msg.answer;
++            
++            // 检测是否有完整的思考标签
++            const fullThinkMatch = /<think>([\s\S]*?)<\/think>/g.exec(msg.answer);
++            if (fullThinkMatch) {
++              thinkingContent = fullThinkMatch[1];
++              
++              // 检查是否仅包含思考内容
++              const contentWithoutThinking = msg.answer.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
++              if (contentWithoutThinking === '') {
++                // 如果是仅思考内容的消息，添加特殊标记
++                displayContent = '<div class="think-only-placeholder">该回复仅包含思考过程</div>';
++              }
++            }
++            
+             const aiMessage = {
+               type: 'ai',
+-              content: msg.answer,
+-              messageId: msg.id
++              content: displayContent,
++              thinkingContent: thinkingContent, // 添加思考内容字段
++              messageId: msg.id,
++              hasOnlyThinking: thinkingContent && displayContent.includes('think-only-placeholder') // 标记仅包含思考内容
+             };
+             
+             // 处理AI回复中的引用资源
+@@ -699,7 +741,7 @@ const sendMessage = async () => {
+       // 添加AI思考中状态
+       messageList.value.push({
+         type: 'thinking',
+-        content: '思考中...'
++        content: ''
+       });
+       scrollToBottom();
+       
+@@ -716,33 +758,54 @@ const sendMessage = async () => {
+         // 流式回调处理...
+         // 其余代码保持不变
+         (text, tid, msgId) => {
+-          // 现有代码不变
+           if (tid && !currentTaskId.value) {
+             currentTaskId.value = tid;
+           }
+           
++          // 提取思考内容
++          let thinkingContent = null;
++          let displayContent = text;
++          
++          // 检测是否有完整的思考标签
++          const fullThinkMatch = /<think>([\s\S]*?)<\/think>/g.exec(text);
++          if (fullThinkMatch) {
++            thinkingContent = fullThinkMatch[1];
++            displayContent = text;  // 保持原始内容，由renderMarkdown函数处理
++          } else {
++            // 检测是否有未闭合的思考标签
++            const openThinkMatch = /<think>([\s\S]*?)$/g.exec(text);
++            if (openThinkMatch) {
++              thinkingContent = openThinkMatch[1];
++              // 当只有开始标签时，显示内容暂时为空，等待后续内容
++              displayContent = '';
++            }
++          }
++          
+           // 移除思考中状态或更新现有AI回复
+           const thinkingMsgIndex = messageList.value.findIndex(msg => msg.type === 'thinking');
+           if (thinkingMsgIndex !== -1) {
+             // 替换思考中消息为AI回复
+             messageList.value.splice(thinkingMsgIndex, 1, {
+               type: 'ai',
+-              content: text,
++              content: displayContent,
++              thinkingContent: thinkingContent,
+               messageId: msgId
+             });
+           } else {
+             // 查找并更新现有AI回复
+             const aiMsg = messageList.value[messageList.value.length - 1];
+             if (aiMsg && aiMsg.type === 'ai') {
+-              aiMsg.content = text;
+-              if (messageId) {
++              aiMsg.content = displayContent;
++              aiMsg.thinkingContent = thinkingContent;
++              if (msgId) {
+                 aiMsg.messageId = msgId;
+               }
+             } else {
+               // 如果没有找到现有消息，添加新的
+               messageList.value.push({
+                 type: 'ai',
+-                content: text,
++                content: displayContent,
++                thinkingContent: thinkingContent,
+                 messageId: msgId
+               });
+             }
+@@ -881,7 +944,7 @@ const sendMessage = async () => {
+     // 添加AI思考中状态
+     messageList.value.push({
+       type: 'thinking',
+-      content: '思考中...'
++      content: ''
+     });
+     scrollToBottom();
+     
+@@ -1038,11 +1101,11 @@ const handleNewDialog = () => {
+   messageList.value = [];
+   currentDialogId.value = null; // 重要：置空ID，确保服务器生成新ID
+   isFirstInput.value = true;
+-  
++  ElMessage.success('已创建新对话');
+   // 添加欢迎消息
+   messageList.value.push({
+     type: 'ai',
+-    content: ' 你好！我是你的智能数学助手QMathify。<br>我能够根据你所给出的知识点或问题生成相关题目，你可以沉浸式思考，加深对知识点的掌握和理解，巩固解题方法。<br>例如：你可以问我“生成一元二次方程相关问题。”<br>请告诉我你的需求，我会为你生成相关题目。'
++    content: '你好！我是你的智能数学助手QMathify。<br>我能够根据你所给出的知识点或问题生成相关题目，你可以沉浸式思考，加深对知识点的掌握和理解，巩固解题方法。<br>例如：你可以问我“生成一元二次方程相关问题。”<br>请告诉我你的需求，我会为你生成相关题目。'
+   });
+ };
+ 
+@@ -1193,19 +1256,19 @@ onMounted(() => {
+   handleNewDialog();
+ 
+   // 检查localStorage中是否有存储的问题内容
+-  const question = localStorage.getItem('bo07Question');
++  const question = localStorage.getItem('bo02Question');
+   if (question) {
+     inputMessage.value = question;
+     // 移除localStorage中的内容，避免下次重复填充
+-    localStorage.removeItem('bo07Question');
++    localStorage.removeItem('bo02Question');
+   }
+   // 检查bo03Question
+ 
+-const question08 = localStorage.getItem('bo08Question');
++const question03 = localStorage.getItem('bo03Question');
+ 
+-if (question08) {
+-inputMessage.value = question08;
+-localStorage.removeItem('bo08Question');
++if (question03) {
++inputMessage.value = question03;
++localStorage.removeItem('bo03Question');
+ }
+   if (typeof existingOnMounted === 'function') {
+     existingOnMounted();
+@@ -1233,15 +1296,44 @@ defineExpose({
+   border-radius: 15px;
+ 
+ }
+-.ai-thinking{
++.think-only-placeholder {
++  color: #713deb;
++  font-style: italic;
++  padding: 8px 0;
++  font-size: 14px;
++  border-left: 3px solid #713deb;
++  padding-left: 10px;
++  background-color: rgba(113, 61, 235, 0.05);
++  border-radius: 4px;
++  margin: 5px 0;
++}
++.ai-message {
++  display: flex;
++  flex-direction: column; /* 改为纵向排列 */
++}
++.ai-message > div {
++  width: 100%;
++}
++/* 添加或更新样式 */
++.thinking-content {
+   display: block;
+-  background-color: #f0f0f0; /* 浅灰色背景 */
+-  padding: 10px;            /* 内边距 */
+-  border-radius: 8px;       /* 圆角边框 */
+-  margin: 10px 0;           /* 外边距 */
+-  color: #333;              /* 文字颜色 */
++  background-color: #f5f5f5;
++  padding: 12px;
++  border-radius: 0 0 8px 8px; /* 只保留下方和右侧的圆角 */
++  color: #555;
++  font-size: 0.95em;
++  border-left: none; /* 移除重复的左边框 */
++  width: 100%;
++  box-sizing: border-box;
++  line-height: 1.5;
+ }
+ 
++/* 确保思考内容内的代码格式也能正确显示 */
++.thinking-content code {
++  background-color: rgba(27, 31, 35, 0.05);
++  padding: 0.2em 0.4em;
++  border-radius: 3px;
++}
+ .markdown-body {
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+   font-size: 16px;
+@@ -1429,6 +1521,7 @@ body {
+ /* 思考中状态的旋转动画 */
+ .thinking {
+   display: flex;
++  flex-direction: row; /* 明确指定水平排列 */
+   align-items: center;
+   gap: 10px;
+ }
+@@ -1450,18 +1543,57 @@ body {
+     transform: rotate(360deg);
+   }
+ }
++.thinking-details {
++  width: 100%;
++  margin-bottom: 12px;
++  border-radius: 8px;
++  overflow: hidden;
++  background-color: rgba(113, 61, 235, 0.05);
++  border-left:3px solid #fdfdfd
++}
++
++/* 思考内容折叠标题 */
++.thinking-summary {
++  padding: 8px 12px;
++  color: #713deb;
++  font-size: 14px;
++  cursor: pointer;
++  list-style: none;
++  transition: background-color 0.2s;
++}
++
++.thinking-summary:hover {
++  background-color: rgba(113, 61, 235, 0.1);
++}
+ 
++/* 移除默认的三角形图标 */
++.thinking-summary::-webkit-details-marker {
++  display: none;
++}
++
++/* 添加自定义图标 */
++.thinking-summary::before {
++  content: '▶';
++  display: inline-block;
++  margin-right: 5px;
++  font-size: 12px;
++  transition: transform 0.3s;
++}
++
++details[open] .thinking-summary::before {
++  transform: rotate(90deg);
++}
+ /* 思考中状态样式 */
+ .thinking-message {
+   background-color: #ffffff;
+   width: fit-content;
+   position: relative;
+-  left: -1%;
++  left: 0;
+   border-radius: 14px;
+   padding: 0.5rem;
+   max-width: 85%;
+   align-self: flex-start;
+-  margin-left: 6rem;
++  margin-left: 5.5rem;
+   max-width: 78.9%;
+   box-sizing: border-box;
+ }
+@@ -1538,6 +1670,7 @@ body {
+   right: 0;       
+   display: flex;
+   z-index: 5;
++  flex-direction: row-reverse;
+ }
+ 
+ .action-icons {
+@@ -1733,9 +1866,7 @@ body {
+   justify-content: center;
+   transition: width 0.3s ease; /* 添加过渡效果 */
+ }
+-.message.greeting-message .action-icons-container {
+-  display: none;
+-}
++
+ .input-wrapper {
+   width: 100%;
+   max-width: 85%;
+@@ -1856,8 +1987,27 @@ textarea:focus {
+     margin-right: 3rem;
+   }
+   
+-  .ai-message .ai-message-greeting {
++  .ai-message {
++    margin-left: 3rem;
++    margin-bottom: 48px;
++  }
++  
++  .ai-message.greeting-message {
+     margin-left: 3rem;
++    margin-bottom: 20px;
++  }
++
++  .thinking-message {
++    margin-left: 3rem;
++  }
++
++
++  .aitou {
++    left: -3rem;
++  }
++  
++  .usertou {
++    right: -3rem;
+   }
+ 
+   .action-icons-container {
+@@ -1916,7 +2066,7 @@ textarea:focus {
+ 
+   .ai-message{
+     margin-left: 2.5rem;
+-    margin-bottom: 28px;
++    margin-bottom: 40px;
+   }
+ 
+   .thinking-message {
+@@ -1926,13 +2076,13 @@ textarea:focus {
+   .aitou {
+     width: 2rem;
+     height: 2rem;
+-    left: -2.25rem;
++    left: -2.5rem;
+   }
+   
+   .usertou {
+     width: 2rem;
+     height: 2rem;
+-    right: -2.25rem;
++    right: -2.5rem;
+   }
+   
+   .action-icons-container {
+@@ -2010,13 +2160,14 @@ textarea:focus {
+   }
+ }
+ /* 当屏幕宽度小于 1149px 时隐藏 AI 头像 */
+-@media (max-width: 1149px) {
++@media (min-width: 769px) and (max-width: 1149px) {
+   .ai-message {
+-    margin-left: 9%;
++    margin-left: 5.5rem;
++  }
++  
++  .references-outside-container {
++    margin-left: 3.5rem;
++    left: 5.6%;
+   }
+-}
+-@media (max-width: 767px) {
+-  .ai-message {
+-max-width: 81%;  }
+ }
+ </style>
+\ No newline at end of file
+-- 
+2.39.5 (Apple Git-154)
+

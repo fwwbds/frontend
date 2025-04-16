@@ -1,0 +1,398 @@
+From 9eb7500f14378cc2bcbded7645491d44b6260e2f Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Wed, 19 Mar 2025 15:14:57 +0800
+Subject: [PATCH 14/20] =?UTF-8?q?style:=E4=BF=AE=E6=94=B9=E9=83=A8?=
+ =?UTF-8?q?=E5=88=86=E5=B7=B2=E7=9F=A5=E6=A0=B7=E5=BC=8F=E9=97=AE=E9=A2=98?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/routes/index.ts   |  2 +-
+ frontend/src/views/ai.vue      | 45 +++++++++++++++++++++++++----
+ frontend/src/views/menu01.vue  | 24 ++++++++++++----
+ frontend/src/views/menu02.vue  | 22 +++++++++++---
+ frontend/src/views/point01.vue | 52 ++++++++++++++++++++++++++++++----
+ frontend/src/views/point02.vue | 19 +++++++++++--
+ 6 files changed, 141 insertions(+), 23 deletions(-)
+
+diff --git a/frontend/src/routes/index.ts b/frontend/src/routes/index.ts
+index 4409283..5b04d78 100644
+--- a/frontend/src/routes/index.ts
++++ b/frontend/src/routes/index.ts
+@@ -82,7 +82,7 @@ const routes = [
+     component:funcPage 
+   },
+   {
+-    path: '/Leading',
++    path: '/leading',
+     name: 'Leading',
+     component:leadPage 
+   }
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index f073926..be9d4fb 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -167,7 +167,7 @@
+     
+     <!-- 输入和发送区域 -->
+     <div class="chat-input">
+-      <div class="input-wrapper">
++      <div class="input-wrapper" :class="{ 'input-expanded': isSidebarOpen }" >
+         <textarea
+           v-model="inputMessage"
+           placeholder="请输入您想要问的问题 （Shift+Enter 换行）"
+@@ -247,7 +247,7 @@
+ </template>
+ 
+ <script setup>
+-import { ref, onMounted, watch, nextTick } from 'vue';
++import { ref, onMounted, watch, nextTick,computed } from 'vue';
+ import { ElMessage } from "element-plus";
+ import { Picture, FolderOpened, ChatDotRound, CopyDocument, Refresh, CircleCheck, CircleClose, VideoPause, InfoFilled ,ArrowRight, Document} from '@element-plus/icons-vue';
+ import {
+@@ -291,6 +291,26 @@ const md = new MarkdownIt({
+   }
+ });
+ 
++const isSidebarOpen = ref(false); // 假设这个变量在父组件中定义并传递给子组件
++
++// 监听 isSidebarOpen 的变化
++watch(isSidebarOpen, () => {
++  nextTick(() => {
++    adjustInputWidth();
++  });
++});
++
++const adjustInputWidth = () => {
++  const inputWrapper = document.querySelector('.input-wrapper');
++  if (inputWrapper) {
++    if (isSidebarOpen.value) {
++      inputWrapper.style.width = 'calc(100% - 200px)'; // 假设侧栏宽度为200px，根据实际情况调整
++    } else {
++      inputWrapper.style.width = '100%';
++    }
++  }
++};
++
+ // 添加Markdown渲染函数
+ const renderMarkdown = (text) => {
+   try {
+@@ -1461,7 +1481,7 @@ body {
+ .ai-message {
+   background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+-  margin-left: 4.8rem;
++  margin-left: 5.5rem;
+   max-width: 80.9%;
+   margin-bottom: 48px; /* 减小为更合理的值 */
+   position: relative;
+@@ -1518,7 +1538,7 @@ body {
+   background-color: #ffffff;
+   width: fit-content;
+   position: relative;
+-  left: -2%;
++  left: -1%;
+   border-radius: 14px;
+   padding: 0.5rem;
+   max-width: 85%;
+@@ -1793,11 +1813,12 @@ body {
+   flex-shrink: 0;
+   box-sizing: border-box;
+   justify-content: center;
++  transition: width 0.3s ease; /* 添加过渡效果 */
+ }
+ 
+ .input-wrapper {
+   width: 100%;
+-  max-width: 800px;
++  max-width: 85%;
+   margin: 0 auto;
+   display: flex;
+   flex-direction: column;
+@@ -1808,6 +1829,10 @@ body {
+   overflow: hidden;
+ }
+ 
++.input-expanded {
++  max-width: none; /* 取消最大宽度限制 */
++  width: calc(100% - 200px); /* 假设侧栏宽度为200px，根据实际情况调整 */
++}
+ /* 文本框样式 */
+ textarea {
+   width: 100%;
+@@ -2064,4 +2089,14 @@ textarea:focus {
+     height: 1rem;
+   }
+ }
++/* 当屏幕宽度小于 1149px 时隐藏 AI 头像 */
++@media (max-width: 1149px) {
++  .ai-message {
++    margin-left: 9%;
++  }
++}
++@media (max-width: 767px) {
++  .ai-message {
++max-width: 81%;  }
++}
+ </style>
+\ No newline at end of file
+diff --git a/frontend/src/views/menu01.vue b/frontend/src/views/menu01.vue
+index 2126b9f..2f5f87e 100644
+--- a/frontend/src/views/menu01.vue
++++ b/frontend/src/views/menu01.vue
+@@ -34,7 +34,7 @@ const handleClose = (key: string, keyPath: string[]) => {
+   console.log(key, keyPath);
+ };
+ const goToPage02 = () => {
+-  window.location.href = '/Leading';
++  window.location.href = '/leading';
+ };
+ </script>
+ <style scoped>
+@@ -48,8 +48,8 @@ const goToPage02 = () => {
+   ) !important;
+   border: none;
+   width: 203%;
+-  border-radius: 10px;
+-  font-size: 19px;
++  border-radius: 10px !important; /* 确保圆角优先级最高 */
++    font-size: 19px;
+   position: relative; /* 确保父容器是相对定位 */
+   z-index: 1000; /* 设置较高的 z-index */
+ }
+@@ -62,11 +62,25 @@ const goToPage02 = () => {
+   width: 100%; /* 子菜单宽度与父菜单一致 */
+   background-color: white; /* 设置背景色，避免透明 */
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+-}
++  border-radius: 10px !important; /* 确保圆角优先级最高 */}
+ 
+ :deep(.el-menu-item) {
+   z-index: 1002; /* 菜单项的 z-index 更高 */
+ }
+-.custom-menu::hovor{  border-radius: 10px;
++.custom-menu:hover{  border-radius: 10px;
++}
++
++/* 确保悬浮时父菜单的圆角不变 */
++:deep(.el-sub-menu__title:hover) {
++  border-radius: 10px !important;
++}
++
++/* 确保悬浮时子菜单的圆角不变 */
++:deep(.el-menu-item:hover) {
++  border-radius: 10px !important;
++}
++
++:deep(.el-sub-menu .el-menu:hover) {
++  border-radius: 10px !important;
+ }
+ </style>
+\ No newline at end of file
+diff --git a/frontend/src/views/menu02.vue b/frontend/src/views/menu02.vue
+index 8ae0e42..8284ff0 100644
+--- a/frontend/src/views/menu02.vue
++++ b/frontend/src/views/menu02.vue
+@@ -48,8 +48,8 @@ const goToPage02 = () => {
+   ) !important;
+   border: none;
+   width: 203%;
+-  border-radius: 10px;
+-  font-size: 19px;
++  border-radius: 10px !important; /* 确保圆角优先级最高 */
++    font-size: 19px;
+   position: relative; /* 确保父容器是相对定位 */
+   z-index: 1000; /* 设置较高的 z-index */
+ }
+@@ -62,11 +62,25 @@ const goToPage02 = () => {
+   width: 100%; /* 子菜单宽度与父菜单一致 */
+   background-color: white; /* 设置背景色，避免透明 */
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+-}
++  border-radius: 10px !important; /* 确保圆角优先级最高 */}
+ 
+ :deep(.el-menu-item) {
+   z-index: 1002; /* 菜单项的 z-index 更高 */
+ }
+-.custom-menu::hovor{  border-radius: 10px;
++.custom-menu:hover{  border-radius: 10px;
++}
++
++/* 确保悬浮时父菜单的圆角不变 */
++:deep(.el-sub-menu__title:hover) {
++  border-radius: 10px !important;
++}
++
++/* 确保悬浮时子菜单的圆角不变 */
++:deep(.el-menu-item:hover) {
++  border-radius: 10px !important;
++}
++
++:deep(.el-sub-menu .el-menu:hover) {
++  border-radius: 10px !important;
+ }
+ </style>
+\ No newline at end of file
+diff --git a/frontend/src/views/point01.vue b/frontend/src/views/point01.vue
+index 88c34e5..70080ba 100644
+--- a/frontend/src/views/point01.vue
++++ b/frontend/src/views/point01.vue
+@@ -17,9 +17,9 @@
+         <span class="title-main">你好,我是QMathify!</span>
+         <span class="title-sub">作为你的智能数学问答助手，我可以帮你解决数学各方面问题。</span>
+       </div><div class="box01"  >
+-            <span class="font01">问题对话实时解答</span>
++            <span class="font01" :ref="`font01_01`" :class="{ 'clickable': isSmallScreen }" @click="goToPage01WhenSmall"  >问题对话实时解答</span>
+             <span class="font02">小学、初中、高中所有数学问题都能详细分析、智能解答，你可以问我：</span>
+-            <el-button type="primary"  class="bo01"  @click="goToPage01" >
++            <el-button type="primary"  class="bo01"  @click="goToPage01"  v-show="!isSmallScreen">
+               开始
+             </el-button>
+             <el-button type="primary" class="bo02" @click="handleBo02Click">
+@@ -29,9 +29,9 @@
+               当a=14,b=-5时,代数式2a+3b的值等于多少?            </el-button>
+           </div>
+           <div class="box02"  >
+-            <span class="font01">启发提问引导思考</span>
++            <span class="font01" :ref="`font01_02`" :class="{ 'clickable': isSmallScreen }" @click="goToPage02WhenSmall" >启发提问引导思考</span>
+             <span class="font02">根据你所给的题目，我会递进式地反问你相关知识点，暂时不给出答案，引导你思考。</span>
+-            <el-button type="primary"  class="bo04"  @click="goToPage02">
++            <el-button type="primary"  v-show="!isSmallScreen" class="bo04"  @click="goToPage02">
+               开始
+             </el-button>
+             <el-button type="primary"  class="bo05">
+@@ -46,10 +46,11 @@
+       </div>
+     </template>
+     <script setup> 
+-  import { ref} from 'vue';
++  import { ref, onMounted, watch} from 'vue';
+   import { Memo} from '@element-plus/icons-vue'; // 引入图标
+   
+   const isSidebarOpen = ref(false); // 侧栏展开状态
++  const isSmallScreen = ref(false); // 标识是否为小屏幕
+   // 侧栏管理
+   const toggleSidebar = () => {
+     isSidebarOpen.value = !isSidebarOpen.value;
+@@ -60,6 +61,18 @@
+ const goToPage02 = () => {
+   window.location.href = '/Leading';
+ };
++const goToPage01WhenSmall = () => {
++  if (isSmallScreen.value) {
++    goToPage01();
++  }
++};
++
++const goToPage02WhenSmall = () => {
++  if (isSmallScreen.value) {
++    goToPage02();
++  }
++};
++
+ const handleBo02Click = () => {
+   const question = "什么是全概率公式？它和贝叶斯公式有何关系？"; // 获取按钮的文字内容
+   // 将问题内容存储到localStorage中
+@@ -67,6 +80,28 @@ const handleBo02Click = () => {
+   // 跳转到 /QMathify 页面
+   window.location.href = `/QMathify`;
+ };
++
++onMounted(() => {
++  checkScreenSize();
++  window.addEventListener('resize', checkScreenSize);
++});
++
++watch(() => isSmallScreen.value, () => {
++  const font01_01 = document.querySelector('[ref="font01_01"]');
++  const font01_02 = document.querySelector('[ref="font01_02"]');
++  if (isSmallScreen.value) {
++    font01_01.style.cursor = 'pointer';
++    font01_02.style.cursor = 'pointer';
++  } else {
++    font01_01.style.cursor = 'default';
++    font01_02.style.cursor = 'default';
++  }
++});
++
++const checkScreenSize = () => {
++  const width = window.innerWidth;
++  isSmallScreen.value = width <1425; 
++};
+   </script>
+     <style scoped> 
+   .menu-icon {
+@@ -132,6 +167,13 @@ const handleBo02Click = () => {
+     color: grey;
+     display: block;
+   margin-right:3% ;}
++  .clickable {
++  cursor: pointer;
++}
++.clickable:hover {
++  text-decoration: underline; /* 鼠标悬浮时显示下划线 */
++  color: purple; /* 鼠标悬浮时文字变紫色 */
++}
+   .box02{
+     top:-29%;
+     left:51.2%;
+diff --git a/frontend/src/views/point02.vue b/frontend/src/views/point02.vue
+index b5c8c61..bc40958 100644
+--- a/frontend/src/views/point02.vue
++++ b/frontend/src/views/point02.vue
+@@ -1400,7 +1400,7 @@ body {
+   border-radius: 15px;
+   align-self: flex-end;
+   margin-left: auto;
+-  margin-right: 6.6rem;
++  margin-right: 5.3rem;
+   padding: 0.5rem;
+   position: relative;
+   width: fit-content;
+@@ -1487,9 +1487,10 @@ body {
+   position: relative;
+   border-radius: 14px;
+   padding: 0.5rem;
++  left: -1%;
+   max-width: 85%;
+   align-self: flex-start;
+-  margin-left: 6.7rem;
++  margin-left: 6rem;
+   max-width: 78.9%;
+   box-sizing: border-box;
+ }
+@@ -1759,11 +1760,13 @@ body {
+   flex-shrink: 0;
+   box-sizing: border-box;
+   justify-content: center;
++  transition: width 0.3s ease; /* 添加过渡效果 */
++
+ }
+ 
+ .input-wrapper {
+   width: 100%;
+-  max-width: 800px;
++  max-width: 85%;
+   margin: 0 auto;
+   display: flex;
+   flex-direction: column;
+@@ -2030,4 +2033,14 @@ textarea:focus {
+     height: 1rem;
+   }
+ }
++/* 当屏幕宽度小于 1149px 时隐藏 AI 头像 */
++@media (max-width: 1149px) {
++  .ai-message {
++    margin-left: 9%;
++  }
++}
++@media (max-width: 767px) {
++  .ai-message {
++max-width: 81%;  }
++}
+ </style>
+\ No newline at end of file
+-- 
+2.39.5 (Apple Git-154)
+

@@ -1,0 +1,280 @@
+From 8d87026ece92fd63fe2225e951111cb2c6698a09 Mon Sep 17 00:00:00 2001
+From: fangwenjing-web <mingxiechunshi@outlook.com>
+Date: Tue, 18 Mar 2025 11:45:39 +0800
+Subject: [PATCH 13/20] =?UTF-8?q?style:=E4=BF=AE=E5=A4=8D=E9=83=A8?=
+ =?UTF-8?q?=E5=88=86=E5=B7=B2=E7=9F=A5=E9=97=AE=E9=A2=98?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ frontend/src/routes/index.ts   |   2 +-
+ frontend/src/views/ai.vue      |  16 +++--
+ frontend/src/views/point01.vue | 107 +++++++++++++++++++++++++++++----
+ 3 files changed, 107 insertions(+), 18 deletions(-)
+
+diff --git a/frontend/src/routes/index.ts b/frontend/src/routes/index.ts
+index 0616db3..4409283 100644
+--- a/frontend/src/routes/index.ts
++++ b/frontend/src/routes/index.ts
+@@ -77,7 +77,7 @@ const routes = [
+     component: aiPage
+   },
+   {
+-    path: '/Function',
++    path: '/function',
+     name: 'Function',
+     component:funcPage 
+   },
+diff --git a/frontend/src/views/ai.vue b/frontend/src/views/ai.vue
+index b5b1508..f073926 100644
+--- a/frontend/src/views/ai.vue
++++ b/frontend/src/views/ai.vue
+@@ -1260,10 +1260,17 @@ const handleFileUpload = async (e) => {
+ const existingOnMounted = onMounted;
+ onMounted(() => {
+   handleNewDialog();
++
++  // 检查localStorage中是否有存储的问题内容
++  const question = localStorage.getItem('bo02Question');
++  if (question) {
++    inputMessage.value = question;
++    // 移除localStorage中的内容，避免下次重复填充
++    localStorage.removeItem('bo02Question');
++  }
+   if (typeof existingOnMounted === 'function') {
+     existingOnMounted();
+   }
+-  
+   // 初始化文本框高度
+   nextTick(() => {
+     adjustTextareaHeight();
+@@ -1426,7 +1433,7 @@ body {
+   border-radius: 15px;
+   align-self: flex-end;
+   margin-left: auto;
+-  margin-right: 6.6rem;
++  margin-right: 5rem;
+   padding: 0.5rem;
+   position: relative;
+   width: fit-content;
+@@ -1454,7 +1461,7 @@ body {
+ .ai-message {
+   background: rgba(255, 255, 255, 1);
+   align-self: flex-start;
+-  margin-left: 5.5rem;
++  margin-left: 4.8rem;
+   max-width: 80.9%;
+   margin-bottom: 48px; /* 减小为更合理的值 */
+   position: relative;
+@@ -1511,11 +1518,12 @@ body {
+   background-color: #ffffff;
+   width: fit-content;
+   position: relative;
++  left: -2%;
+   border-radius: 14px;
+   padding: 0.5rem;
+   max-width: 85%;
+   align-self: flex-start;
+-  margin-left: 6.7rem;
++  margin-left: 6rem;
+   max-width: 78.9%;
+   box-sizing: border-box;
+ }
+diff --git a/frontend/src/views/point01.vue b/frontend/src/views/point01.vue
+index 85ddee8..88c34e5 100644
+--- a/frontend/src/views/point01.vue
++++ b/frontend/src/views/point01.vue
+@@ -13,17 +13,18 @@
+             alt="AI Avatar"
+           />
+           </div>
+-          <span style="font-size: 30px; position: relative; left: 16%; top: 8.4%;" >你好,我是QMathify!</span>
+-          <span style="font-size: 20px; position: relative; left: -13%; top: 13.4%;font-weight: 400;color: rgba(56, 56, 56, 1);">作为你的智能数学问答助手，我可以帮你解决数学各方面问题。</span>
+-          <div class="box01"  >
++          <div class="title-container">
++        <span class="title-main">你好,我是QMathify!</span>
++        <span class="title-sub">作为你的智能数学问答助手，我可以帮你解决数学各方面问题。</span>
++      </div><div class="box01"  >
+             <span class="font01">问题对话实时解答</span>
+             <span class="font02">小学、初中、高中所有数学问题都能详细分析、智能解答，你可以问我：</span>
+             <el-button type="primary"  class="bo01"  @click="goToPage01" >
+               开始
+             </el-button>
+-            <el-button type="primary"  class="bo02">
+-              什么是全概率公式？它和贝叶斯公式有何关系？
+-            </el-button>
++            <el-button type="primary" class="bo02" @click="handleBo02Click">
++  什么是全概率公式？它和贝叶斯公式有何关系？
++</el-button>
+             <el-button type="primary"  class="bo03">
+               当a=14,b=-5时,代数式2a+3b的值等于多少?            </el-button>
+           </div>
+@@ -58,6 +59,13 @@
+ };
+ const goToPage02 = () => {
+   window.location.href = '/Leading';
++};
++const handleBo02Click = () => {
++  const question = "什么是全概率公式？它和贝叶斯公式有何关系？"; // 获取按钮的文字内容
++  // 将问题内容存储到localStorage中
++  localStorage.setItem('bo02Question', question);
++  // 跳转到 /QMathify 页面
++  window.location.href = `/QMathify`;
+ };
+   </script>
+     <style scoped> 
+@@ -85,7 +93,7 @@ const goToPage02 = () => {
+       rgba(194, 210, 255, 0.2) 57.22%,
+       rgba(194, 175, 240, 0.2) 100%
+     );
+-    top: 12%;
++    top: 9%;
+     bottom: 0%;
+     overflow-y: hidden;
+     left: 13%;
+@@ -93,8 +101,13 @@ const goToPage02 = () => {
+       /* 新增样式，根据侧栏状态调整 */
+   /*width: calc(100% - 0px);*/
+   }
++  .box01,.box02{
++    padding: 10px; /* 添加内边距 */
++  box-sizing: border-box; /* 确保内边距不会增加容器大小 */
++  overflow: hidden; /* 防止内容超出 */
++  }
+   .box01{
+-    top:16%;
++    top:2%;
+     left:15.2%;
+     position: relative;
+     width: 33%;
+@@ -117,9 +130,10 @@ const goToPage02 = () => {
+     left: 4%;
+     top: 8%;
+     color: grey;
+-    display: block;}
++    display: block;
++  margin-right:3% ;}
+   .box02{
+-    top:-15.3%;
++    top:-29%;
+     left:51.2%;
+     position: relative;
+     width: 33%;
+@@ -129,14 +143,32 @@ const goToPage02 = () => {
+   background: rgba(255, 255, 255, 1);
+   border: 1px solid rgba(182, 182, 250, 1);
+   box-shadow: 0px 2px 4px  rgba(0, 0, 0, 0.25);}
++  .bo02, .bo03, .bo05 {
++  white-space: normal; /* 允许文字换行 */
++  padding: 10px; /* 添加内边距 */
++  box-sizing: border-box; /* 确保内边距不会增加按钮大小 */
++  line-height: 1.5; /* 调整行间距 */
++}
+   .content-shifted {
+     margin-left: 178px;
+     position: absolute; /* 保持绝对定位 */
+     left: calc(15.6% + 280px); /* 初始位置 + 侧栏宽度 */
+   
+   }
++  
++.bo01, .bo04 {
++  position: absolute;
++  bottom: 10px; /* 固定在底部 */
++  right: 10px; /* 固定在右侧 */
++  opacity: 1;
++  border: none;
++  border-radius: 10px;
++  background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191, 242, 0.95) 33.49%, rgba(162, 169, 252, 0.89) 74.36%, rgba(151, 107, 255, 0.8) 100%);
++  width: auto; /* 宽度自适应 */
++  padding: 10px 20px; /* 调整内边距 */
++}
+   .bo01{position: relative;
+-    top: -27%;
++    top: -30%;
+     left: 71%;
+     opacity: 1;
+     border: none;
+@@ -166,7 +198,7 @@ background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191,
+     border: none;
+ } 
+ .bo04{position: relative;
+-    top: -27%;
++    top: -30%;
+     left: 71%;
+     opacity: 1;
+     border: none;
+@@ -179,7 +211,7 @@ background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191,
+     border-radius: 10px;
+     background: #f4f0ff;
+     width: 96%;
+-    height: 40%;
++    height: 50%;
+     color: black;
+     border: none;
+     text-align: left;
+@@ -196,6 +228,26 @@ background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191,
+     top: 9.5%;
+     transform: translateY(0); /* 移除 translateY(-50%)，因为不再需要垂直居中 */
+   }
++  
++.title-container {
++  position: relative;
++  top: -2%;
++  margin-left: 16%; /* 与头像对齐 */
++  margin-top: 8.4%; /* 调整顶部间距 */
++}
++
++.title-main {
++  font-size: 30px;
++  display: block; /* 独占一行 */
++}
++
++.title-sub {
++  font-size: 20px;
++  font-weight: 400;
++  color: rgba(56, 56, 56, 1);
++  display: block; /* 独占一行 */
++  margin-top: 5px; /* 调整与上文的间距 */
++}
+   .sidebar {
+     transition: width 0.3s ease;
+     z-index: 1000; /* 确保侧边栏在聊天容器之上 */
+@@ -204,4 +256,33 @@ background: linear-gradient(90deg, rgba(170, 239, 242, 1) 0.92%, rgba(136, 191,
+     position: relative;
+     z-index: 1;
+   }
++  /* 小窗模式适配 */
++@media (max-width: 768px) {
++  .chat-container {
++    width: 90%;
++    left: 5%;
++  }
++
++  .box01, .box02 {
++    width: 45%; /* 调整宽度 */
++    left: 5%;
++  }
++
++  .box02 {
++    left: 55%;
++  }
++
++  .bo01 {
++    position: relative;
++    top: -40%;
++    padding: 8px 16px; /* 调整内边距 */
++    font-size: 14px; /* 调整字体大小 */
++  }
++ .bo04 {
++    position: relative;
++    top: -50%;
++    padding: 8px 16px; /* 调整内边距 */
++    font-size: 14px; /* 调整字体大小 */
++  }
++}
+   </style >
+\ No newline at end of file
+-- 
+2.39.5 (Apple Git-154)
+
